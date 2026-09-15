@@ -18,11 +18,11 @@ No dependencies or build step are required.
 - `dist/styles/main.css`: proportional desktop canvas, Figma window bounds, and crossfade.
 - `dist/scripts/scenes.js`: screen definitions and shared helpers.
 - `dist/scripts/app.js`: navigation, image readiness, focus, and reduced-motion handling.
-- `dist/assets/`: exact original Figma PNG exports, stored locally without expiring URLs.
+- `dist/assets/`: exact original Figma SVG exports, stored locally without expiring URLs.
 
 ## Fidelity and scope
 
-The two static illustrated compositions are original Figma exports, including custom lettering, texture, rotation, and shadows. They remain at their original 1512 × 982 aspect ratio, fitting within the desktop viewport without cropping or stretching. Surrounding space uses the homepage paper color. Lettering is embedded in the artwork rather than substituted with fallback fonts; accessible descriptions provide equivalent screen context. Raster exports have a native resolution of 1512 × 982.
+The two illustrated compositions are original Figma SVG exports, including custom lettering, texture, rotation, and shadows. Both contain real vector paths with no embedded bitmap images; lettering is outlined to preserve the original fonts. Accessible descriptions provide equivalent screen context. The 1512 × 982 coordinate system scales uniformly to cover the entire desktop viewport, with centered edge cropping when the viewport has a different aspect ratio. No black frame border or letterboxing is added. The interactive window shares that coordinate system so its hit area stays aligned at every desktop size.
 
 Click the window, or focus it and press Enter/Space, to crossfade to the board in 600 ms. Reduced-motion preferences skip the animation. Browser Back returns to the window; reload always starts at the window. No city/map/archive interactions exist yet.
 
