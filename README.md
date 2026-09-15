@@ -22,7 +22,7 @@ No dependencies or build step are required.
 
 ## Fidelity and scope
 
-The two illustrated compositions are original Figma SVG exports, including custom lettering, texture, rotation, and shadows. Both contain real vector paths with no embedded bitmap images; lettering is outlined to preserve the original fonts. Accessible descriptions provide equivalent screen context. The 1512 × 982 coordinate system scales uniformly to cover the entire desktop viewport, with centered edge cropping when the viewport has a different aspect ratio. No black frame border or letterboxing is added. The interactive window shares that coordinate system so its hit area stays aligned at every desktop size.
+The two illustrated compositions are original Figma SVG exports, including custom lettering, texture, rotation, and shadows. Both contain real vector paths with no embedded bitmap images; lettering is outlined to preserve the original fonts. Accessible descriptions provide equivalent screen context. The 1512 × 982 coordinate system scales uniformly to fit completely inside the desktop viewport and remains centered, without cropping or stretching. Extra viewport space extends the original edge color: homepage paper `#fff7cd`, corkboard paper `#f4ebd9`. This surrounding color crossfades with navigation. No black border is added. The interactive window shares the artwork coordinate system so its hit area stays aligned at every desktop size.
 
 Click the window, or focus it and press Enter/Space, to crossfade to the board in 600 ms. Reduced-motion preferences skip the animation. Browser Back returns to the window; reload always starts at the window. No city/map/archive interactions exist yet.
 

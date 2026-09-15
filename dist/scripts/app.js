@@ -19,6 +19,7 @@ async function navigate(destination, { recordHistory = true } = {}) {
   try {
     // Avoid fading into an empty screen on a slow connection.
     await prepareScene(incoming);
+    document.body.style.backgroundColor = scenes[destination].background;
     outgoing.inert = true;
     outgoing.setAttribute('aria-hidden', 'true');
     if (!reducedMotion.matches) {
@@ -38,6 +39,7 @@ async function navigate(destination, { recordHistory = true } = {}) {
     else incoming.focus({ preventScroll: true });
     status.textContent = '';
   } catch {
+    document.body.style.backgroundColor = scenes[current].background;
     showScene(outgoing, true);
     status.textContent = 'The artwork could not load. Please try opening the window again.';
   } finally {

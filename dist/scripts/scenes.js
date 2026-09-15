@@ -1,7 +1,7 @@
 /** Add later screens here as they are implemented. Artwork and behavior stay separate. */
 export const scenes = Object.freeze({
-  home: { elementId: 'home', title: 'The Cultural Atlas' },
-  corkboard: { elementId: 'corkboard', title: 'Corkboard — The Cultural Atlas' },
+  home: { elementId: 'home', title: 'The Cultural Atlas', background: '#fff7cd' },
+  corkboard: { elementId: 'corkboard', title: 'Corkboard — The Cultural Atlas', background: '#f4ebd9' },
 });
 
 export async function prepareScene(element) {
