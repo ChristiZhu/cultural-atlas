@@ -1,0 +1,31 @@
+@font-face { font-family: 'Ugly Dave'; src: url('../assets/fonts/ugly-dave.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: block; }
+.atlas { container-type: inline-size; }
+.art-button { position: absolute; left: calc(var(--x) / 1512 * 100%); top: calc(var(--y) / 982 * 100%); width: calc(var(--w) / 1512 * 100%); height: calc(var(--h) / 982 * 100%); margin: 0; padding: 0; border: 0; background: transparent; color: #206eb8; cursor: pointer; }
+.art-button:focus-visible { outline: 2px solid #ffd01a; outline-offset: 3px; }
+.art-button[hidden] { display: none; }
+.art-button[aria-disabled='true'] { cursor: progress; }
+.guangzhou-card { transform: rotate(-3deg); transform-origin: top left; }
+.guangzhou-card:hover, .guangzhou-card:focus-visible { box-shadow: inset 0 0 0 2px #206eb8; }
+.guangzhou-card:active, .guangzhou-card[data-selected='true'] { background: rgb(32 110 184 / 10%); }
+.nav-button img { display: block; width: 100%; height: 100%; transition: transform 100ms, opacity 100ms; pointer-events: none; }
+.nav-button::after { content: ''; position: absolute; bottom: calc(-4 * 100cqw / 1512); left: 50%; width: calc(var(--underline) / var(--w) * 100%); height: max(1px, calc(1.5 * 100cqw / 1512)); background: #206eb8; transform: translateX(-50%) scaleX(0); transform-origin: center; transition: transform 120ms ease; }
+.nav-button:hover::after, .nav-button:focus-visible::after, .nav-button:active::after, .nav-button[data-selected='true']::after, .nav-button[aria-current='page']::after { transform: translateX(-50%) scaleX(1); }
+.nav-button:active img, .nav-button[data-selected='true'] img { transform: translateY(1px); opacity: .7; }
+.map-scene { background: #84c9e1; }
+.map-art, .map-art > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map-art { pointer-events: none; }
+.map-art [data-panel='expanded'] { transition: transform 180ms ease, opacity 180ms ease; }
+.map-scene[data-collapsed='true'] [data-panel='expanded'] { transform: translateX(-330px); opacity: 0; }
+.map-scene[data-collapsed='true'] [data-panel='collapsed'] { display: inline !important; }
+.map-art [data-filter-fill] { transition: fill 120ms; }
+.map-art [data-filter-art][data-active='true'] [data-filter-fill] { fill: #a4d4e5; }
+.map-art [data-filter-art][data-active='true'] [data-filter-label] path { fill: #206eb8; }
+.map-art [data-filter-art][data-hover='true'] [data-filter-fill] { fill: #4e98de; }
+.map-art [data-filter-art][data-active='true'][data-hover='true'] [data-filter-fill] { fill: #a4d4e5; }
+.filter-button:active { background: rgb(248 210 77 / 10%); }
+.collapse-button { border-radius: 50%; }
+.collapse-button:hover, .collapse-button:active { background: rgb(255 208 26 / 16%); }
+.map-filter-status { position: absolute; left: calc(40 / 1512 * 100%); top: calc(929 / 982 * 100%); width: calc(213 / 1512 * 100%); height: calc(27 / 982 * 100%); text-align: center; color: #f8d24d; font: calc(16 * 100cqw / 1512)/1.2 'Ugly Dave', sans-serif; letter-spacing: calc(2 * 100cqw / 1512); pointer-events: none; }
+.map-scene[data-collapsed='true'] .map-filter-status { left: calc(25 / 1512 * 100%); top: calc(205 / 982 * 100%); width: calc(184 / 1512 * 100%); font-size: calc(23 * 100cqw / 1512); letter-spacing: calc(3 * 100cqw / 1512); }
+.map-scene[data-collapsed='true'][data-category='architecture'] .map-filter-status { font-size: calc(17 * 100cqw / 1512); letter-spacing: calc(.4 * 100cqw / 1512); top: calc(210 / 982 * 100%); }
+@media (prefers-reduced-motion: reduce) { .map-art [data-panel], .nav-button img, .nav-button::after { transition: none; } }

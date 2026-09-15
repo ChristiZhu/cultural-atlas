@@ -8,6 +8,7 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%235fb3bd' d='M0 0h32v32H0z'/%3E%3Cpath fill='%23f5e388' d='M6 3h20v26H6z'/%3E%3Cpath fill='%23ec70b7' d='M9 6h14v20H9z'/%3E%3Cpath stroke='%23fff7cd' stroke-width='2' d='M16 6v20M9 16h14'/%3E%3C/svg%3E">
     <link rel="preload" as="image" href="./assets/homepage.svg">
     <link rel="stylesheet" href="./styles/main.css">
+    <link rel="stylesheet" href="./styles/map.css">
     <script type="module" src="./scripts/app.js"></script>
   </head>
   <body>
@@ -18,6 +19,30 @@
       </section>
       <section id="corkboard" class="scene" aria-label="Cultural atlas corkboard" tabindex="-1" aria-hidden="true" inert data-figma-node="1:3">
         <img class="scene__art" src="./assets/corkboard.svg" width="1512" height="982" alt="A corkboard of illustrated landmark cards for Guangzhou, Beijing, Dehong, Shanxi and Shanghai. Red threads connect the cards to a paper map of China. Field bulletin: An atlas of places, collected through the landmarks that give them identity. Follow the red thread. Every city has its own story." decoding="async" draggable="false">
+        <button class="art-button guangzhou-card" data-nav="map" type="button" aria-label="Guangzhou — open the map" style="--x:117;--y:155;--w:295;--h:280"></button>
+      </section>
+      <section id="guangzhou" class="scene map-scene" aria-label="Guangzhou map" tabindex="-1" aria-hidden="true" inert data-figma-node="1:10306" data-collapsed="false" data-category="all">
+        <div class="map-art" aria-hidden="true"></div>
+        <div id="map-filters" class="map-controls" role="group" aria-label="Map category filters">
+          <button class="art-button filter-button" data-filter="food" aria-label="Food" aria-pressed="false" style="--x:40;--y:698;--w:213;--h:52"></button>
+          <button class="art-button filter-button" data-filter="architecture" aria-label="Architecture" aria-pressed="false" style="--x:19;--y:775;--w:234;--h:52"></button>
+          <button class="art-button filter-button" data-filter="craft" aria-label="Craft" aria-pressed="false" style="--x:40;--y:852;--w:213;--h:52"></button>
+        </div>
+        <button id="collapse-info" class="art-button collapse-button" aria-label="Collapse information panel" aria-controls="map-filters" aria-expanded="true" style="--x:262;--y:498;--w:45.248;--h:50"></button>
+        <button id="expand-info" class="art-button collapse-button" aria-label="Expand information panel" aria-controls="map-filters" aria-expanded="false" style="--x:0;--y:495;--w:30;--h:50" hidden></button>
+        <output id="map-filter-status" class="map-filter-status" aria-label="Current map filter" aria-live="polite">ALL</output>
+        <ul id="map-items" class="visually-hidden" aria-label="Visible map items"></ul>
+        <nav aria-label="Map navigation">
+          <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1144;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
+          <button class="art-button nav-button" data-nav="library" aria-label="Icon Library" style="--x:1230;--y:29;--w:247;--h:29;--underline:195"><img src="./assets/map/nav-library.svg" alt="" width="247" height="29"></button>
+        </nav>
+      </section>
+      <section id="icon-library" class="scene" aria-label="Icon library" tabindex="-1" aria-hidden="true" inert data-figma-node="1:2238">
+        <img class="scene__art" src="./assets/map/library.svg" width="1512" height="982" alt="Icon library. All cities are selected. A blue collection tray contains cultural symbols, with tabs for Guangzhou, Beijing, Shanghai, Dehong, and Shanxi." decoding="async" draggable="false">
+        <nav aria-label="Icon library navigation">
+          <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1242;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
+          <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
+        </nav>
       </section>
     </main>
     <p id="status" class="visually-hidden" role="status" aria-live="polite"></p>
