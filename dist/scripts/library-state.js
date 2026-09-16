@@ -1,10 +1,12 @@
-/** Shared inputs for the library and a future pattern composer. No generator lives here. */
+import { patternMetadata } from './pattern-metadata.js';
+/** Shared cultural sources and ordered selection: primary, secondary, accent. */
+export const MAX_SELECTED_ICONS=3;
 export const culturalIcons = Object.freeze([
   { id:'canton-tower', label:'Canton Tower', city:'guangzhou' },
   ...Array.from({length:6},(_,i)=>({id:`porcelain-${i+1}`,label:`Guangzhou Painted Porcelain motif ${i+1}`,city:'guangzhou'})),
   { id:'har-gow', label:'Har Gow', city:'guangzhou' },
   { id:'five-rams', label:'Five Rams sculpture motif', city:'guangzhou' },
-].map(Object.freeze));
+].map(icon=>Object.freeze({...icon,...patternMetadata(icon.id)})));
 export const cities = Object.freeze([
   {id:'all',label:'ALL',x:86,w:133},
   {id:'guangzhou',label:'Guangzhou',x:217,w:236},
@@ -29,9 +31,10 @@ export function createLibraryState() {
       notify();
     },
     toggleIcon(id) {
-      if(!availableIcons().some(icon=>icon.id===id))return;
+      if(!availableIcons().some(icon=>icon.id===id))return false;
+      if(!selectedIcons.includes(id)&&selectedIcons.length>=MAX_SELECTED_ICONS)return false;
       selectedIcons=selectedIcons.includes(id)?selectedIcons.filter(item=>item!==id):[...selectedIcons,id];
-      notify();
+      notify();return true;
     },
     subscribe(listener) {listeners.add(listener);return()=>listeners.delete(listener);},
   };

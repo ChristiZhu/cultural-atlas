@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./styles/map.css">
     <link rel="stylesheet" href="./styles/archive.css">
     <link rel="stylesheet" href="./styles/library.css">
+    <link rel="stylesheet" href="./styles/pattern.css">
     <script type="module" src="./scripts/app.js"></script>
   </head>
   <body>
@@ -69,45 +70,50 @@
       </section>
       <section id="choose-icons" class="scene library-scene pattern-scene" aria-label="Choose icons" tabindex="-1" aria-hidden="true" inert data-figma-node="1:2437">
         <div class="library-art" data-svg-src="./assets/library/choose-icons.svg" aria-hidden="true"></div>
-        <div class="icon-controls" role="group" aria-label="Select cultural icons"></div>
+        <div class="icon-controls" role="group" aria-label="Select one to three cultural icons"></div>
         <p class="collection-status visually-hidden" role="status" aria-live="polite"></p>
+        <p id="icon-selection-hint" class="selection-hint" role="status">Choose 1–3 icons.</p>
         <button type="button" class="art-button flow-button workflow-button" data-flow="back" aria-label="Back — city filters" style="--x:126;--y:847;--w:141;--h:74" data-nav="library"><img src="./assets/library/choose-icons-back.svg" alt="" draggable="false"></button>
-        <button type="button" class="art-button flow-button workflow-button" data-flow="next" aria-label="Next — Figma pattern preview" style="--x:1254;--y:847;--w:141;--h:74" data-nav="pattern-creating"><img src="./assets/library/choose-icons-next.svg" alt="" draggable="false"></button>
+        <button type="button" class="art-button flow-button workflow-button" data-flow="next" aria-label="Next — create pattern" aria-describedby="icon-selection-hint" style="--x:1254;--y:847;--w:141;--h:74" data-nav="pattern-creating"><img src="./assets/library/choose-icons-next.svg" alt="" draggable="false"></button>
         <nav aria-label="Choose icons navigation" >
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1242;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
           <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
         </nav>
       </section>
-      <section id="pattern-creating" class="scene library-scene pattern-scene" aria-label="Creating — Figma demonstration" tabindex="-1" aria-hidden="true" inert data-figma-node="1:2506">
+      <section id="pattern-creating" class="scene library-scene pattern-scene" aria-label="Creating your pattern" tabindex="-1" aria-hidden="true" inert data-figma-node="1:2506">
         <div class="library-art" data-svg-src="./assets/library/creating.svg" aria-hidden="true"></div>
+        <div class="generated-pattern" role="img" aria-label="Generated cultural pattern"></div><div class="floating-field" aria-hidden="true"></div>
 
-        <nav aria-label="Creating — Figma demonstration navigation" >
+        <nav aria-label="Creating your pattern navigation" >
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1242;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
           <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
         </nav>
       </section>
-      <section id="pattern-preview" class="scene library-scene pattern-scene" aria-label="Figma pattern preview" tabindex="-1" aria-hidden="true" inert data-figma-node="1:2527">
+      <section id="pattern-preview" class="scene library-scene pattern-scene" aria-label="Your pattern preview" tabindex="-1" aria-hidden="true" inert data-figma-node="1:2527">
         <div class="library-art" data-svg-src="./assets/library/preview.svg" aria-hidden="true"></div>
+        <div class="generated-pattern" role="img" aria-label="Generated cultural pattern"></div><div class="selected-source-icons" aria-label="Selected source icons"></div><div class="motif-preview" role="img" aria-label="Seamless repeat tile"></div><p class="pattern-announcement visually-hidden" role="status"></p>
         <button type="button" class="art-button flow-button workflow-button" data-flow="back" aria-label="Back — choose icons" style="--x:917;--y:865;--w:162;--h:61" data-nav="choose-icons"><img src="./assets/library/preview-back.svg" alt="" draggable="false"></button>
-        <button type="button" class="art-button flow-button workflow-button" data-flow="redo" aria-label="Redo — replay Figma preview" style="--x:1101;--y:865;--w:162;--h:61" data-nav="pattern-creating"><img src="./assets/library/preview-redo.svg" alt="" draggable="false"></button>
+        <button type="button" class="art-button flow-button workflow-button" data-flow="redo" aria-label="Redo — generate another pattern" style="--x:1101;--y:865;--w:162;--h:61" data-nav="pattern-creating"><img src="./assets/library/preview-redo.svg" alt="" draggable="false"></button>
         <button type="button" class="art-button flow-button workflow-button" data-flow="next" aria-label="OK — continue to Save" style="--x:1280;--y:865;--w:162;--h:61" data-nav="pattern-save"><img src="./assets/library/preview-next.svg" alt="" draggable="false"></button>
-        <nav aria-label="Figma pattern preview navigation" >
+        <nav aria-label="Your pattern preview navigation" >
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1242;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
           <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
         </nav>
       </section>
-      <section id="pattern-save" class="scene library-scene pattern-scene" aria-label="Save Figma pattern example" tabindex="-1" aria-hidden="true" inert data-figma-node="1:4114">
+      <section id="pattern-save" class="scene library-scene pattern-scene" aria-label="Save your pattern" tabindex="-1" aria-hidden="true" inert data-figma-node="1:4114">
         <div class="library-art" data-svg-src="./assets/library/save.svg" aria-hidden="true"></div>
-        <button type="button" class="art-button flow-button workflow-button" data-flow="save" aria-label="Save Figma pattern example" style="--x:666;--y:862;--w:162;--h:61" id="save-pattern"><img src="./assets/library/save-save.svg" alt="" draggable="false"></button>
-        <nav aria-label="Save Figma pattern example navigation" >
+        <div class="generated-pattern" role="img" aria-label="Generated cultural pattern"></div>
+        <button type="button" class="art-button flow-button workflow-button" data-flow="save" aria-label="Save your pattern" style="--x:666;--y:862;--w:162;--h:61" id="save-pattern"><img src="./assets/library/save-save.svg" alt="" draggable="false"></button>
+        <nav aria-label="Save your pattern navigation" >
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1242;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
           <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
         </nav>
       </section>
-      <section id="pattern-saved" class="scene library-scene pattern-scene" aria-label="Figma pattern example downloaded" tabindex="-1" aria-hidden="true" inert data-figma-node="1:5671">
+      <section id="pattern-saved" class="scene library-scene pattern-scene" aria-label="Pattern downloaded" tabindex="-1" aria-hidden="true" inert data-figma-node="1:5671">
         <div class="library-art" data-svg-src="./assets/library/saved.svg" aria-hidden="true"></div>
+        <div class="generated-pattern" role="img" aria-label="Generated cultural pattern"></div>
         <div class="art-button workflow-button" data-flow="save" aria-hidden="true" style="--w:162;--h:61;pointer-events:none"><img src="./assets/library/save-save.svg" alt=""></div>
-        <nav aria-label="Figma pattern example downloaded navigation" inert aria-hidden="true">
+        <nav aria-label="Pattern downloaded navigation" inert aria-hidden="true">
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1242;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
           <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
         </nav>

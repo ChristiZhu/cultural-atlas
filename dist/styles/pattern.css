@@ -1,0 +1,17 @@
+/* The result occupies the original Figma pattern rectangle at a uniform scale. */
+.generated-pattern { position: absolute; left: calc(var(--art-left) + 291 * var(--unit)); top: calc(var(--art-top) + 188 * var(--unit)); width: calc(1014 * var(--unit)); height: calc(581 * var(--unit)); overflow: hidden; pointer-events: none; }
+.generated-pattern > svg, .motif-preview > svg { display: block; width: 100%; height: 100%; }
+#pattern-save .generated-pattern, #pattern-saved .generated-pattern { left: calc(var(--art-left) + 240 * var(--unit)); top: calc(var(--art-top) + 200 * var(--unit)); }
+#pattern-creating { background: #84c9e1; }
+#pattern-creating .generated-pattern { opacity: 0; }
+.floating-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.floating-symbol { position: absolute; left: 0; top: 0; width: 100px; height: 100px; transform-origin: center; will-change: transform, opacity; }
+#pattern-creating nav { z-index: 5; }
+.selected-source-icons { position: absolute; left: calc(var(--art-left) + 98 * var(--unit)); top: calc(var(--art-top) + 190 * var(--unit)); display: grid; gap: calc(28 * var(--unit)); }
+.selected-source-icons img { display: block; width: calc(92 * var(--unit)); height: calc(92 * var(--unit)); background: #206eb8; }
+.motif-preview { position: absolute; left: calc(var(--art-left) + 98 * var(--unit)); top: calc(var(--art-top) + (190 + var(--selected-count, 1) * 120) * var(--unit)); width: calc(92 * var(--unit)); height: calc(92 * var(--unit)); }
+.selection-hint { position: absolute; left: calc(var(--art-left) + 126 * var(--unit)); top: calc(var(--art-top) + 775 * var(--unit)); margin: 0; font: 18px/1.5 'Ugly Dave', sans-serif; color: #000; }
+.workflow-button:disabled { opacity: .45; cursor: default; }
+.workflow-button:disabled img { transform: none; filter: none; }
+.icon-button[aria-disabled='true'] { cursor: default; }
+@media (prefers-reduced-motion: reduce) { .floating-symbol { will-change: auto; } }

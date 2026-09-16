@@ -1,9 +1,9 @@
-import { cities, culturalIcons, libraryState } from './library-state.js';
+import { cities, culturalIcons, libraryState, MAX_SELECTED_ICONS } from './library-state.js';
 
-export function createIconLibrary({navigate}) {
+export function createIconLibrary({navigate,onSave}) {
   const library=document.querySelector('#icon-library'),chooser=document.querySelector('#choose-icons');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-  let paintedCity=libraryState.getState().selectedCity,change=0,animation,previewTimer;
+  let paintedCity=libraryState.getState().selectedCity,change=0,animation;
   function button(label,styles) {
     const el=document.createElement('button');el.type='button';el.className='art-button';
     el.setAttribute('aria-label',label);el.style.cssText=styles;return el;
@@ -17,7 +17,9 @@ export function createIconLibrary({navigate}) {
   for(const [index,icon] of culturalIcons.entries()) {
     const el=button(icon.label,`--x:${xs[index]};--y:259;--w:92;--h:92`);
     el.dataset.icon=icon.id;el.classList.add('icon-button');
-    el.addEventListener('click',()=>libraryState.toggleIcon(icon.id));
+    el.addEventListener('click',()=>{
+      if(libraryState.toggleIcon(icon.id)===false)chooser.querySelector('#icon-selection-hint').textContent='Choose up to 3 icons. Deselect one to try another.';
+    });
     const feedback=active=>chooser.querySelector(`[data-icon-card="${icon.id}"]`)?.setAttribute('data-hover',String(active));
     el.addEventListener('pointerenter',()=>feedback(true));el.addEventListener('pointerleave',()=>feedback(false));
     el.addEventListener('focus',()=>feedback(true));el.addEventListener('blur',()=>feedback(false));
@@ -51,12 +53,15 @@ export function createIconLibrary({navigate}) {
     });
     scene.querySelectorAll('[data-icon]').forEach(el=>{
       el.hidden=!available.has(el.dataset.icon);el.setAttribute('aria-pressed',String(state.selectedIcons.includes(el.dataset.icon)));
+      el.setAttribute('aria-disabled',String(state.selectedIcons.length>=MAX_SELECTED_ICONS&&!state.selectedIcons.includes(el.dataset.icon)));
     });
     scene.dataset.city=state.selectedCity;
   }
   function paintControls(state) {
     library.querySelectorAll('[data-city]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.city===state.selectedCity)));
     library.querySelectorAll('[data-city-art]').forEach(el=>el.dataset.active=String(el.dataset.cityArt===state.selectedCity));
+    chooser.querySelector('[data-flow=next]').disabled=state.selectedIcons.length===0;
+    chooser.querySelector('#icon-selection-hint').textContent=state.selectedIcons.length?`${state.selectedIcons.length} / 3 selected`:'Choose 1–3 icons.';
     const city=cities.find(city=>city.id===state.selectedCity).label;
     library.querySelector('.collection-status').textContent=`${city}: ${state.availableIcons.length} icons available.`;
     chooser.querySelector('.collection-status').textContent=`${city}: ${state.availableIcons.length} icons available, ${state.selectedIcons.length} selected.`;
@@ -79,12 +84,7 @@ export function createIconLibrary({navigate}) {
     finally {if(ticket===change)library.removeAttribute('aria-busy');}
   }
   libraryState.subscribe(update);
-  document.querySelector('#save-pattern').addEventListener('click',()=>{
-    // Download the existing Figma example. This does not compose or generate a pattern.
-    const link=document.createElement('a');link.href='./assets/library/figma-pattern-example.svg';
-    link.download='canton-tower-figma-example.svg';document.body.append(link);link.click();link.remove();
-    navigate('pattern-saved');
-  });
+  document.querySelector('#save-pattern').addEventListener('click',onSave);
   document.querySelector('#save-success-layer').addEventListener('keydown',event=>{
     if(event.key==='Escape'){event.preventDefault();navigate('pattern-save');}
     if(event.key==='Tab') {
@@ -100,11 +100,7 @@ export function createIconLibrary({navigate}) {
       const state=libraryState.getState();paintedCity=state.selectedCity;
       paintControls(state);paintIcons(library,state);paintIcons(chooser,state);
     },
-    enter(scene) {
-      clearTimeout(previewTimer);
-      if(scene==='pattern-creating')previewTimer=setTimeout(()=>navigate('pattern-preview',{replaceHistory:true}),reduced.matches?100:1200);
-    },
-    leave(){clearTimeout(previewTimer);},
+    leave(){change++;animation?.cancel();library.removeAttribute('aria-busy');},
     getSelection:()=>libraryState.getState(),
   };
 }
