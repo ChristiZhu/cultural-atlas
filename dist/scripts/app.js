@@ -1,4 +1,4 @@
-import { transitionPage } from './transitions.js';
+import { transitionPage, transitionWorkflow, transitionSuccess } from './transitions.js';
 import { scenes, prepareScene, showScene } from './scenes.js';
 import { createGuangzhouMap } from './guangzhou.js';
 import { createArchive } from './archive.js';
@@ -31,6 +31,7 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   }
   if (archive.isOpen) return;
   if(destination.startsWith('pattern-')&&!library.getSelection().selectedIcons.length)destination='choose-icons';
+  if(['pattern-preview','pattern-save','pattern-saved'].includes(destination)&&!pattern.canShowResult())destination='pattern-creating';
   if (transitioning || destination === current || !scenes[destination]) return;
   library.leave();
   if(!patternContinuation)pattern.leave();
@@ -38,12 +39,16 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   trigger.setAttribute('aria-disabled', 'true');
   source?.setAttribute('data-selected', 'true');
   source?.setAttribute('aria-disabled', 'true');
+  const closingSuccess=current==='pattern-saved'&&destination==='pattern-preview';
+  const openingSuccess=destination==='pattern-saved';
+  const workflowScenes=['library','choose-icons','pattern-creating','pattern-preview','pattern-save','pattern-saved'];
+  const lightTransition=workflowScenes.includes(current)||workflowScenes.includes(destination);
   const outgoing = document.getElementById(scenes[current].elementId);
   const incoming = document.getElementById(scenes[destination].elementId);
   try {
     // Avoid fading into an empty screen on a slow connection.
     await Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare() : Promise.resolve(), destination === 'pattern-saved' ? prepareScene(successLayer) : Promise.resolve()]);
-    await pattern.prepare(destination,{regenerate:destination==='pattern-creating'&&recordHistory});
+    await pattern.prepare(destination);
     library.prepare();
     const commit = () => {
       document.body.style.backgroundColor = scenes[destination].background;
@@ -51,10 +56,11 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
       current = destination;atlas.dataset.screen = destination;
       successLayer.hidden = destination !== 'pattern-saved';
       atlas.inert = destination === 'pattern-saved';
-      if(patternContinuation)pattern.leave();
     };
-    if(patternContinuation)commit();
+    if(closingSuccess||openingSuccess)await transitionSuccess(successLayer,openingSuccess,commit);
+    else if(lightTransition)await transitionWorkflow(scenes[destination].background,commit,outgoing,incoming);
     else await transitionPage(scenes[destination].background, commit);
+    if(patternContinuation)pattern.leave();
     document.title = scenes[destination].title;
     if (recordHistory) history[replaceHistory ? 'replaceState' : 'pushState']({ scene: destination }, '');
     if (destination === 'home') trigger.focus({ preventScroll: true });

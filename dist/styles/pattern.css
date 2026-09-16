@@ -1,7 +1,7 @@
 /* The result occupies the original Figma pattern rectangle at a uniform scale. */
 .generated-pattern { position: absolute; left: calc(var(--art-left) + 291 * var(--unit)); top: calc(var(--art-top) + 188 * var(--unit)); width: calc(1014 * var(--unit)); height: calc(581 * var(--unit)); overflow: hidden; pointer-events: none; }
 .generated-pattern > svg, .motif-preview > svg { display: block; width: 100%; height: 100%; }
-#pattern-save .generated-pattern, #pattern-saved .generated-pattern { left: calc(var(--art-left) + 240 * var(--unit)); top: calc(var(--art-top) + 200 * var(--unit)); }
+#pattern-save .generated-pattern { left: calc(var(--art-left) + 240 * var(--unit)); top: calc(var(--art-top) + 200 * var(--unit)); }
 #pattern-creating { background: #84c9e1; }
 #pattern-creating .generated-pattern { opacity: 0; }
 .floating-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
@@ -15,3 +15,4 @@
 .workflow-button:disabled img { transform: none; filter: none; }
 .icon-button[aria-disabled='true'] { cursor: default; }
 @media (prefers-reduced-motion: reduce) { .floating-symbol { will-change: auto; } }
+#export-status { left: calc(var(--art-left) + 240 * var(--unit)); top: calc(var(--art-top) + 810 * var(--unit)); }

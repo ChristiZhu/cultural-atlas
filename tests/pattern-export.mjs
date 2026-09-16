@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createRequire} from 'node:module';
+import {culturalIcons} from '../dist/scripts/library-state.js';
+import {generatePattern} from '../dist/scripts/pattern-generator.js';
+import {ARTWORK,renderArtwork,exportArtworkPNG} from '../dist/scripts/pattern-export.js';
+const sharp=createRequire(import.meta.url)('sharp');
+const icons=[culturalIcons[0],culturalIcons[2],culturalIcons[7]];
+const assets=Object.fromEntries(icons.map(icon=>[icon.id,fs.readFileSync(new URL('../dist/assets/pattern-icons/'+icon.id+'.svg',import.meta.url),'utf8').replace(/^<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'')]));
+const result=generatePattern(icons,{seed:127,first:true}),urls=new Map(),revoked=[];let serial=0,canvas,drawn,sourceSVG;
+URL.createObjectURL=blob=>{const id='blob:test-'+serial++;urls.set(id,blob);return id;};URL.revokeObjectURL=url=>{revoked.push(url);urls.delete(url);};
+globalThis.Image=class{async decode(){this.svg=await urls.get(this.src).text();sourceSVG=this.svg;}};
+globalThis.document={createElement(type){assert.equal(type,'canvas');canvas={getContext:()=>({drawImage:(...args)=>drawn=args}),toBlob:async callback=>{const png=await sharp(Buffer.from(drawn[0].svg)).resize(canvas.width,canvas.height,{fit:'fill'}).png().toBuffer();callback(new Blob([png],{type:'image/png'}));}};return canvas;}};
+const output=await exportArtworkPNG(result,assets),bytes=Buffer.from(await output.blob.arrayBuffer()),metadata=await sharp(bytes).metadata();
+assert.equal(metadata.format,'png');assert.equal(metadata.width,3072);assert.equal(metadata.height,Math.round(3072*581/1014));
+assert.equal(sourceSVG,renderArtwork(result,assets,'atlas-full-export'),'Export must use the exact same composition as Preview');
+assert(sourceSVG.includes('viewBox="0 0 3600 '));assert.equal(ARTWORK.repeats,3);assert.deepEqual(drawn.slice(1),[0,0,output.width,output.height]);
+assert.equal(urls.size,0);assert.equal(revoked.length,1);assert(bytes.length>10000);
+// A rasterization failure must not produce a bogus successful download, and URLs are released.
+globalThis.Image=class{async decode(){throw new Error('decode failure');}};
+await assert.rejects(()=>exportArtworkPNG(result,assets),/decode failure/);assert.equal(urls.size,0);
+console.log(`PASS: full Preview composition rasterizes to ${metadata.width}×${metadata.height} PNG, with all repeats, matching palette/aspect ratio and cleanup on success/failure.`);

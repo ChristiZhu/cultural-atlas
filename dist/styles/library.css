@@ -20,7 +20,6 @@
 [data-flow-art][data-feedback='pressed'] { transform: translateY(1px) scale(.985); }
 .flow-button { border-radius: calc(20 * var(--unit)); }
 .flow-button:focus-visible { outline: 2px solid #206eb8; outline-offset: 4px; }
-#pattern-saved nav { pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
   [data-tab-shape], [data-tab-label], [data-icon-background], [data-icon-art], [data-flow-art] { transition: none; }

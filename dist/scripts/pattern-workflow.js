@@ -1,5 +1,6 @@
 import { culturalIcons, libraryState } from './library-state.js';
 import { generatePattern, renderPatternSVG, TILE_SIZE } from './pattern-generator.js';
+import { renderArtwork, exportArtworkPNG } from './pattern-export.js';
 import { prepareScene } from './scenes.js';
 
 const imageSVG=(body,color)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" color="${color}">${body}</svg>`;
@@ -7,7 +8,7 @@ const dataURL=svg=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
 export function createPatternWorkflow({navigate}) {
   const creating=document.querySelector('#pattern-creating'),field=creating.querySelector('.floating-field');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)'),assets={},pending=new Map(),motions=new Set();
-  let result=null,selectionKey='',run=0,serial=0;
+  let currentDisplayedPattern=null,pendingGeneratedPattern=null,selectionKey='',run=0,state='idle',exporting=false;
   const currentIcons=()=>libraryState.getState().selectedIcons.map(id=>culturalIcons.find(icon=>icon.id===id));
   async function loadIcon(icon) {
     if(assets[icon.id])return;
@@ -21,9 +22,10 @@ export function createPatternWorkflow({navigate}) {
     await pending.get(icon.id);
   }
   function renderResult() {
-    for(const scene of ['pattern-creating','pattern-preview','pattern-save','pattern-saved']) {
+    const result=currentDisplayedPattern;
+    for(const scene of ['pattern-preview','pattern-save']) {
       const container=document.querySelector(`#${scene} .generated-pattern`);
-      container.innerHTML=renderPatternSVG(result,assets,{width:1014,height:581,prefix:scene,repeats:3});
+      container.innerHTML=renderArtwork(result,assets,scene);
       container.dataset.grammar=result.grammar;container.dataset.seed=result.seed;
       container.setAttribute('aria-label',`${result.grammar.replaceAll('-',' ')} pattern using ${currentIcons().map(icon=>icon.label).join(', ')}`);
     }
@@ -35,22 +37,16 @@ export function createPatternWorkflow({navigate}) {
     tile.innerHTML=renderPatternSVG(result,assets,{width:92,height:92,prefix:'motif-preview'});
     document.querySelector('#pattern-preview .pattern-announcement').textContent=`Your ${result.grammar.replaceAll('-',' ')} pattern is ready.`;
   }
-  async function prepare(scene,{regenerate=false}={}) {
-    if(!scene.startsWith('pattern-'))return;
-    const icons=currentIcons(),key=icons.map(icon=>icon.id).join('|');
-    if(!icons.length)throw new Error('Choose at least one icon first.');
-    if(!result||key!==selectionKey||regenerate) {
-      await Promise.all(icons.map(loadIcon));
-      const previous=result,keyChanged=key!==selectionKey;
-      const entropy=new Uint32Array(1);crypto.getRandomValues(entropy);
-      result=generatePattern(icons,{seed:entropy[0],previousGrammar:!keyChanged?previous?.grammar:null,first:!previous||keyChanged});
-      selectionKey=key;renderResult();
-    }
-    if(scene==='pattern-creating') {
-      await prepareScene(document.querySelector('#pattern-preview'));
-      field.replaceChildren();creating.dataset.phase='exploration';
-      creating.style.backgroundColor='';creating.querySelector('.generated-pattern').style.opacity='0';
-    }
+  function canShowResult() {
+    return !!currentDisplayedPattern&&selectionKey===currentIcons().map(icon=>icon.id).join('|');
+  }
+  async function prepare(scene) {
+    if(scene!=='pattern-creating')return;
+    const icons=currentIcons();if(!icons.length)throw new Error('Choose at least one icon first.');
+    // Only assets are prepared offscreen. A new result is never rendered here.
+    await Promise.all(icons.map(loadIcon));
+    field.replaceChildren();creating.dataset.phase='ready';
+    creating.style.backgroundColor='';creating.querySelector('.generated-pattern').replaceChildren();
   }
   function play(element,keyframes,options) {
     const motion=element.animate(keyframes,{fill:'both',easing:'cubic-bezier(.4,0,.2,1)',...options});motions.add(motion);
@@ -60,68 +56,92 @@ export function createPatternWorkflow({navigate}) {
   }
   function stop() {
     run++;for(const motion of motions)motion.cancel();motions.clear();
+    pendingGeneratedPattern=null;state=currentDisplayedPattern?'ready':'idle';
     field.replaceChildren();creating.removeAttribute('data-phase');
   }
+  const transform=(x,y,size,rotation=0,sx=1,sy=1)=>`translate(${x-50}px,${y-50}px) rotate(${rotation}deg) scale(${size/100*sx},${size/100*sy})`;
+  async function animatePhase(symbols,phase,duration,frames) {
+    creating.dataset.phase=phase;
+    const batch=symbols.map((symbol,i)=>play(symbol.img,frames(symbol,i),{duration}));
+    await Promise.all(batch.map(motion=>motion.finished));
+    for(const motion of batch){motion.commitStyles();motion.cancel();motions.delete(motion);}
+  }
   async function enter(scene) {
-    if(scene!=='pattern-creating')return;
-    const ticket=++run,canvas=creating.querySelector('.generated-pattern');
-    if(reduced.matches){canvas.style.opacity='1';creating.dataset.phase='complete';await navigate('pattern-preview',{replaceHistory:true,patternContinuation:true});return;}
-    const duration=8200,w=creating.clientWidth,h=creating.clientHeight,rect=canvas.getBoundingClientRect();
-    // Final positions come from the actual generated tile, including its selected grammar.
-    const unit=rect.width/(TILE_SIZE*3),targets=[];
-    for(let row=0;row<2;row++)for(let col=0;col<3;col++)for(const item of result.items) {
-      const x=rect.x+(item.x+col*TILE_SIZE)*unit,y=rect.y+(item.y+row*TILE_SIZE)*unit;
-      if(x>rect.left+30&&x<rect.right-30&&y>rect.top+30&&y<rect.bottom-30)targets.push({...item,x,y,size:item.size*unit});
-    }
-    // A balanced selection across the canvas; every chosen cultural icon remains represented.
-    const chosen=[];
-    for(const id of result.selectedIcons){const match=targets.find(item=>item.id===id);if(match)chosen.push(match);}
-    for(let i=0;chosen.length<16&&i<targets.length;i++){
-      const item=targets[Math.floor(i*targets.length/16)%targets.length];if(!chosen.includes(item))chosen.push(item);
-    }
-    chosen.forEach((target,i)=>{
-      const img=new Image();img.src=dataURL(imageSVG(assets[target.id],result.palette[target.role]));img.alt='';img.className='floating-symbol';field.append(img);
-      const initialSize=Math.min(w*.075,h*.12)*(target.role==='primary'?1:target.role==='secondary'?.85:.75);
-      const x=w*(.12+(i%4)*.25),y=h*(.25+Math.floor(i/4)*.17);
-      const group=Math.floor(i/4),arm=Math.min(w,h)*.085,angle=[0,90,180,-90][i%4];
-      const groupX=w*(group%2?.7:.3),groupY=h*(group<2?.4:.73);
-      const pairX=groupX+Math.sin(angle*Math.PI/180)*arm,pairY=groupY-Math.cos(angle*Math.PI/180)*arm;
-      const transform=(px,py,size,rotation,sx=1,sy=1)=>`translate(${px-50}px,${py-50}px) rotate(${rotation}deg) scale(${size/100*sx},${size/100*sy})`;
-      const delay=(i%4)*90;
-      const startAngle=i%3===0?45:0;
-      const endAngle=angle+((target.angle-angle+540)%360)-180;
-      play(img,[
-        {offset:0,opacity:0,transform:transform(x,y+18,initialSize*.9,startAngle)},
-        {offset:.1,opacity:.95,transform:transform(x,y,initialSize,startAngle)},
-        {offset:.32,opacity:.95,transform:transform(x+(i%2?18:-18),y+(i%3?12:-16),initialSize*1.04,startAngle)},
-        {offset:.55,opacity:.95,transform:transform(pairX,pairY,initialSize*.75,angle)},
-        {offset:.64,opacity:.95,transform:transform(pairX+(pairX-groupX)*.18,pairY+(pairY-groupY)*.18,initialSize*.8,angle)},
-        {offset:.9,opacity:.95,transform:transform(target.x,target.y,target.size,endAngle,target.flipX?-1:1,target.flipY?-1:1)},
-        {offset:1,opacity:0,transform:transform(target.x,target.y,target.size,endAngle,target.flipX?-1:1,target.flipY?-1:1)},
-      ],{duration:duration-delay,delay});
+    if(scene!=='pattern-creating'||state==='creating')return;
+    const ticket=++run,icons=currentIcons(),key=icons.map(icon=>icon.id).join('|');
+    state='creating';pendingGeneratedPattern=null;
+    const w=creating.clientWidth,h=creating.clientHeight;
+    const symbols=Array.from({length:16},(_,i)=>{
+      const icon=icons[i%icons.length],size=Math.min(w*.075,h*.12)*(i%icons.length===0?1:.8);
+      const x=w*(.12+(i%4)*.25),y=h*(.25+Math.floor(i/4)*.17),angle=i%3===0?45:0;
+      const img=new Image();img.src=dataURL(imageSVG(assets[icon.id],icon.naturalPalette.colors[0]));img.alt='';img.className='floating-symbol';field.append(img);
+      return {img,id:icon.id,size,x,y,angle};
     });
-    play(canvas,[{offset:0,opacity:0},{offset:.68,opacity:0},{offset:1,opacity:1}],{duration});
-    play(creating.querySelector('.library-art'),[{offset:0,opacity:1},{offset:.75,opacity:1},{offset:1,opacity:0}],{duration});
-    const completion=play(creating,[{offset:0,backgroundColor:'#84C9E1'},{offset:.68,backgroundColor:'#84C9E1'},{offset:1,backgroundColor:'#FFEFF9'}],{duration});
-    // Phase announcements are silent visually; the page stays a visual workspace.
-    const phase=play(field,[{opacity:1},{opacity:1}],{duration:duration*.35});
-    phase.finished.then(()=>{if(ticket===run)creating.dataset.phase='motif';}).catch(()=>{});
-    const convergence=play(field,[{opacity:1},{opacity:1}],{duration:duration*.65});
-    convergence.finished.then(()=>{if(ticket===run)creating.dataset.phase='convergence';}).catch(()=>{});
+    const live=()=>ticket===run;
     try {
-      await completion.finished;
-      if(ticket!==run)return;
-      creating.dataset.phase='complete';
+      // Start exploration on the visible Creating screen before computing its pending result.
+      const exploration=animatePhase(symbols,'exploration',reduced.matches?650:3000,(s,i)=>reduced.matches
+        ? [{opacity:.5,transform:transform(s.x,s.y,s.size)},{opacity:1,transform:transform(s.x,s.y,s.size)}]
+        : [{opacity:0,transform:transform(s.x,s.y+18,s.size*.9,s.angle)},{offset:.25,opacity:1,transform:transform(s.x,s.y,s.size,s.angle)},{opacity:1,transform:transform(s.x+(i%2?18:-18),s.y+(i%3?12:-16),s.size*1.04,s.angle)}]);
+      // Observe cancellation immediately while assets/geometry are being prepared.
+      exploration.catch(()=>{});
+      const generation=(async()=>{
+        await new Promise(requestAnimationFrame);if(!live())return;
+        const entropy=new Uint32Array(1);crypto.getRandomValues(entropy);
+        const result=generatePattern(icons,{seed:entropy[0],previousGrammar:key===selectionKey?currentDisplayedPattern?.grammar:null,first:!currentDisplayedPattern||key!==selectionKey});
+        if(live())pendingGeneratedPattern=result;
+        await prepareScene(document.querySelector('#pattern-preview'));
+      })();
+      await Promise.all([exploration,generation]);if(!live())return;
+      const pending=pendingGeneratedPattern;
+      if(!reduced.matches) {
+        const arm=Math.min(w,h)*.085;
+        for(let i=0;i<symbols.length;i++){
+          const s=symbols[i],group=Math.floor(i/4);s.angle=[0,90,180,-90][i%4];
+          const cx=w*(group%2?.7:.3),cy=h*(group<2?.4:.73);
+          s.groupX=cx+Math.sin(s.angle*Math.PI/180)*arm;s.groupY=cy-Math.cos(s.angle*Math.PI/180)*arm;
+        }
+        await animatePhase(symbols,'motif',2200,s=>[{transform:s.img.style.transform},{transform:transform(s.groupX,s.groupY,s.size*.75,s.angle)}]);
+        if(!live())return;
+        const rect=creating.querySelector('.generated-pattern').getBoundingClientRect(),unit=rect.width/(TILE_SIZE*3),targets=[];
+        for(let row=0;row<2;row++)for(let col=0;col<3;col++)for(const item of pending.items){
+          const x=rect.x+(item.x+col*TILE_SIZE)*unit,y=rect.y+(item.y+row*TILE_SIZE)*unit;
+          if(x>rect.left+20&&x<rect.right-20&&y>rect.top+20&&y<rect.bottom-20)targets.push({...item,x,y,size:item.size*unit});
+        }
+        const used=new Set();
+        await animatePhase(symbols,'convergence',2400,(s,i)=>{
+          const target=targets.find(t=>t.id===s.id&&!used.has(t))||targets.find(t=>t.id===s.id)||targets[i%targets.length];used.add(target);
+          const endAngle=s.angle+((target.angle-s.angle+540)%360)-180;
+          return [{transform:s.img.style.transform,opacity:1},{transform:transform(target.x,target.y,target.size,endAngle,target.flipX?-1:1,target.flipY?-1:1),opacity:.8}];
+        });
+      }
+      if(!live())return;
+      // The only commit point: publish after all Creating phases have completed.
+      currentDisplayedPattern=pending;selectionKey=key;pendingGeneratedPattern=null;state='ready';
+      renderResult();creating.dataset.phase='complete';
       await navigate('pattern-preview',{replaceHistory:true,patternContinuation:true});
-    } catch(error) {if(error.name!=='AbortError')document.querySelector('#status').textContent='Please try creating your pattern again.';}
+    } catch(error) {
+      if(live()&&error.name!=='AbortError'){
+        stop();document.querySelector('#icon-selection-hint').textContent='Please try again — your selection is saved.';
+        await navigate('choose-icons',{replaceHistory:true});
+      }
+    }
   }
-  function save() {
-    if(!result)return;
-    const svg=renderPatternSVG(result,assets,{prefix:`cultural-atlas-export-${++serial}`});
-    const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml;charset=utf-8'}));
-    const link=document.createElement('a');link.href=url;link.download=`cultural-atlas-${result.grammar}-${result.seed}.svg`;
-    document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
-    navigate('pattern-saved');
+  async function save() {
+    if(!currentDisplayedPattern||exporting)return;
+    const result=currentDisplayedPattern,ticket=run,button=document.querySelector('#save-pattern');
+    exporting=true;button.disabled=true;button.setAttribute('aria-busy','true');
+    document.querySelector('#export-status').textContent='';
+    try {
+      const {blob}=await exportArtworkPNG(result,assets);
+      if(ticket!==run)return;
+      const url=URL.createObjectURL(blob),link=document.createElement('a');
+      link.href=url;link.download=`cultural-atlas-${result.grammar}-${result.seed}.png`;
+      document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+      await navigate('pattern-saved');
+    } catch(error) {
+      document.querySelector('#export-status').textContent='The download could not be prepared. Please try Save again.';
+    } finally {exporting=false;button.disabled=false;button.removeAttribute('aria-busy');}
   }
-  return {prepare,enter,leave:stop,save,getResult:()=>result};
+  return {prepare,enter,leave:stop,save,canShowResult,getResult:()=>currentDisplayedPattern,getState:()=>({state,currentDisplayedPattern,pendingGeneratedPattern})};
 }
