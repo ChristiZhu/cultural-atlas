@@ -1,3 +1,4 @@
+@font-face { font-family: 'Ugly Dave'; src: url('../assets/fonts/ugly-dave.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: block; }
 .art-button { position: absolute; left: calc(var(--art-left) + var(--x) * var(--unit)); top: calc(var(--art-top) + var(--y) * var(--unit)); width: calc(var(--w) * var(--unit)); height: calc(var(--h) * var(--unit)); margin: 0; padding: 0; border: 0; background: transparent; color: #206eb8; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .art-button:focus-visible { outline: 2px solid #ffd01a; outline-offset: 3px; }
 .art-button[hidden] { display: none; }
@@ -28,7 +29,7 @@
 .map-scene::after { bottom: 0; }
 .map-scene[data-collapsed='true']::before, .map-scene[data-collapsed='true']::after { opacity: 0; }
 /* Selected filters change only the original background and its existing stroke. */
-.panel-art [data-filter-fill] { transition: fill 120ms, stroke 120ms; }
+.panel-art [data-filter-fill] { stroke-width: 1.5px; vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; shape-rendering: geometricPrecision; transition: fill 120ms, stroke 120ms; }
 .panel-art [data-filter-art][data-active='true'] [data-filter-fill] { fill: #84c9e1; stroke: #206eb8; }
 /* Feedback changes the actual vector button fill, so it cannot spill beyond its shape. */
 .panel-art [data-backward-fill] { transition: fill 120ms; }
@@ -40,3 +41,8 @@
   #corkboard:has(.guangzhou-card:hover, .guangzhou-card:focus-visible, .guangzhou-card:active, .guangzhou-card[data-selected='true']) [data-card='guangzhou'] { transform: none; }
   .guangzhou-card:hover, .guangzhou-card:focus-visible, .guangzhou-card:active, .guangzhou-card[data-selected='true'] { transform: rotate(-3deg); }
 }
+
+/* The original compact filter-info label remains; there is no expanded footer label. */
+.map-filter-status { position: absolute; left: calc(25 * var(--unit)); top: calc(var(--art-top) + 205 * var(--unit)); width: calc(184 * var(--unit)); height: calc(27 * var(--unit)); text-align: center; color: #f8d24d; font: calc(23 * var(--unit))/1.2 'Ugly Dave', sans-serif; letter-spacing: calc(3 * var(--unit)); pointer-events: none; }
+.map-filter-status[hidden] { display: none; }
+.map-scene[data-category='architecture'] .map-filter-status { font-size: calc(17 * var(--unit)); letter-spacing: calc(.4 * var(--unit)); top: calc(var(--art-top) + 210 * var(--unit)); }

@@ -164,7 +164,7 @@
 </g>
 <g id="filter button">
 <g id="food" data-filter-art="food">
-<path id="food_2" d="M213.306 697.5L213.431 697.581L253.273 723.581L253.915 724L253.273 724.419L213.431 750.419L213.306 750.5H39.5V697.5H213.306Z" fill="#206EB8" stroke="#F8D24D" data-filter-fill="" />
+<path id="food_2" d="M213.306 697.5L253.915 724L213.306 750.5H39.5V697.5Z" fill="#206EB8" stroke="#F8D24D" data-filter-fill="" />
 <g id="Food" data-filter-label="">
 <mask id="path-126-outside-1_1_10306" maskUnits="userSpaceOnUse" x="90" y="712" width="66" height="24" fill="black">
 <rect fill="white" x="90" y="712" width="66" height="24" />

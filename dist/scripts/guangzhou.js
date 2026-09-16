@@ -8,6 +8,7 @@ export function createGuangzhouMap(scene) {
   const collapse = scene.querySelector('#collapse-info');
   const expand = scene.querySelector('#expand-info');
   const itemList = scene.querySelector('#map-items');
+  const status = scene.querySelector('#map-filter-status');
 
   function render() {
     scene.dataset.collapsed = String(state.collapsed);
@@ -16,6 +17,8 @@ export function createGuangzhouMap(scene) {
     filters.inert = state.collapsed;
     collapse.hidden = state.collapsed;
     expand.hidden = !state.collapsed;
+    status.hidden = !state.collapsed;
+    status.value = (state.category ?? 'all').toUpperCase();
     scene.querySelectorAll('[data-filter]').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.filter === state.category));
     });
@@ -59,6 +62,7 @@ export function createGuangzhouMap(scene) {
         svg.querySelectorAll('[data-panel]').forEach(panel => panelSvg.append(panel));
         scene.querySelector('.map-art').replaceChildren(svg);
         scene.querySelector('.panel-art').replaceChildren(panelSvg);
+        await document.fonts.load('23px "Ugly Dave"');
         render();
       })().catch(error => { ready = null; throw error; });
       return ready;
