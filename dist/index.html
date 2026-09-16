@@ -22,7 +22,10 @@
         <button class="art-button guangzhou-card" data-nav="map" type="button" aria-label="Guangzhou — open the map" style="--x:117;--y:155;--w:295;--h:280"></button>
       </section>
       <section id="guangzhou" class="scene map-scene" aria-label="Guangzhou map" tabindex="-1" aria-hidden="true" inert data-figma-node="1:10306" data-collapsed="false" data-category="all">
-        <div class="map-art" aria-hidden="true"></div>
+        <div class="map-ocean" aria-hidden="true"></div>
+        <div class="map-viewport" tabindex="0" role="region" aria-label="Explore Guangzhou. Scroll to zoom, drag to pan. Keyboard: arrows to pan, plus and minus to zoom, zero to reset.">
+          <div class="map-art"></div>
+        </div>
         <div class="panel-art" aria-hidden="true"></div>
         <div id="map-filters" class="map-controls" role="group" aria-label="Map category filters">
           <button class="art-button filter-button" data-filter="food" aria-label="Food" aria-pressed="false" style="--x:40;--y:698;--w:213;--h:52"></button>
@@ -32,6 +35,11 @@
         <button id="collapse-info" class="art-button collapse-button" aria-label="Collapse information panel" aria-controls="map-filters" aria-expanded="true" style="--x:262;--y:498;--w:45.248;--h:50"></button>
         <button id="expand-info" class="art-button collapse-button" aria-label="Expand information panel" aria-controls="map-filters" aria-expanded="false" style="--x:0;--y:495;--w:30;--h:50" hidden></button>
         <output id="map-filter-status" class="map-filter-status" aria-label="Current map filter" aria-live="polite" hidden>ALL</output>
+        <div id="item-callout" class="item-callout" role="group" aria-label="Selected cultural item" hidden>
+          <img class="item-callout__art" src="./assets/map/item-callout.svg" alt="" width="335" height="118">
+          <span id="item-title" class="item-callout__title" tabindex="-1"></span>
+          <button id="open-front-cover" class="item-callout__link" type="button" aria-label="Go to Front Cover" disabled><img src="./assets/map/go-front-cover.svg" alt="" width="40" height="40"></button>
+        </div>
         <ul id="map-items" class="visually-hidden" aria-label="Visible map items"></ul>
         <nav aria-label="Map navigation">
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1144;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
@@ -43,6 +51,20 @@
         <nav aria-label="Icon library navigation">
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1242;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
           <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
+        </nav>
+      </section>
+      <section id="canton-cover" class="scene cover-scene" aria-label="Canton Tower front cover" tabindex="-1" aria-hidden="true" inert data-figma-node="1:9511">
+        <img class="scene__art art-canvas" src="./assets/covers/canton.svg" width="1512" height="982" alt="Canton Tower. Architecture Division. The Cultural Atlas Archive, Guangzhou, file GZ–A–001. Kraft paper folder with a metal clip, archival label, and red Classified seal." decoding="async" draggable="false">
+        <nav aria-label="Archive navigation">
+          <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
+          <button class="art-button nav-button" data-nav="library" aria-label="Icon Library" style="--w:247;--h:29;--underline:195"><img src="./assets/map/nav-library.svg" alt="" width="247" height="29"></button>
+        </nav>
+      </section>
+      <section id="porcelain-cover" class="scene cover-scene" aria-label="Guangzhou Painted Porcelain front cover" tabindex="-1" aria-hidden="true" inert data-figma-node="1:9587">
+        <img class="scene__art art-canvas" src="./assets/covers/porcelain.svg" width="1512" height="982" alt="Guangzhou Painted Porcelain. Crafts and Arts Division. The Cultural Atlas Archive, Guangzhou, file GZ–C–001. Kraft folder with a jade cloth spine and an ivory catalogue label." decoding="async" draggable="false">
+        <nav aria-label="Archive navigation">
+          <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
+          <button class="art-button nav-button" data-nav="library" aria-label="Icon Library" style="--w:247;--h:29;--underline:195"><img src="./assets/map/nav-library.svg" alt="" width="247" height="29"></button>
         </nav>
       </section>
     </main>

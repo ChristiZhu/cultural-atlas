@@ -46,3 +46,49 @@
 .map-filter-status { position: absolute; left: calc(25 * var(--unit)); top: calc(var(--art-top) + 205 * var(--unit)); width: calc(184 * var(--unit)); height: calc(27 * var(--unit)); text-align: center; color: #f8d24d; font: calc(23 * var(--unit))/1.2 'Ugly Dave', sans-serif; letter-spacing: calc(3 * var(--unit)); pointer-events: none; }
 .map-filter-status[hidden] { display: none; }
 .map-scene[data-category='architecture'] .map-filter-status { font-size: calc(17 * var(--unit)); letter-spacing: calc(.4 * var(--unit)); top: calc(var(--art-top) + 210 * var(--unit)); }
+
+/* Smaller secondary navigation; the original vector labels retain comfortable hit areas. */
+.scene nav { position: absolute; z-index: 5; right: calc(35 * var(--unit)); top: calc(var(--art-top) + 23 * var(--unit)); display: flex; align-items: center; gap: calc(12 * var(--unit)); }
+.scene nav .nav-button { position: relative; left: auto; top: auto; width: max(44px, calc(var(--w) * .75 * var(--unit))); height: max(44px, calc(40 * var(--unit))); display: flex; align-items: center; justify-content: center; }
+.scene nav .nav-button img { width: 100%; height: calc(29 * .75 * var(--unit)); }
+.scene nav .nav-button::after { bottom: calc(6 * var(--unit)); }
+.cover-scene { background: #426571; }
+.cover-scene .nav-button img, .cover-scene .nav-button::after { opacity: .6; }
+
+/* Gentle light drift over the original ocean color; only composited transforms animate. */
+.map-ocean { position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: #84c9e1; }
+.map-ocean::before, .map-ocean::after { content: ''; position: absolute; inset: -12%; background: radial-gradient(ellipse at 22% 38%, rgb(255 255 255 / .075), transparent 52%), radial-gradient(ellipse at 78% 65%, rgb(32 110 184 / .035), transparent 55%); animation: ocean-drift 28s ease-in-out infinite alternate; }
+.map-ocean::after { background: radial-gradient(ellipse at 64% 20%, rgb(255 255 255 / .055), transparent 48%); animation-duration: 37s; animation-direction: alternate-reverse; }
+@keyframes ocean-drift { from { transform: translate(-2%, -1%) scale(1); } to { transform: translate(3%, 2%) scale(1.05); } }
+.map-scene:not(.scene--active) .map-ocean::before, .map-scene:not(.scene--active) .map-ocean::after { animation-play-state: paused; }
+.map-viewport { position: absolute; inset: 0; z-index: 1; overflow: hidden; touch-action: none; cursor: grab; }
+.map-viewport:focus { outline: none; }
+.map-viewport:focus-visible { box-shadow: inset 0 0 0 1px #f5bbc7; }
+.map-viewport[data-dragging='true'], .map-viewport[data-dragging='true'] .map-item { cursor: grabbing; }
+.map-art svg { overflow: visible; }
+.panel-art { position: absolute; inset: 0; z-index: 2; }
+.panel-art [data-panel] { pointer-events: visiblePainted; }
+.map-scene::before, .map-scene::after { z-index: 2; pointer-events: none; }
+.map-controls .art-button, .collapse-button, .map-filter-status { z-index: 4; }
+.map-item { pointer-events: all; cursor: pointer; outline: none; }
+.map-item .marker-art { transform-box: fill-box; transform-origin: center bottom; transition: transform 240ms cubic-bezier(.2,.7,.2,1), filter 240ms ease; }
+.map-item:hover .marker-art, .map-item:focus-visible .marker-art { transform: translateY(-6px) scale(1.06); filter: drop-shadow(0 0 3px rgb(248 210 77 / .4)) drop-shadow(0 3px 3px rgb(19 45 70 / .15)); }
+.map-viewport[data-dragging='true'] .map-item .marker-art { transform: none; filter: none; }
+.map-item[aria-expanded='true'] .marker-art { filter: drop-shadow(0 0 2px rgb(248 210 77 / .3)); }
+.minimap-viewport { fill: none; stroke: #f5bbc7; stroke-width: 1.5px; vector-effect: non-scaling-stroke; pointer-events: none; }
+.item-callout { position: absolute; z-index: 3; width: calc(335 * var(--unit)); height: calc(118 * var(--unit)); pointer-events: none; }
+.item-callout[hidden] { display: none; }
+.item-callout__art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.item-callout__title { position: absolute; left: 0; top: calc(25 * var(--unit)); width: calc(270 * var(--unit)); height: calc(40 * var(--unit)); display: grid; place-items: center; text-align: center; color: #f8d24d; font: calc(25 * var(--unit))/1 'Ugly Dave', sans-serif; letter-spacing: calc(5 * var(--unit)); -webkit-text-stroke: calc(1 * var(--unit)) #132d46; paint-order: stroke fill; outline: none; }
+.item-callout[data-long-title='true'] .item-callout__title { font-size: calc(20 * var(--unit)); letter-spacing: calc(2 * var(--unit)); padding: 0 calc(14 * var(--unit)); }
+.item-callout__link { position: absolute; left: calc(270 * var(--unit)); top: calc(25 * var(--unit)); width: calc(40 * var(--unit)); height: calc(40 * var(--unit)); padding: 0; border: 0; background: transparent; cursor: pointer; pointer-events: auto; }
+.item-callout__link img { display: block; width: 100%; height: 100%; transition: transform 100ms, opacity 100ms; }
+.item-callout__link:hover img { opacity: .85; }
+.item-callout__link:active img { transform: scale(.96); }
+.item-callout__link:focus-visible { outline: 1px solid #f8d24d; outline-offset: 2px; }
+.item-callout__link:disabled { cursor: default; opacity: .5; }
+@media (prefers-reduced-motion: reduce) {
+  .map-ocean::before, .map-ocean::after { animation: none; }
+  .map-item .marker-art, .item-callout__link img { transition: none; }
+  .map-item:hover .marker-art, .map-item:focus-visible .marker-art { transform: none; }
+}

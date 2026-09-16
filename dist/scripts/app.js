@@ -5,7 +5,7 @@ const atlas = document.querySelector('#atlas');
 const trigger = document.querySelector('#enter-window');
 const status = document.querySelector('#status');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-const map = createGuangzhouMap(document.querySelector('#guangzhou'));
+const map = createGuangzhouMap(document.querySelector('#guangzhou'), { navigate });
 let current = 'home';
 let transitioning = false;
 
