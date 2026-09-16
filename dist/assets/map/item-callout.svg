@@ -1,10 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="335" height="118" viewBox="0 0 335 118" fill="none">
 <g id="icon click">
-<g id="Frame 12">
-<g id="Rectangle 137">
-<path d="M13 10H325V81.3641H185.769H151.215H13V10Z" fill="#F16FBE" />
-<path d="M151.215 81.3641L167.984 108L185.769 81.3641H151.215Z" fill="#F16FBE" />
-</g>
+<path id="Polygon 1" d="M167.5 96L152.345 75H182.655L167.5 96Z" fill="#206EB8" />
+<g id="Frame 15">
+<rect x="11" y="16" width="314" height="59" rx="10" fill="#206EB8" />
 </g>
 </g>
 </svg>

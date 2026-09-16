@@ -7,9 +7,16 @@ export function createMapCamera({ surface, svg, world, bounds, onChange, onSelec
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
   function layout() {
-    const rect = svg.getBoundingClientRect();
     const viewport = surface.getBoundingClientRect();
-    return { rect, viewport, scale: rect.width / 1512 };
+    const scale = Math.min(viewport.width / 1512, viewport.height / 982);
+    const offsetX = (viewport.width - 1512 * scale) / 2;
+    const offsetY = (viewport.height - 982 * scale) / 2;
+    // The SVG viewport itself covers the entire browser. Extend its viewBox,
+    // rather than relying on overflow outside a narrower SVG in Chrome.
+    const viewBox = `${-offsetX / scale} ${-offsetY / scale} ${viewport.width / scale} ${viewport.height / scale}`;
+    if (svg.getAttribute('viewBox') !== viewBox) svg.setAttribute('viewBox', viewBox);
+    return { viewport, scale, rect: { left: viewport.left + offsetX, top: viewport.top + offsetY,
+      width: 1512 * scale, height: 982 * scale } };
   }
   function visibleBounds() {
     const { rect, viewport, scale } = layout();
@@ -80,6 +87,7 @@ export function createMapCamera({ surface, svg, world, bounds, onChange, onSelec
     if (!gesture || gesture.pointerId !== event.pointerId) return;
     const dx = event.clientX - gesture.clientX, dy = event.clientY - gesture.clientY;
     if (!gesture.dragged && Math.hypot(dx, dy) < 4) return;
+    if (!gesture.dragged) onDismiss();
     gesture.dragged = true;
     surface.dataset.dragging = 'true';
     const { scale } = layout();
@@ -121,15 +129,5 @@ export function createMapCamera({ surface, svg, world, bounds, onChange, onSelec
     }
   });
   new ResizeObserver(() => { constrain(); draw(); }).observe(surface);
-  return {
-    refresh: draw,
-    focus(itemBounds) {
-      const { rect, viewport, scale } = layout();
-      const zoom = Math.max(state.zoom, 2.6);
-      animateTo({ zoom,
-        x: (viewport.width * .565 + viewport.left - rect.left) / scale - (itemBounds.x + itemBounds.width / 2) * zoom,
-        y: (viewport.height * .51 + viewport.top - rect.top) / scale - itemBounds.y * zoom,
-      });
-    },
-  };
+  return { refresh: draw };
 }

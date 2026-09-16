@@ -13,6 +13,7 @@
   </head>
   <body>
     <main id="atlas" class="atlas" data-screen="home" aria-label="The Cultural Atlas">
+      <div class="site-logo" aria-label="CULTURAL ATLAS"><img src="./assets/site-logo.svg" width="176" height="24" alt="CULTURAL ATLAS" draggable="false"></div>
       <section id="home" class="scene scene--active" aria-label="Homepage" data-figma-node="1:1358">
         <img class="scene__art art-canvas" src="./assets/homepage.svg" width="1512" height="982" alt="The Cultural Atlas. A yellow-framed window on a turquoise paper wall, with pink, blue and turquoise panes and a pot of flowers." fetchpriority="high" draggable="false">
         <button id="enter-window" class="window-target" type="button" aria-label="Open the window and enter the cultural atlas corkboard" aria-controls="corkboard"></button>
@@ -34,11 +35,17 @@
         </div>
         <button id="collapse-info" class="art-button collapse-button" aria-label="Collapse information panel" aria-controls="map-filters" aria-expanded="true" style="--x:262;--y:498;--w:45.248;--h:50"></button>
         <button id="expand-info" class="art-button collapse-button" aria-label="Expand information panel" aria-controls="map-filters" aria-expanded="false" style="--x:0;--y:495;--w:30;--h:50" hidden></button>
-        <output id="map-filter-status" class="map-filter-status" aria-label="Current map filter" aria-live="polite" hidden>ALL</output>
-        <div id="item-callout" class="item-callout" role="group" aria-label="Selected cultural item" hidden>
+        <div id="map-overview" class="map-overview" aria-label="Specific Location and Filter Info" hidden>
+          <div class="overview-art" aria-hidden="true"></div>
+          <output id="map-filter-status" class="map-filter-status" aria-label="Current map filter" aria-live="polite">ALL</output>
+        </div>
+        <div id="item-callout" class="item-callout" role="tooltip" hidden>
           <img class="item-callout__art" src="./assets/map/item-callout.svg" alt="" width="335" height="118">
-          <span id="item-title" class="item-callout__title" tabindex="-1"></span>
-          <button id="open-front-cover" class="item-callout__link" type="button" aria-label="Go to Front Cover" disabled><img src="./assets/map/go-front-cover.svg" alt="" width="40" height="40"></button>
+          <svg class="item-callout__label" viewBox="0 0 335 118" aria-hidden="true">
+            <defs><clipPath id="name-card-text-clip"><rect x="25" y="21" width="286" height="49"/></clipPath></defs>
+            <text id="item-title" x="168" y="45.5" text-anchor="middle" dominant-baseline="central" fill="#F8D24D" stroke="#132D46" stroke-width="2" stroke-linejoin="round" paint-order="stroke fill" clip-path="url(#name-card-text-clip)"></text>
+          </svg>
+          <span class="visually-hidden" id="item-name-accessible"></span>
         </div>
         <ul id="map-items" class="visually-hidden" aria-label="Visible map items"></ul>
         <nav aria-label="Map navigation">
