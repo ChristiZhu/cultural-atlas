@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1512" height="982" viewBox="0 0 1512 982" fill="none">
+<g id="Canton Tower Â· 03-04" clip-path="url(#clip0_0_1)">
+<g id="æ¡£æ¡ / çç®çº¸å°å¥" filter="url(#filter0_dn_0_1)">
+<rect x="110" y="100" width="1290" height="800" rx="7" fill="#BB9868" />
+<rect id="å·¦ä¾§æè¾¹" x="110" y="364" width="27" height="519" fill="#B58F61" />
+<rect id="å·¦é¡µåºçº¸" x="135" y="118" width="610" height="760" fill="#C8A878" />
+<rect id="å³é¡µåºçº¸" x="763" y="118" width="610" height="760" fill="#C3A071" />
+<rect id="ä¸­å¤®åç" opacity="0.48" x="746" y="106" width="17" height="786" fill="#9D774C" />
+<rect id="åçé«å" x="764" y="112" width="2" height="777" fill="#D7BA8D" />
+<rect id="å³ä¾§ç´¢å¼çº¸ç­¾" x="1367" y="128" width="28" height="176" fill="#E9DFB9" />
+</g>
+</g>
+<defs>
+<filter id="filter0_dn_0_1" x="106" y="98" width="1304" height="814" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix" />
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+<feOffset dx="3" dy="5" />
+<feGaussianBlur stdDeviation="3.5" />
+<feColorMatrix type="matrix" values="0 0 0 0 0.12 0 0 0 0 0.08 0 0 0 0 0.035 0 0 0 0.25 0" />
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1" />
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+<feTurbulence type="fractalNoise" baseFrequency="1.6666666269302368 1.6666666269302368" stitchTiles="stitch" numOctaves="3" result="noise" seed="0" />
+<feColorMatrix in="noise" type="luminanceToAlpha" result="alphaNoise" />
+<feComponentTransfer in="alphaNoise" result="coloredNoise1">
+<feFuncA type="discrete" tableValues="0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 " />
+</feComponentTransfer>
+<feComposite operator="in" in2="shape" in="coloredNoise1" result="noise1Clipped" />
+<feFlood flood-color="rgba(64, 48, 28, 0.055)" result="color1Flood" />
+<feComposite operator="in" in2="noise1Clipped" in="color1Flood" result="color1" />
+<feMerge result="effect2_noise_0_1">
+<feMergeNode in="shape" />
+<feMergeNode in="color1" />
+</feMerge>
+<feBlend mode="normal" in="effect2_noise_0_1" in2="effect1_dropShadow_0_1" result="effect2_noise_0_1" />
+</filter>
+<clipPath id="clip0_0_1">
+<rect width="1512" height="982" fill="white" />
+</clipPath>
+</defs>
+</svg>

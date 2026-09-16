@@ -105,3 +105,7 @@
 .map-zoom button:focus-visible { outline: 2px solid #f8d24d; outline-offset: 3px; }
 
 .atlas[data-archive-open='true'] .item-callout { display: none; }
+
+#icon-library nav { gap: calc(36 * var(--unit)); }
+
+.map-scene[data-suppress-card='true'] .map-item .marker-art { transform: none; filter: none; }

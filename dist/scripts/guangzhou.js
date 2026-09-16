@@ -10,7 +10,7 @@ const destinations = Object.freeze({ 'Canton Tower': 'canton', 'Guangcai Porcela
 /** One map, independent filter/panel state, and a camera shared by land and symbols. */
 export function createGuangzhouMap(scene, { navigate }) {
   const state = { collapsed: false, category: null, selected: null };
-  let ready, camera, viewportIndicator;
+  let ready, camera, viewportIndicator, suppressCard = false;
   createOcean(scene.querySelector('.map-ocean'));
   const markers = new Map();
   const filters = scene.querySelector('#map-filters');
@@ -83,6 +83,7 @@ export function createGuangzhouMap(scene, { navigate }) {
     camera?.refresh();
   }
   function showItem(element) {
+    if (suppressCard) return;
     if (scene.querySelector('.map-viewport').dataset.dragging) return;
     state.selected = element.dataset.item;
     nameCard.show(state.selected);
@@ -93,6 +94,10 @@ export function createGuangzhouMap(scene, { navigate }) {
     const destination = destinations[element.dataset.item];
     if (destination) { closeCallout(); navigate(destination, { source: element }); }
   }
+  scene.addEventListener('pointermove', event => {
+    if (!suppressCard || !event.isTrusted || (!event.movementX && !event.movementY)) return;
+    suppressCard = false; delete scene.dataset.suppressCard; const item = event.target.closest('[data-item]'); if (item) showItem(item);
+  });
   scene.addEventListener('keydown', event => {
     if (event.key === 'Escape') closeCallout();
   });
@@ -112,6 +117,10 @@ export function createGuangzhouMap(scene, { navigate }) {
   return {
     zoomBy(factor) { camera?.zoomBy(factor); },
     dismissCard: closeCallout,
+    resetInteraction() {
+      suppressCard = true; scene.dataset.suppressCard = 'true'; state.selected = null; nameCard.reset();
+      for (const { element } of markers.values()) element.setAttribute('aria-expanded', 'false');
+    },
     prepare() {
       if (!ready) ready = (async () => {
         const [svg, overviewSvg] = await Promise.all([loadArtwork('./assets/map/guangzhou.svg'), loadArtwork('./assets/map/overview.svg')]);

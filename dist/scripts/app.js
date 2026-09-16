@@ -7,7 +7,7 @@ const trigger = document.querySelector('#enter-window');
 const status = document.querySelector('#status');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const map = createGuangzhouMap(document.querySelector('#guangzhou'), { navigate });
-const archive = createArchive(document.querySelector('#archive'), { onClose: () => { if(history.state?.archive)history.back(); } });
+const archive = createArchive(document.querySelector('#archive'), { onRestore: () => map.resetInteraction(), onClose: () => { if(history.state?.archive)history.back(); } });
 document.querySelectorAll('[data-zoom]').forEach(button=>button.addEventListener('click',()=>map.zoomBy(button.dataset.zoom==='in'?1.25:1/1.25)));
 let current = 'home';
 let transitioning = false;

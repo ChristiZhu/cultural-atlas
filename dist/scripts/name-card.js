@@ -48,6 +48,7 @@ export function createNameCard(element, { onHide } = {}) {
   return {
     show(name) { keep(); label(name); element.hidden = false; requestAnimationFrame(() => element.classList.add('is-visible')); },
     hide,
+    reset() { clearTimeout(hideTimer); clearTimeout(leaveTimer); element.hidden = true; element.classList.remove('is-visible'); onHide?.(); },
     leave() { clearTimeout(leaveTimer); leaveTimer = setTimeout(hide, 180); },
     keep,
   };

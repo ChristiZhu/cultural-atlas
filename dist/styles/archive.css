@@ -1,18 +1,19 @@
-.archive { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; overflow: hidden; color: #f8d24d; cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='40'%3E%3Ctext x='3' y='24' font-family='sans-serif' font-size='20' fill='%23f8d24d' stroke='%23206eb8' stroke-width='3' paint-order='stroke'%3E%C3%97 EXIT%3C/text%3E%3C/svg%3E") 8 16, crosshair; }
+.archive { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; overflow: hidden; color: #f8d24d; cursor: none; }
 .archive::backdrop { background: rgb(0 0 0 / .58); }
 .archive-stage { position: absolute; left: 50%; top: 50%; width: min(100vw, calc(100dvh * 1512 / 982)); height: min(100dvh, calc(100vw * 982 / 1512)); transform: translate(-50%,-50%); perspective: 2200px; pointer-events: none; }
-.archive-art { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.archive-hit { position: absolute; pointer-events: auto; cursor: default; }
-.archive-hit button { position: absolute; top: 0; height: 100%; padding: 0; border: 0; background: transparent; }
+.archive-base, .archive-art { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.archive-hit { position: absolute; left: 7.275132%; top: 10.1833%; width: 85.31746%; height: 81.466395%; pointer-events: auto; cursor: none; }
+.archive-hit button { position: absolute; top: 0; height: 100%; padding: 0; border: 0; background: transparent; cursor: none; }
 .archive-hit button[hidden] { display: none; }
 .archive-hit button:focus-visible { outline: 2px solid #f8d24d; outline-offset: -4px; }
-.archive-hit [data-page='previous'] { left: 0; cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ctext x='2' y='30' font-size='34' fill='%23f8d24d' stroke='%23206eb8' stroke-width='3' paint-order='stroke'%3E%E2%86%90%3C/text%3E%3C/svg%3E") 20 20, w-resize; }
-.archive-hit [data-page='next'], .archive-hit [data-page='cover'] { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ctext x='2' y='30' font-size='34' fill='%23f8d24d' stroke='%23206eb8' stroke-width='3' paint-order='stroke'%3E%E2%86%92%3C/text%3E%3C/svg%3E") 20 20, e-resize; }
-.archive-hit [data-page='cover'] { left: 0; width: 100%; }
-.archive-hit [data-page='cover']:disabled { cursor: default; }
-.archive-sheet { position: absolute; transform-style: preserve-3d; pointer-events: none; }
-.archive-sheet-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; box-shadow: 7px 0 20px rgb(40 25 12 / .18); }
+.archive-hit [data-page='previous'] { left: 0; width: 50%; }
+.archive-hit [data-page='next'] { left: 50%; width: 50%; }
+.archive-hit [data-page='cover'] { left: 25.077519%; width: 50%; top: -7.5%; height: 109.25%; }
+.archive-sheet { position: absolute; top: 0; width: 42.65873%; height: 100%; transform-style: preserve-3d; pointer-events: none; will-change: transform; }
+.archive-sheet-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; }
 .archive-sheet-face--back { transform: rotateY(180deg); }
 .archive-sheet img { position: absolute; max-width: none; }
+.archive-cursor { position: fixed; left: 0; top: 0; width: 64px; height: auto; z-index: 20; pointer-events: none; }
+.archive-cursor[hidden] { display: none; }
 .archive[data-book-state='FRONT_COVER']:not([aria-busy]):has([data-page='cover']:hover:not(:disabled)) .archive-art { filter: drop-shadow(4px 6px 5px rgb(0 0 0 / .15)); }
 .atlas[data-archive-open='true'] .ocean-ripples { animation-play-state: paused; }
