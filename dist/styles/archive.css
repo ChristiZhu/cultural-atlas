@@ -1,14 +1,14 @@
 .archive { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; overflow: hidden; color: #f8d24d; cursor: none; }
 .archive::backdrop { background: rgb(0 0 0 / .58); }
 .archive-stage { position: absolute; left: 50%; top: 50%; width: min(100vw, calc(100dvh * 1512 / 982)); height: min(100dvh, calc(100vw * 982 / 1512)); transform: translate(-50%,-50%); perspective: 2200px; pointer-events: none; }
-.archive-base, .archive-art { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.archive-hit { position: absolute; left: 7.275132%; top: 10.1833%; width: 85.31746%; height: 81.466395%; pointer-events: auto; cursor: none; }
-.archive-hit button { position: absolute; top: 0; height: 100%; padding: 0; border: 0; background: transparent; cursor: none; }
+.archive-art { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.archive-hit { position: absolute; left: 7.34127%; top: 10.1833%; width: 85.31746%; height: 84.017235%; pointer-events: none; cursor: none; }
+.archive-hit button { position: absolute; top: 0; height: 100%; padding: 0; border: 0; background: transparent; pointer-events: auto; cursor: none; }
 .archive-hit button[hidden] { display: none; }
 .archive-hit button:focus-visible { outline: 2px solid #f8d24d; outline-offset: -4px; }
 .archive-hit [data-page='previous'] { left: 0; width: 50%; }
 .archive-hit [data-page='next'] { left: 50%; width: 50%; }
-.archive-hit [data-page='cover'] { left: 25.077519%; width: 50%; top: -7.5%; height: 109.25%; }
+.archive-hit [data-page='cover'] { left: 25%; width: 50%; top: -8.25%; height: 108.25%; }
 .archive-sheet { position: absolute; top: 0; width: 42.65873%; height: 100%; transform-style: preserve-3d; pointer-events: none; will-change: transform; }
 .archive-sheet-face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; }
 .archive-sheet-face--back { transform: rotateY(180deg); }

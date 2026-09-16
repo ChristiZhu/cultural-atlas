@@ -1,6 +1,6 @@
-/** A stationary Figma kraft board with internal, fixed-dimension page and cover layers. */
+/** A transparent fixed stage with Figma-normalized covers and two-sided pages. */
 const base = './assets/archive/';
-const FRAME = { width:1512, height:982, left:110, spine:755, pageWidth:645, coverLeft:433.5 };
+const FRAME = { width:1512, height:982, left:111, spine:756, pageWidth:645, coverLeft:433.5 };
 const canton = [
   { key:'FRONT_COVER', file:'canton-front.svg', label:'Front cover' },
   { key:'SPREAD_01_02', file:'pages-01-02.svg', label:'Pages 01–02 — Identity and context' },
@@ -45,7 +45,6 @@ export function createArchive(dialog,{onClose,onRestore}) {
   function face(page,side,back=false){
     const el=document.createElement('div');el.className='archive-sheet-face'+(back?' archive-sheet-face--back':'');
     const start=isCover(page)?FRAME.coverLeft:side==='right'?FRAME.spine:FRAME.left;
-    if(!isCover(page))el.append(image('book-base.svg',start));
     el.append(image(page.file,start));return el;
   }
   function sheet(page,side,position){
@@ -80,14 +79,17 @@ export function createArchive(dialog,{onClose,onRestore}) {
         const shift=(FRAME.spine-FRAME.coverLeft)/FRAME.pageWidth*100;
         await animate(leaf,[{transform:'translateX(0)'},{transform:`translateX(${shift}%)`}],360,'slide-right',ticket);
         // Finish the slide first; the pivot is now exactly on the common spine.
-        leaf.append(face(page,'left',true));paint(page);art.style.visibility='';
+        leaf.append(face(page,'left',true));paint(page);
+        const right=sheet(page,'right');right.style.zIndex='0';leaf.style.zIndex='2';
         await animate(leaf,[{transform:`translateX(${shift}%) rotateY(0deg)`},{transform:`translateX(${shift}%) rotateY(-180deg)`}],650,'open-cover',ticket);
       }else if(isCover(page)){
         // Closing leaves turn fully before the separate return-to-center motion.
         const side=forward?'right':'left',landing=forward?FRAME.left:FRAME.spine;
+        const stationary=sheet(old,forward?'left':'right');stationary.style.zIndex='1';
         const leaf=sheet(old,side);leaf.append(face(page,'cover',true));leaf.style.zIndex='2';
+        art.style.visibility='hidden';
         await animate(leaf,[{transform:'rotateY(0deg)'},{transform:`rotateY(${forward?-180:180}deg)`}],650,'closing-turn',ticket);
-        art.style.visibility='hidden';leaf.remove();
+        leaf.remove();stationary.remove();
         const closed=sheet(page,'cover',landing);
         const shift=(FRAME.coverLeft-landing)/FRAME.pageWidth*100;
         await animate(closed,[{transform:'translateX(0)'},{transform:`translateX(${shift}%)`}],360,'slide-center',ticket);
@@ -141,7 +143,7 @@ export function createArchive(dialog,{onClose,onRestore}) {
   return {get isOpen(){return dialog.open;},close,
     async open(id){
       if(!catalog[id])return;
-      const selected=catalog[id];await Promise.all(['book-base.svg',selected.pages[0].file,'cursor-exit.svg','cursor-previous.svg','cursor-next.svg'].map(load));
+      const selected=catalog[id];await Promise.all([selected.pages[0].file,'cursor-exit.svg','cursor-previous.svg','cursor-next.svg'].map(load));
       book=selected;index=0;generation++;busy=false;paint(book.pages[0]);hideCursor();
       atlas.inert=true;atlas.dataset.archiveOpen='true';dialog.showModal();
       (book.pages.length>1?cover:dialog).focus({preventScroll:true});
