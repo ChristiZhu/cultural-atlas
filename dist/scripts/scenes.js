@@ -4,6 +4,11 @@ export const scenes = Object.freeze({
   corkboard: { elementId: 'corkboard', title: 'Corkboard — The Cultural Atlas', background: '#f4ebd9' },
   map: { elementId: 'guangzhou', title: 'Guangzhou — The Cultural Atlas', background: '#84c9e1' },
   library: { elementId: 'icon-library', title: 'Icon Library — The Cultural Atlas', background: '#ffeff9' },
+  'choose-icons': { elementId: 'choose-icons', title: 'Choose Icons — The Cultural Atlas', background: '#84c9e1' },
+  'pattern-creating': { elementId: 'pattern-creating', title: 'Creating — The Cultural Atlas', background: '#84c9e1' },
+  'pattern-preview': { elementId: 'pattern-preview', title: 'Preview — The Cultural Atlas', background: '#ffeff9' },
+  'pattern-save': { elementId: 'pattern-save', title: 'Save — The Cultural Atlas', background: '#ffeff9' },
+  'pattern-saved': { elementId: 'pattern-saved', title: 'Saved — The Cultural Atlas', background: '#ffeff9' },
 });
 
 export async function prepareScene(element) {

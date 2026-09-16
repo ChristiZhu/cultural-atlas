@@ -1,6 +1,7 @@
 import { scenes, prepareScene, showScene } from './scenes.js';
 import { createGuangzhouMap } from './guangzhou.js';
 import { createArchive } from './archive.js';
+import { createIconLibrary } from './icon-library.js';
 
 const atlas = document.querySelector('#atlas');
 const trigger = document.querySelector('#enter-window');
@@ -8,6 +9,7 @@ const status = document.querySelector('#status');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const map = createGuangzhouMap(document.querySelector('#guangzhou'), { navigate });
 const archive = createArchive(document.querySelector('#archive'), { onRestore: () => map.resetInteraction(), onClose: () => { if(history.state?.archive)history.back(); } });
+const library = createIconLibrary({ navigate });
 document.querySelectorAll('[data-zoom]').forEach(button=>button.addEventListener('click',()=>map.zoomBy(button.dataset.zoom==='in'?1.25:1/1.25)));
 let current = 'home';
 let transitioning = false;
@@ -15,7 +17,7 @@ let transitioning = false;
 // Every fresh visit starts at the window. History supports returning and replaying.
 history.replaceState({ scene: 'home' }, '');
 
-async function navigate(destination, { recordHistory = true, source } = {}) {
+async function navigate(destination, { recordHistory = true, replaceHistory = false, source } = {}) {
   if(destination==='canton'||destination==='porcelain'){
     if(transitioning||archive.isOpen)return;
     transitioning=true;map.dismissCard();
@@ -26,6 +28,7 @@ async function navigate(destination, { recordHistory = true, source } = {}) {
   }
   if (archive.isOpen) return;
   if (transitioning || destination === current || !scenes[destination]) return;
+  library.leave();
   transitioning = true;
   trigger.setAttribute('aria-disabled', 'true');
   source?.setAttribute('data-selected', 'true');
@@ -35,6 +38,7 @@ async function navigate(destination, { recordHistory = true, source } = {}) {
   try {
     // Avoid fading into an empty screen on a slow connection.
     await Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare() : Promise.resolve()]);
+    library.prepare();
     document.body.style.backgroundColor = scenes[destination].background;
     outgoing.inert = true;
     outgoing.setAttribute('aria-hidden', 'true');
@@ -50,10 +54,11 @@ async function navigate(destination, { recordHistory = true, source } = {}) {
     current = destination;
     atlas.dataset.screen = destination;
     document.title = scenes[destination].title;
-    if (recordHistory) history.pushState({ scene: destination }, '');
+    if (recordHistory) history[replaceHistory ? 'replaceState' : 'pushState']({ scene: destination }, '');
     if (destination === 'home') trigger.focus({ preventScroll: true });
     else incoming.focus({ preventScroll: true });
     status.textContent = '';
+    library.enter(destination);
   } catch {
     document.body.style.backgroundColor = scenes[current].background;
     showScene(outgoing, true);
