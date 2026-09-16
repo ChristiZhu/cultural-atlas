@@ -1,11 +1,14 @@
 import { scenes, prepareScene, showScene } from './scenes.js';
 import { createGuangzhouMap } from './guangzhou.js';
+import { createArchive } from './archive.js';
 
 const atlas = document.querySelector('#atlas');
 const trigger = document.querySelector('#enter-window');
 const status = document.querySelector('#status');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const map = createGuangzhouMap(document.querySelector('#guangzhou'), { navigate });
+const archive = createArchive(document.querySelector('#archive'), { onClose: () => { if(history.state?.archive)history.back(); } });
+document.querySelectorAll('[data-zoom]').forEach(button=>button.addEventListener('click',()=>map.zoomBy(button.dataset.zoom==='in'?1.25:1/1.25)));
 let current = 'home';
 let transitioning = false;
 
@@ -13,6 +16,15 @@ let transitioning = false;
 history.replaceState({ scene: 'home' }, '');
 
 async function navigate(destination, { recordHistory = true, source } = {}) {
+  if(destination==='canton'||destination==='porcelain'){
+    if(transitioning||archive.isOpen)return;
+    transitioning=true;map.dismissCard();
+    try{await archive.open(destination,source);if(recordHistory)history.pushState({scene:'map',archive:destination},'');}
+    catch{status.textContent='The archive could not load. Please try again.';}
+    finally{transitioning=false;}
+    return;
+  }
+  if (archive.isOpen) return;
   if (transitioning || destination === current || !scenes[destination]) return;
   transitioning = true;
   trigger.setAttribute('aria-disabled', 'true');
@@ -58,4 +70,8 @@ trigger.addEventListener('click', () => navigate('corkboard'));
 document.querySelectorAll('[data-nav]').forEach(button => {
   button.addEventListener('click', () => navigate(button.dataset.nav, { source: button }));
 });
-window.addEventListener('popstate', event => navigate(event.state?.scene ?? 'home', { recordHistory: false }));
+window.addEventListener('popstate', async event => {
+  if(archive.isOpen)archive.close(false);
+  await navigate(event.state?.scene ?? 'home', {recordHistory:false});
+  if(event.state?.archive)await navigate(event.state.archive,{recordHistory:false});
+});

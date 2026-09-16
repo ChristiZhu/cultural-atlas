@@ -91,3 +91,17 @@
   .map-item .marker-art, .item-callout { transition: none; }
   .map-item:hover .marker-art, .map-item:focus-visible .marker-art { transform: none; }
 }
+
+/* Intro frames retain their original identity; the small logo starts at the map. */
+.atlas[data-screen='home'] .site-logo, .atlas[data-screen='corkboard'] .site-logo { display: none; }
+.item-callout { width: calc(268 * var(--unit)); height: calc(94.4 * var(--unit)); }
+#collapse-info, #expand-info { top: 50%; transform: translateY(-50%); }
+.panel-art [id='backward'] { transform: translateY(-32px); }
+.panel-art [id='compact-backward left'] { transform: translateY(-29px); }
+.map-zoom { position: absolute; z-index: 4; right: calc(30 * var(--unit)); bottom: calc(28 * var(--unit)); display: grid; gap: 5px; }
+.map-zoom button { width: 36px; height: 36px; border: 0; border-radius: 5px; background: #206eb8; color: #f8d24d; font: 27px/1 sans-serif; cursor: pointer; transition: transform 120ms, filter 120ms; }
+.map-zoom button:hover { filter: brightness(1.08); }
+.map-zoom button:active { transform: scale(.95); }
+.map-zoom button:focus-visible { outline: 2px solid #f8d24d; outline-offset: 3px; }
+
+.atlas[data-archive-open='true'] .item-callout { display: none; }

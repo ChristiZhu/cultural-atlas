@@ -44,8 +44,9 @@ export function createGuangzhouMap(scene, { navigate }) {
     const anchorX = rect.left - viewport.left + (view.x + (bounds.x + bounds.width / 2) * view.zoom) * scale;
     const anchorY = rect.top - viewport.top + (view.y + bounds.y * view.zoom) * scale;
     callout.hidden = anchorX < 0 || anchorX > viewport.width || anchorY < 0 || anchorY > viewport.height;
-    callout.style.left = `${anchorX - 167.5 * scale}px`;
-    callout.style.top = `${anchorY - 100 * scale}px`;
+    callout.style.left = `${anchorX - 167.5 * scale * .8}px`;
+    const hoverLift = (6 + bounds.height * .06) * view.zoom;
+    callout.style.top = `${anchorY - (96 * .8 + 24 + hoverLift) * scale}px`;
   }
 
   function closeCallout() {
@@ -109,6 +110,8 @@ export function createGuangzhouMap(scene, { navigate }) {
   });
 
   return {
+    zoomBy(factor) { camera?.zoomBy(factor); },
+    dismissCard: closeCallout,
     prepare() {
       if (!ready) ready = (async () => {
         const [svg, overviewSvg] = await Promise.all([loadArtwork('./assets/map/guangzhou.svg'), loadArtwork('./assets/map/overview.svg')]);
@@ -133,7 +136,7 @@ export function createGuangzhouMap(scene, { navigate }) {
         for (const element of world.children) {
           if (!element.dataset.item) { element.setAttribute('aria-hidden', 'true'); continue; }
           const raw = element.getBBox();
-          const markerScale = Math.min(Math.sqrt(2304 / (raw.width * raw.height)), 72 / Math.max(raw.width, raw.height));
+          const markerScale = 1; // Preserve the original Frame 03 relative sizes.
           const anchor = { x: raw.x + raw.width / 2, y: raw.y + raw.height };
           const width = raw.width * markerScale, height = raw.height * markerScale;
           const x = anchor.x - width / 2, y = anchor.y - height;

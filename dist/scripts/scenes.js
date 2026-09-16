@@ -3,8 +3,6 @@ export const scenes = Object.freeze({
   home: { elementId: 'home', title: 'The Cultural Atlas', background: '#fff7cd' },
   corkboard: { elementId: 'corkboard', title: 'Corkboard — The Cultural Atlas', background: '#f4ebd9' },
   map: { elementId: 'guangzhou', title: 'Guangzhou — The Cultural Atlas', background: '#84c9e1' },
-  canton: { elementId: 'canton-cover', title: 'Canton Tower — The Cultural Atlas', background: '#426571' },
-  porcelain: { elementId: 'porcelain-cover', title: 'Guangzhou Painted Porcelain — The Cultural Atlas', background: '#426571' },
   library: { elementId: 'icon-library', title: 'Icon Library — The Cultural Atlas', background: '#ffeff9' },
 });
 

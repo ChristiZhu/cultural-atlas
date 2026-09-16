@@ -9,6 +9,7 @@
     <link rel="preload" as="image" href="./assets/homepage.svg">
     <link rel="stylesheet" href="./styles/main.css">
     <link rel="stylesheet" href="./styles/map.css">
+    <link rel="stylesheet" href="./styles/archive.css">
     <script type="module" src="./scripts/app.js"></script>
   </head>
   <body>
@@ -48,6 +49,7 @@
           <span class="visually-hidden" id="item-name-accessible"></span>
         </div>
         <ul id="map-items" class="visually-hidden" aria-label="Visible map items"></ul>
+        <div class="map-zoom" role="group" aria-label="Map zoom"><button type="button" data-zoom="in" aria-label="Zoom in">+</button><button type="button" data-zoom="out" aria-label="Zoom out">−</button></div>
         <nav aria-label="Map navigation">
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1144;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
           <button class="art-button nav-button" data-nav="library" aria-label="Icon Library" style="--x:1230;--y:29;--w:247;--h:29;--underline:195"><img src="./assets/map/nav-library.svg" alt="" width="247" height="29"></button>
@@ -60,21 +62,19 @@
           <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
         </nav>
       </section>
-      <section id="canton-cover" class="scene cover-scene" aria-label="Canton Tower front cover" tabindex="-1" aria-hidden="true" inert data-figma-node="1:9511">
-        <img class="scene__art art-canvas" src="./assets/covers/canton.svg" width="1512" height="982" alt="Canton Tower. Architecture Division. The Cultural Atlas Archive, Guangzhou, file GZ–A–001. Kraft paper folder with a metal clip, archival label, and red Classified seal." decoding="async" draggable="false">
-        <nav aria-label="Archive navigation">
-          <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
-          <button class="art-button nav-button" data-nav="library" aria-label="Icon Library" style="--w:247;--h:29;--underline:195"><img src="./assets/map/nav-library.svg" alt="" width="247" height="29"></button>
-        </nav>
-      </section>
-      <section id="porcelain-cover" class="scene cover-scene" aria-label="Guangzhou Painted Porcelain front cover" tabindex="-1" aria-hidden="true" inert data-figma-node="1:9587">
-        <img class="scene__art art-canvas" src="./assets/covers/porcelain.svg" width="1512" height="982" alt="Guangzhou Painted Porcelain. Crafts and Arts Division. The Cultural Atlas Archive, Guangzhou, file GZ–C–001. Kraft folder with a jade cloth spine and an ivory catalogue label." decoding="async" draggable="false">
-        <nav aria-label="Archive navigation">
-          <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
-          <button class="art-button nav-button" data-nav="library" aria-label="Icon Library" style="--w:247;--h:29;--underline:195"><img src="./assets/map/nav-library.svg" alt="" width="247" height="29"></button>
-        </nav>
-      </section>
     </main>
+    <dialog id="archive" class="archive" aria-label="Cultural archive book" aria-describedby="archive-help" tabindex="-1">
+      <p id="archive-help" class="visually-hidden">Click the cover to open. Click the right page to turn forward or the left page to turn back. Click outside the book or press Escape to close.</p>
+      <div class="archive-stage">
+        <img class="archive-art" alt="" draggable="false">
+        <div class="archive-hit">
+          <button type="button" data-page="previous" aria-label="Previous spread"></button>
+          <button type="button" data-page="next" aria-label="Next spread"></button>
+          <button type="button" data-page="cover" aria-label="Open archive book"></button>
+        </div>
+      </div>
+      <p class="archive-status visually-hidden" role="status" aria-live="polite"></p>
+    </dialog>
     <p id="status" class="visually-hidden" role="status" aria-live="polite"></p>
   </body>
 </html>

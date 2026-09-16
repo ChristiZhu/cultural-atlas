@@ -129,5 +129,11 @@ export function createMapCamera({ surface, svg, world, bounds, onChange, onSelec
     }
   });
   new ResizeObserver(() => { constrain(); draw(); }).observe(surface);
-  return { refresh: draw };
+  return { refresh: draw, zoomBy(factor) {
+    const view = visibleBounds();
+    const p = { x: view.x + view.width / 2, y: view.y + view.height / 2 };
+    const zoom = clamp(state.zoom * factor, limits.min, limits.max);
+    animateTo({ zoom, x: p.x - (p.x - state.x) * zoom / state.zoom,
+      y: p.y - (p.y - state.y) * zoom / state.zoom });
+  } };
 }
