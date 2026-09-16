@@ -2,15 +2,22 @@
 * { box-sizing: border-box; }
 html, body { width: 100%; height: 100%; margin: 0; }
 body { overflow: hidden; background-color: #fff7cd; transition: background-color var(--transition-duration) ease-in-out; }
-/* Fit the complete design inside the viewport. Extra space extends each scene's
-   original paper color; artwork and its click target always scale together. */
-.atlas { position: absolute; left: 50%; top: 50%; width: min(100vw, calc(100dvh * 1512 / 982)); aspect-ratio: 1512 / 982; transform: translate(-50%, -50%); overflow: hidden; isolation: isolate; border: 0; }
-.scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; pointer-events: none; }
+/* Full viewport surface. Artwork shares one uniform scale; edge controls can
+   dock to the viewport without distorting the original Figma coordinate system. */
+.atlas { position: relative; width: 100vw; height: 100dvh; min-height: 100vh; overflow: hidden; isolation: isolate; border: 0;
+  --art-width: min(100vw, calc(100dvh * 1512 / 982));
+  --art-height: calc(var(--art-width) * 982 / 1512);
+  --unit: calc(var(--art-width) / 1512);
+  --art-left: calc((100vw - var(--art-width)) / 2);
+  --art-top: calc((100dvh - var(--art-height)) / 2);
+}
+.art-canvas { position: absolute; left: var(--art-left); top: var(--art-top); width: var(--art-width); height: var(--art-height); }
+.scene { position: absolute; inset: 0; overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; }
 .scene--active { opacity: 1; visibility: visible; pointer-events: auto; }
-.scene__art { display: block; width: 100%; height: 100%; user-select: none; }
+.scene__art { display: block; user-select: none; }
 .scene:focus { outline: none; }
 /* Coordinates match the window frame (1:1772), including its yellow surround. */
-.window-target { position: absolute; left: calc(481 / 1512 * 100%); top: calc(141 / 982 * 100%); width: calc(474 / 1512 * 100%); height: calc(566 / 982 * 100%); margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.window-target { position: absolute; left: calc(var(--art-left) + 481 * var(--unit)); top: calc(var(--art-top) + 141 * var(--unit)); width: calc(474 * var(--unit)); height: calc(566 * var(--unit)); margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .window-target:focus-visible { outline: 3px solid #fff7cd; outline-offset: 5px; }
 .window-target[aria-disabled="true"] { cursor: progress; }
 .scene--leaving { z-index: 2; visibility: visible; pointer-events: none; animation: leave var(--transition-duration) ease-in-out both; }

@@ -7,11 +7,29 @@ export const scenes = Object.freeze({
 });
 
 export async function prepareScene(element) {
-  await Promise.all([...element.querySelectorAll('img')].map(image => image.decode()));
+  await Promise.all([
+    ...[...element.querySelectorAll('img')].map(image => image.decode()),
+    ...[...element.querySelectorAll('[data-svg-src]')].map(async container => {
+      if (!container.firstElementChild) container.replaceChildren(await loadArtwork(container.dataset.svgSrc));
+    }),
+  ]);
 }
 
 export function showScene(element, visible) {
   element.classList.toggle('scene--active', visible);
   element.inert = !visible;
   element.setAttribute('aria-hidden', String(!visible));
+}
+
+/** Load trusted, checked-in Figma vectors as live layers for interaction. */
+export async function loadArtwork(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Artwork could not load');
+  const parsed = new DOMParser().parseFromString(await response.text(), 'image/svg+xml');
+  if (parsed.querySelector('parsererror')) throw new Error('Invalid artwork');
+  const svg = document.importNode(parsed.documentElement, true);
+  svg.classList.add('art-canvas');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('focusable', 'false');
+  return svg;
 }
