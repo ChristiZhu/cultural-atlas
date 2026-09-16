@@ -24,11 +24,24 @@ export function createIconLibrary({navigate}) {
     chooser.querySelector('.icon-controls').append(el);
   }
   document.querySelectorAll('.flow-button').forEach(el=>{
-    const feedback=state=>el.closest('.scene').querySelector(`[data-flow-art="${el.dataset.flow}"]`)?.setAttribute('data-feedback',state);
+    const feedback=state=>el.closest('.scene, .viewport-layer').querySelector(`[data-flow-art="${el.dataset.flow}"]`)?.setAttribute('data-feedback',state);
     el.addEventListener('pointerenter',()=>feedback('hover'));el.addEventListener('pointerleave',()=>feedback(''));
     el.addEventListener('pointerdown',()=>feedback('pressed'));el.addEventListener('pointerup',()=>feedback('hover'));
     el.addEventListener('focus',()=>feedback('hover'));el.addEventListener('blur',()=>feedback(''));
   });
+  // All cells share the same positioning component; visual states only change ink.
+  function centerIconCards() {
+    chooser.querySelectorAll('[data-icon-card]').forEach(card=>{
+      if(card.querySelector('[data-icon-position]'))return;
+      const art=card.querySelector('[data-icon-art]'),cell=card.querySelector('[data-icon-background]');
+      const wrapper=document.createElementNS('http://www.w3.org/2000/svg','g');
+      wrapper.setAttribute('data-icon-position','');art.before(wrapper);wrapper.append(art);
+      const wasHidden=card.style.display;card.style.display='';
+      const box=wrapper.getBBox(),bounds=cell.getBBox();
+      wrapper.setAttribute('transform',`translate(${bounds.x+bounds.width/2-box.x-box.width/2} ${bounds.y+bounds.height/2-box.y-box.height/2})`);
+      card.style.display=wasHidden;
+    });
+  }
   function paintIcons(scene,state) {
     const available=new Set(state.availableIcons.map(icon=>icon.id));
     scene.querySelectorAll('[data-library-icon]').forEach(el=>el.style.display=available.has(el.dataset.libraryIcon)?'':'none');
@@ -72,11 +85,17 @@ export function createIconLibrary({navigate}) {
     link.download='canton-tower-figma-example.svg';document.body.append(link);link.click();link.remove();
     navigate('pattern-saved');
   });
-  document.querySelector('#pattern-saved').addEventListener('keydown',event=>{
+  document.querySelector('#save-success-layer').addEventListener('keydown',event=>{
     if(event.key==='Escape'){event.preventDefault();navigate('pattern-save');}
+    if(event.key==='Tab') {
+      const buttons=[...event.currentTarget.querySelectorAll('button')];
+      const index=buttons.indexOf(document.activeElement);
+      event.preventDefault();buttons[(index+(event.shiftKey?-1:1)+buttons.length)%buttons.length].focus();
+    }
   });
   return {
     prepare() {
+      centerIconCards();
       change++;animation?.cancel();library.removeAttribute('aria-busy');
       const state=libraryState.getState();paintedCity=state.selectedCity;
       paintControls(state);paintIcons(library,state);paintIcons(chooser,state);

@@ -1,15 +1,11 @@
 :root { color-scheme: light; background: #fff7cd; --transition-duration: 600ms; }
 * { box-sizing: border-box; }
 html, body { width: 100%; height: 100%; margin: 0; }
-body { overflow: hidden; background-color: #fff7cd; transition: background-color var(--transition-duration) ease-in-out; }
+body { overflow: hidden; background-color: #fff7cd;  }
 /* Full viewport surface. Artwork shares one uniform scale; edge controls can
    dock to the viewport without distorting the original Figma coordinate system. */
 .atlas { position: relative; width: 100vw; height: 100dvh; min-height: 100vh; overflow: hidden; isolation: isolate; border: 0;
-  --art-width: min(100vw, calc(100dvh * 1512 / 982));
-  --art-height: calc(var(--art-width) * 982 / 1512);
-  --unit: calc(var(--art-width) / 1512);
-  --art-left: calc((100vw - var(--art-width)) / 2);
-  --art-top: calc((100dvh - var(--art-height)) / 2);
+
 }
 .art-canvas { position: absolute; left: var(--art-left); top: var(--art-top); width: var(--art-width); height: var(--art-height); }
 .scene { position: absolute; inset: 0; overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; }
@@ -20,9 +16,17 @@ body { overflow: hidden; background-color: #fff7cd; transition: background-color
 .window-target { position: absolute; left: calc(var(--art-left) + 481 * var(--unit)); top: calc(var(--art-top) + 141 * var(--unit)); width: calc(474 * var(--unit)); height: calc(566 * var(--unit)); margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .window-target:focus-visible { outline: 3px solid #fff7cd; outline-offset: 5px; }
 .window-target[aria-disabled="true"] { cursor: progress; }
-.scene--leaving { z-index: 2; visibility: visible; pointer-events: none; animation: leave var(--transition-duration) ease-in-out both; }
-.scene--entering { visibility: visible; animation: enter var(--transition-duration) ease-in-out both; }
-@keyframes leave { from { opacity: 1; } to { opacity: 0; } }
-@keyframes enter { from { opacity: 0; } to { opacity: 1; } }
 .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 @media (prefers-reduced-motion: reduce) { :root { --transition-duration: 1ms; } }
+
+:root {
+  --art-width: min(100vw, calc(100dvh * 1512 / 982));
+  --art-height: calc(var(--art-width) * 982 / 1512);
+  --unit: calc(var(--art-width) / 1512);
+  --art-left: calc((100vw - var(--art-width)) / 2);
+  --art-top: calc((100dvh - var(--art-height)) / 2);
+}
+#page-transition { position: fixed; inset: 0; width: 100vw; height: 100dvh; z-index: 100; pointer-events: auto; }
+#page-transition[hidden], .viewport-layer[hidden] { display: none; }
+.viewport-layer { position: fixed; inset: 0; width: 100vw; height: 100dvh; z-index: 50; outline: none; }
+.success-backdrop { position: fixed; inset: 0; background: rgb(0 0 0 / .5); }

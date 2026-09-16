@@ -1,5 +1,6 @@
 .archive { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; overflow: hidden; color: #f8d24d; cursor: none; }
-.archive::backdrop { background: rgb(0 0 0 / .58); }
+.archive::backdrop { background: transparent; }
+.archive-backdrop { position: fixed; inset: 0; background: rgb(0 0 0 / .58); pointer-events: none; }
 .archive-stage { position: absolute; left: 50%; top: 50%; width: min(100vw, calc(100dvh * 1512 / 982)); height: min(100dvh, calc(100vw * 982 / 1512)); transform: translate(-50%,-50%); perspective: 2200px; pointer-events: none; }
 .archive-art { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .archive-hit { position: absolute; left: 7.34127%; top: 10.1833%; width: 85.31746%; height: 84.017235%; pointer-events: none; cursor: none; }

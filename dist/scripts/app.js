@@ -1,3 +1,4 @@
+import { transitionPage } from './transitions.js';
 import { scenes, prepareScene, showScene } from './scenes.js';
 import { createGuangzhouMap } from './guangzhou.js';
 import { createArchive } from './archive.js';
@@ -6,7 +7,7 @@ import { createIconLibrary } from './icon-library.js';
 const atlas = document.querySelector('#atlas');
 const trigger = document.querySelector('#enter-window');
 const status = document.querySelector('#status');
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const successLayer = document.querySelector('#save-success-layer');
 const map = createGuangzhouMap(document.querySelector('#guangzhou'), { navigate });
 const archive = createArchive(document.querySelector('#archive'), { onRestore: () => map.resetInteraction(), onClose: () => { if(history.state?.archive)history.back(); } });
 const library = createIconLibrary({ navigate });
@@ -21,7 +22,7 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   if(destination==='canton'||destination==='porcelain'){
     if(transitioning||archive.isOpen)return;
     transitioning=true;map.dismissCard();
-    try{await archive.open(destination,source);if(recordHistory)history.pushState({scene:'map',archive:destination},'');}
+    try{const opened=await archive.open(destination,source);if(opened&&recordHistory)history.pushState({scene:'map',archive:destination},'');}
     catch{status.textContent='The archive could not load. Please try again.';}
     finally{transitioning=false;}
     return;
@@ -37,26 +38,19 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   const incoming = document.getElementById(scenes[destination].elementId);
   try {
     // Avoid fading into an empty screen on a slow connection.
-    await Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare() : Promise.resolve()]);
+    await Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare() : Promise.resolve(), destination === 'pattern-saved' ? prepareScene(successLayer) : Promise.resolve()]);
     library.prepare();
-    document.body.style.backgroundColor = scenes[destination].background;
-    outgoing.inert = true;
-    outgoing.setAttribute('aria-hidden', 'true');
-    if (!reducedMotion.matches) {
-      outgoing.classList.add('scene--leaving');
-      incoming.classList.add('scene--entering');
-      await Promise.all([...outgoing.getAnimations(), ...incoming.getAnimations()].map(animation => animation.finished.catch(() => {})));
-    }
-    showScene(outgoing, false);
-    showScene(incoming, true);
-    outgoing.classList.remove('scene--leaving');
-    incoming.classList.remove('scene--entering');
-    current = destination;
-    atlas.dataset.screen = destination;
+    await transitionPage(scenes[destination].background, () => {
+      document.body.style.backgroundColor = scenes[destination].background;
+      showScene(outgoing, false);showScene(incoming, true);
+      current = destination;atlas.dataset.screen = destination;
+      successLayer.hidden = destination !== 'pattern-saved';
+      atlas.inert = destination === 'pattern-saved';
+    });
     document.title = scenes[destination].title;
     if (recordHistory) history[replaceHistory ? 'replaceState' : 'pushState']({ scene: destination }, '');
     if (destination === 'home') trigger.focus({ preventScroll: true });
-    else incoming.focus({ preventScroll: true });
+    else (destination === 'pattern-saved' ? successLayer : incoming).focus({ preventScroll: true });
     status.textContent = '';
     library.enter(destination);
   } catch {
@@ -76,7 +70,7 @@ document.querySelectorAll('[data-nav]').forEach(button => {
   button.addEventListener('click', () => navigate(button.dataset.nav, { source: button }));
 });
 window.addEventListener('popstate', async event => {
-  if(archive.isOpen)archive.close(false);
+  if(archive.isOpen)await archive.close(false);
   await navigate(event.state?.scene ?? 'home', {recordHistory:false});
   if(event.state?.archive)await navigate(event.state.archive,{recordHistory:false});
 });
