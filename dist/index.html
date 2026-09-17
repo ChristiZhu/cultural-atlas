@@ -102,9 +102,11 @@
       </section>
       <section id="pattern-save" class="scene library-scene pattern-scene" aria-label="Save your pattern" tabindex="-1" aria-hidden="true" inert data-figma-node="1:4114">
         <div class="library-art" data-svg-src="./assets/library/save.svg" aria-hidden="true"></div>
-        <div class="generated-pattern" role="img" aria-label="Generated cultural pattern"></div>
-        <button type="button" class="art-button flow-button workflow-button" data-flow="save" aria-label="Save your pattern" style="--x:666;--y:862;--w:162;--h:61" id="save-pattern"><img src="./assets/library/save-save.svg" alt="" draggable="false"></button>
-        <p id="export-status" class="selection-hint" role="status"></p>
+        <div class="save-artwork-group">
+          <div class="generated-pattern" role="img" aria-label="Generated cultural pattern"></div>
+          <button type="button" class="art-button flow-button workflow-button" data-flow="save" aria-label="Save your pattern" style="--x:666;--y:862;--w:162;--h:61" id="save-pattern"><img src="./assets/library/save-save.svg" alt="" draggable="false"></button>
+          <p id="export-status" class="selection-hint" role="status"></p>
+        </div>
         <nav aria-label="Save your pattern navigation" >
           <button class="art-button nav-button" data-nav="corkboard" aria-label="Home — city board" style="--x:1242;--y:29;--w:72;--h:29;--underline:78"><img src="./assets/map/nav-home.svg" alt="" width="72" height="29"></button>
           <button class="art-button nav-button" data-nav="map" aria-label="Map — return to Guangzhou" style="--x:1386;--y:29;--w:56;--h:29;--underline:62"><img src="./assets/map/nav-map.svg" alt="" width="56" height="29"></button>
@@ -115,7 +117,7 @@
     <div id="save-success-layer" class="viewport-layer" role="dialog" aria-modal="true" aria-label="Pattern saved successfully" tabindex="-1" hidden>
       <div class="success-backdrop"></div>
       <div class="library-art" data-svg-src="./assets/library/success-modal.svg" aria-hidden="true"></div>
-        <button type="button" class="art-button flow-button" data-flow="exit" aria-label="Close save confirmation" style="--x:537;--y:348;--w:45;--h:43" data-nav="pattern-preview"></button>
+        <button type="button" class="art-button flow-button" data-flow="exit" aria-label="Close save confirmation" style="--x:537;--y:348;--w:45;--h:43" data-nav="pattern-save"></button>
         <button type="button" class="art-button flow-button" data-flow="home" aria-label="Home — city board" style="--x:671;--y:599;--w:151;--h:55" data-nav="corkboard"></button>
     </div>
     <div id="page-transition" aria-hidden="true" hidden></div>

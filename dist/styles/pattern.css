@@ -16,3 +16,6 @@
 .icon-button[aria-disabled='true'] { cursor: default; }
 @media (prefers-reduced-motion: reduce) { .floating-symbol { will-change: auto; } }
 #export-status { left: calc(var(--art-left) + 240 * var(--unit)); top: calc(var(--art-top) + 810 * var(--unit)); }
+
+/* Lift the existing artwork and action together without changing their spacing. */
+.save-artwork-group { position: absolute; inset: 0; transform: translateY(calc(-28 * var(--unit))); }

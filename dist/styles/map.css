@@ -4,11 +4,11 @@
 .art-button[hidden] { display: none; }
 .art-button[aria-disabled='true'] { cursor: progress; }
 /* Animate the original paired card group, including its lettering and artwork. */
-.board-art [data-card='guangzhou'] { transform-box: fill-box; transform-origin: center; transition: transform 300ms cubic-bezier(.2,.7,.2,1); }
+.board-art [data-card] { pointer-events: bounding-box; transform-box: fill-box; transform-origin: center; transition: transform 300ms cubic-bezier(.2,.7,.2,1); }
 .guangzhou-card { transform: rotate(-3deg); transform-origin: top left; transition: transform 300ms cubic-bezier(.2,.7,.2,1); }
-#corkboard:has(.guangzhou-card:hover, .guangzhou-card:focus-visible) [data-card='guangzhou'] { transform: translateY(-8px); }
+.board-art [data-card]:hover, #corkboard:has(.guangzhou-card:hover, .guangzhou-card:focus-visible) [data-card='guangzhou'] { transform: translateY(-8px); }
 .guangzhou-card:hover, .guangzhou-card:focus-visible { transform: translateY(calc(-8 * var(--unit))) rotate(-3deg); }
-#corkboard:has(.guangzhou-card:active, .guangzhou-card[data-selected='true']) [data-card='guangzhou'] { transform: translateY(-2px) scale(.99); transition-duration: 100ms; }
+.board-art [data-card]:active, #corkboard:has(.guangzhou-card:active, .guangzhou-card[data-selected='true']) [data-card='guangzhou'] { transform: translateY(-2px) scale(.99); transition-duration: 100ms; }
 .guangzhou-card:active, .guangzhou-card[data-selected='true'] { transform: translateY(calc(-2 * var(--unit))) rotate(-3deg) scale(.99); transition-duration: 100ms; }
 /* Preserve right-hand Figma offsets while allowing the page to use wide viewports. */
 .scene nav { --art-left: calc(100vw - var(--art-width)); }
@@ -38,7 +38,7 @@
 .map-scene:has(#expand-info:hover, #expand-info:focus-visible, #expand-info:active) [data-backward-fill='collapsed'] { fill: #efcbe1; }
 @media (prefers-reduced-motion: reduce) {
   .panel-art [data-panel], .panel-art [data-filter-fill], .panel-art [data-backward-fill], .nav-button img, .nav-button::after, .board-art [data-card], .guangzhou-card { transition: none !important; }
-  #corkboard:has(.guangzhou-card:hover, .guangzhou-card:focus-visible, .guangzhou-card:active, .guangzhou-card[data-selected='true']) [data-card='guangzhou'] { transform: none; }
+  .board-art [data-card]:hover, .board-art [data-card]:active, #corkboard:has(.guangzhou-card:hover, .guangzhou-card:focus-visible, .guangzhou-card:active, .guangzhou-card[data-selected='true']) [data-card='guangzhou'] { transform: none; }
   .guangzhou-card:hover, .guangzhou-card:focus-visible, .guangzhou-card:active, .guangzhou-card[data-selected='true'] { transform: rotate(-3deg); }
 }
 

@@ -11,7 +11,14 @@ const canton = [
 ];
 const catalog = {
   canton:{title:'Canton Tower',pages:canton},
-  porcelain:{title:'Guangzhou Painted Porcelain',pages:[{key:'FRONT_COVER',file:'porcelain-front.svg',label:'Front cover'}]},
+  porcelain:{title:'Guangzhou Painted Porcelain',pages:[
+    {key:'FRONT_COVER',file:'porcelain-front.svg',label:'Front cover'},
+    {key:'SPREAD_01_02',file:'porcelain-01-02.svg',label:'Pages 01–02 — Identity and context'},
+    {key:'SPREAD_03_04',file:'porcelain-03-04.svg',label:'Pages 03–04 — Materials and making'},
+    {key:'SPREAD_05_06',file:'porcelain-05-06.svg',label:'Pages 05–06 — Ornament, colour and geometry'},
+    {key:'SPREAD_07_08',file:'porcelain-07-08.svg',label:'Pages 07–08 — Symbol extraction'},
+    {key:'BACK_COVER',file:'porcelain-back.svg',label:'Back cover'},
+  ]},
 };
 const isCover = page => page.key.endsWith('COVER');
 export function createArchive(dialog,{onClose,onRestore}) {

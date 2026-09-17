@@ -86,7 +86,7 @@ export function createIconLibrary({navigate,onSave}) {
   libraryState.subscribe(update);
   document.querySelector('#save-pattern').addEventListener('click',onSave);
   document.querySelector('#save-success-layer').addEventListener('keydown',event=>{
-    if(event.key==='Escape'){event.preventDefault();navigate('pattern-preview');}
+    if(event.key==='Escape'){event.preventDefault();navigate('pattern-save');}
     if(event.key==='Tab') {
       const buttons=[...event.currentTarget.querySelectorAll('button')];
       const index=buttons.indexOf(document.activeElement);

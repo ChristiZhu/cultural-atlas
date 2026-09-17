@@ -39,7 +39,7 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   trigger.setAttribute('aria-disabled', 'true');
   source?.setAttribute('data-selected', 'true');
   source?.setAttribute('aria-disabled', 'true');
-  const closingSuccess=current==='pattern-saved'&&destination==='pattern-preview';
+  const closingSuccess=current==='pattern-saved'&&destination==='pattern-save';
   const openingSuccess=destination==='pattern-saved';
   const workflowScenes=['library','choose-icons','pattern-creating','pattern-preview','pattern-save','pattern-saved'];
   const lightTransition=workflowScenes.includes(current)||workflowScenes.includes(destination);

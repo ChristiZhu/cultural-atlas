@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1512" height="982" viewBox="0 0 1512 982" fill="none">
-<g id="Guangzhou Painted Porcelain / front cover" clip-path="url(#clip0_0_1)">
-<g id="Guangcai / front cover / cultural atlas archive" filter="url(#filter0_d_0_1)">
+<g data-figma-node="1:9587" transform="translate(0.000000000 -0.000000000) scale(1.000000000000)"><g id="Guangcai / front cover / cultural atlas archive" filter="url(#filter0_d_0_1)">
 <g id="Kraft archive cover / tab and scored edges">
 <path id="Vector" d="M435.618 102.118L1059.44 100C1072.15 100 1078.5 106.355 1078.5 119.064V486.576C1078.5 495.755 1073.91 502.816 1064.73 507.759L1055.2 514.113C1048.84 517.644 1045.67 523.645 1045.67 532.118V899.63C1045.67 914.458 1037.55 922.578 1021.31 923.99L433.5 925.049L435.618 102.118Z" fill="#C2A47A" />
 <path id="Vector_2" d="M435.618 102.118L1059.44 100C1072.15 100 1078.5 106.355 1078.5 119.064V486.576C1078.5 495.755 1073.91 502.816 1064.73 507.759L1055.2 514.113C1048.84 517.644 1045.67 523.645 1045.67 532.118V899.631C1045.67 914.458 1037.55 922.578 1021.31 923.99L433.5 925.049L435.618 102.118Z" stroke="#A97643" stroke-width="1.48276" />
@@ -751,8 +750,7 @@
 </g>
 </g>
 </g>
-</g>
-<defs>
+</g><defs>
 <filter id="filter0_d_0_1" x="421.85" y="29.0394" width="677.833" height="921.429" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix" />
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
@@ -789,9 +787,6 @@
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1" />
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape" />
 </filter>
-<clipPath id="clip0_0_1">
-<rect width="1512" height="982" fill="white" />
-</clipPath>
 <clipPath id="clip1_0_1">
 <rect width="366.453" height="232.365" fill="white" transform="translate(574.007 216.943) rotate(1)" />
 </clipPath>
