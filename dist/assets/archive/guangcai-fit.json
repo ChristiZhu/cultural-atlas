@@ -14,6 +14,7 @@
       921.4285
     ],
     "sourceSpine": null,
+    "originalSpine": null,
     "stage": [
       1512,
       982
@@ -34,6 +35,7 @@
       875
     ],
     "sourceSpine": 754.7833,
+    "originalSpine": 754.7833,
     "stage": [
       1512,
       982
@@ -54,6 +56,7 @@
       910.8721
     ],
     "sourceSpine": 751.1162,
+    "originalSpine": 751.1162,
     "stage": [
       1512,
       982
@@ -62,10 +65,10 @@
   {
     "node": "1:7624",
     "file": "porcelain-05-06.svg",
-    "scale": 0.9008379888268156,
+    "scale": 0.9984520123839009,
     "translate": [
-      138.92597765363132,
-      45.89054947270955
+      0.17182662538698423,
+      -4.673514729860585
     ],
     "sourceBounds": [
       111,
@@ -73,7 +76,8 @@
       1290,
       811
     ],
-    "sourceSpine": 685,
+    "sourceSpine": 757.0,
+    "originalSpine": 685,
     "stage": [
       1512,
       982
@@ -94,6 +98,7 @@
       809.2622
     ],
     "sourceSpine": 762.6504,
+    "originalSpine": 762.6504,
     "stage": [
       1512,
       982
@@ -114,6 +119,7 @@
       870
     ],
     "sourceSpine": null,
+    "originalSpine": null,
     "stage": [
       1512,
       982

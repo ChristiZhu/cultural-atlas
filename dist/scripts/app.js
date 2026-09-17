@@ -10,7 +10,7 @@ const trigger = document.querySelector('#enter-window');
 const status = document.querySelector('#status');
 const successLayer = document.querySelector('#save-success-layer');
 const map = createGuangzhouMap(document.querySelector('#guangzhou'), { navigate });
-const archive = createArchive(document.querySelector('#archive'), { onRestore: () => map.resetInteraction(), onClose: () => { if(history.state?.archive)history.back(); } });
+const archive = createArchive(document.querySelector('#archive'), { onRestore: () => map.resetInteraction(), onClose: () => { if(history.state?.archive){transitioning=true;history.back();} } });
 const pattern = createPatternWorkflow({ navigate });
 const library = createIconLibrary({ navigate, onSave: () => pattern.save() });
 document.querySelectorAll('[data-zoom]').forEach(button=>button.addEventListener('click',()=>map.zoomBy(button.dataset.zoom==='in'?1.25:1/1.25)));
@@ -79,6 +79,7 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     source?.removeAttribute('data-selected');
   }
   if(current===destination)void pattern.enter(destination);
+  if(current==='map')void archive.preload('porcelain').catch(()=>{});
 }
 
 trigger.addEventListener('click', () => navigate('corkboard'));
@@ -87,6 +88,7 @@ document.querySelectorAll('[data-nav]').forEach(button => {
 });
 window.addEventListener('popstate', async event => {
   if(archive.isOpen)await archive.close(false);
+  transitioning=false;
   await navigate(event.state?.scene ?? 'home', {recordHistory:false});
   if(event.state?.archive)await navigate(event.state.archive,{recordHistory:false});
 });

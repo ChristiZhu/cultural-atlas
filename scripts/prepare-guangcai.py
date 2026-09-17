@@ -37,6 +37,18 @@ for node, filename, paper, crease, bounds in PAGES:
     book = next(e for e in frame if e.tag == f'{{{NS}}}g')
     defs = next(e for e in root if e.tag == f'{{{NS}}}defs')
     x, y, w, h = paper
+    original_crease = crease
+    if node == '7624':
+        # User-authorized fold correction only: leave every paper/photo/text
+        # coordinate unchanged and move the existing crease to the book centre.
+        crease = x + w / 2
+        backing = next(e for e in book if 'full kraft backing' in e.get('id', ''))
+        shade = next(e for e in backing if e.get('id') == 'Vector_3')
+        fold = next(e for e in backing if e.get('id') == 'Vector_4')
+        for element in (shade, fold):
+            element.set('transform', f'translate({crease - original_crease} 0)')
+        backing.remove(fold)
+        book.append(fold)  # The same crease continues across overlapping paper.
     bx, by, bw, bh = bounds
     if crease is None:
         scale = min(645 / w, 825.049255371 / h)
@@ -64,7 +76,7 @@ for node, filename, paper, crease, bounds in PAGES:
     root[:] = [wrapper, defs]
     ET.ElementTree(root).write(DEST / filename, encoding='unicode')
     fits.append({'node': f'1:{node}', 'file': filename, 'scale': scale,
-                 'translate': [tx, ty], 'sourceBounds': bounds, 'sourceSpine': crease,
+                 'translate': [tx, ty], 'sourceBounds': bounds, 'sourceSpine': crease, 'originalSpine': original_crease,
                  'stage': [1512, 982]})
     print(filename, 'uniform scale', round(scale, 6))
 (DEST / 'guangcai-fit.json').write_text(json.dumps(fits, indent=2) + '\n')
