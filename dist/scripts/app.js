@@ -2,6 +2,7 @@ import { transitionPage, transitionWorkflow, transitionSuccess } from './transit
 import { scenes, prepareScene, showScene } from './scenes.js';
 import { createGuangzhouMap } from './guangzhou.js';
 import { createArchive } from './archive.js';
+import { createWindowEntrance } from './window-entrance.js';
 import { createPatternWorkflow } from './pattern-workflow.js';
 import { createIconLibrary } from './icon-library.js';
 
@@ -16,6 +17,8 @@ const library = createIconLibrary({ navigate, onSave: () => pattern.save() });
 document.querySelectorAll('[data-zoom]').forEach(button=>button.addEventListener('click',()=>map.zoomBy(button.dataset.zoom==='in'?1.25:1/1.25)));
 let current = 'home';
 let transitioning = false;
+const entrance=createWindowEntrance(document.querySelector('#home'),trigger);
+void entrance.prepare().catch(()=>{});
 
 // Every fresh visit starts at the window. History supports returning and replaying.
 history.replaceState({ scene: 'home' }, '');
@@ -47,7 +50,10 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   const incoming = document.getElementById(scenes[destination].elementId);
   try {
     // Avoid fading into an empty screen on a slow connection.
-    await Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare() : Promise.resolve(), destination === 'pattern-saved' ? prepareScene(successLayer) : Promise.resolve()]);
+    const destinationReady=Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare() : Promise.resolve(), destination === 'pattern-saved' ? prepareScene(successLayer) : Promise.resolve()]);
+    const windowEntrance=current==='home'&&destination==='corkboard';
+    if(!windowEntrance)await destinationReady;
+    if(destination==='home')entrance.reset();
     await pattern.prepare(destination);
     library.prepare();
     const commit = () => {
@@ -57,7 +63,8 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
       successLayer.hidden = destination !== 'pattern-saved';
       atlas.inert = destination === 'pattern-saved';
     };
-    if(closingSuccess||openingSuccess)await transitionSuccess(successLayer,openingSuccess,commit);
+    if(windowEntrance)await entrance.enter({ready:destinationReady,commit,incoming});
+    else if(closingSuccess||openingSuccess)await transitionSuccess(successLayer,openingSuccess,commit);
     else if(lightTransition)await transitionWorkflow(scenes[destination].background,commit,outgoing,incoming);
     else await transitionPage(scenes[destination].background, commit);
     if(patternContinuation)pattern.leave();
@@ -87,6 +94,7 @@ document.querySelectorAll('[data-nav]').forEach(button => {
   button.addEventListener('click', () => navigate(button.dataset.nav, { source: button }));
 });
 window.addEventListener('popstate', async event => {
+  await entrance.cancel();
   if(archive.isOpen)await archive.close(false);
   transitioning=false;
   await navigate(event.state?.scene ?? 'home', {recordHistory:false});

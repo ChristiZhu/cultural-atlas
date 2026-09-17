@@ -30,3 +30,9 @@ body { overflow: hidden; background-color: #fff7cd;  }
 #page-transition[hidden], .viewport-layer[hidden] { display: none; }
 .viewport-layer { position: fixed; inset: 0; width: 100vw; height: 100dvh; z-index: 50; outline: none; }
 .success-backdrop { position: fixed; inset: 0; background: rgb(0 0 0 / .5); }
+
+/* Original vectors become live only after the complete motion asset is ready. */
+.scene__art[hidden], .window-art[hidden] { display: none; }
+.window-art { pointer-events: none; overflow: visible; }
+#home[data-entrance='OPENING'] .window-art, #home[data-entrance='ENTERING'] .window-art { will-change: transform; }
+#home[data-entrance='OPENING'] [data-motion$='pane'], #home[data-entrance='OPENING'] [data-motion='curtain'] { will-change: transform; }
