@@ -1,6 +1,7 @@
 /** Lifecycle harness with controlled animation completions and asset scheduling. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {palettesDiffer} from '../dist/scripts/pattern-colors.js';
 import {libraryState} from '../dist/scripts/library-state.js';
 const animations=[],frames=[];
 class Element {
@@ -40,6 +41,15 @@ for(let round=0;round<3;round++){
  await finishPhase();await running;assert.strictEqual(workflow.getResult(),pending);assert.equal(workflow.getState().pendingGeneratedPattern,null);
  assert.equal(navigations.at(-1)[0],'pattern-preview');assert.deepEqual(pending.selectedIcons,['canton-tower','porcelain-1','har-gow']);
  if(old)assert.notEqual(pending.grammar,old.grammar);
+}
+const composition=workflow.getResult(),navigationCount=navigations.length,animationCount=animations.length;
+const renderedBefore=elements.get('#pattern-preview .generated-pattern').innerHTML;
+for(const mode of ['authentic','vivid','harmonious','surprise']){
+ workflow.recolor(mode);const colored=workflow.getResult();assert.strictEqual(colored.items,composition.items);assert.equal(colored.palette.mode,mode);
+ workflow.recolor(mode,true);assert(palettesDiffer(workflow.getResult().palette,colored.palette),'Shuffle must visibly change motif colors, not just the background');assert.strictEqual(workflow.getResult().items,composition.items);
+ assert.equal(navigations.length,navigationCount);assert.equal(animations.length,animationCount);
+ assert.equal(elements.get('#pattern-preview .generated-pattern').innerHTML,renderedBefore,'Recolor cannot replace the SVG tree');
+ await workflow.prepare('pattern-save');assert.equal(workflow.getResult().palette.mode,mode,'Save must preserve the current mode');
 }
 workflow.leave();const displayed=workflow.getResult();await workflow.prepare('pattern-creating');const cancelled=workflow.enter('pattern-creating');await generate();workflow.leave();await cancelled;assert.strictEqual(workflow.getResult(),displayed);assert.equal(workflow.getState().pendingGeneratedPattern,null);
 // Reduced motion still has a real, visible Creating interval on every request.

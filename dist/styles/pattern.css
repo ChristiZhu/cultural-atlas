@@ -19,3 +19,23 @@
 
 /* Lift the existing artwork and action together without changing their spacing. */
 .save-artwork-group { position: absolute; inset: 0; transform: translateY(calc(-28 * var(--unit))); }
+
+/* Secondary controls use the existing blue tabs, outlined buttons and handwritten type. */
+.color-controls { position: absolute; right: max(14px, calc(var(--art-left) + 22 * var(--unit))); top: calc(var(--art-top) + 242 * var(--unit)); width: calc(164 * var(--unit)); color: #206eb8; font-family: 'Ugly Dave', sans-serif; }
+.color-controls h2 { font-size: calc(23 * var(--unit)); font-weight: 400; margin: 0 0 calc(22 * var(--unit)); letter-spacing: .03em; }
+.color-mode-options { display: grid; gap: calc(14 * var(--unit)); }
+.color-button { width: 100%; min-height: calc(47 * var(--unit)); padding: calc(7 * var(--unit)) calc(8 * var(--unit)); border: calc(2 * var(--unit)) solid #206eb8; border-radius: calc(9 * var(--unit)); background: #a4d4e5; color: #000; font: 400 calc(22 * var(--unit))/1.15 'Ugly Dave', sans-serif; cursor: pointer; transition: background-color 180ms ease, color 180ms ease, transform 160ms ease; }
+.color-button:hover { background: #cfe8ff; transform: translateY(-1px); }
+.color-button[aria-pressed='true'] { background: #206eb8; color: #fff; }
+.color-button:active { transform: translateY(1px) scale(.985); }
+.color-button:focus-visible { outline: 2px solid #206eb8; outline-offset: 3px; }
+.palette-label { margin: calc(24 * var(--unit)) 0 calc(10 * var(--unit)); font-size: calc(21 * var(--unit)); }
+.palette-swatches { display: flex; gap: calc(5 * var(--unit)); margin-bottom: calc(20 * var(--unit)); }
+.palette-swatch { display: block; flex: 1; aspect-ratio: 1; border-radius: 50%; border: 1px solid #206eb855; transition: background-color 220ms ease; }
+.color-shuffle { background: transparent; font-size: calc(20 * var(--unit)); min-height: calc(43 * var(--unit)); }
+.generated-pattern [data-color-role], .motif-preview [data-color-role] { transition: fill 220ms ease, stroke 220ms ease, color 220ms ease; }
+@media (prefers-reduced-motion: reduce) { .color-button, .palette-swatch, .generated-pattern [data-color-role], .motif-preview [data-color-role] { transition: none; } .color-button:hover, .color-button:active { transform: none; } }
+
+/* Move the artwork, source column and original heading as one composition. */
+.preview-composition { position: absolute; inset: 0; transform: translateX(calc(-32 * var(--unit))); }
+#pattern-creating .generated-pattern { transform: translateX(calc(-32 * var(--unit))); }

@@ -90,8 +90,23 @@
         </nav>
       </section>
       <section id="pattern-preview" class="scene library-scene pattern-scene" aria-label="Your pattern preview" tabindex="-1" aria-hidden="true" inert data-figma-node="1:2527">
+        <div class="preview-composition">
         <div class="library-art" data-svg-src="./assets/library/preview.svg" aria-hidden="true"></div>
         <div class="generated-pattern" role="img" aria-label="Generated cultural pattern"></div><div class="selected-source-icons" aria-label="Selected source icons"></div><div class="motif-preview" role="img" aria-label="Seamless repeat tile"></div><p class="pattern-announcement visually-hidden" role="status"></p>
+        </div>
+        <aside class="color-controls" aria-labelledby="color-mode-title">
+          <h2 id="color-mode-title">COLOR MODE</h2>
+          <div class="color-mode-options" role="group" aria-label="Color mode">
+            <button class="color-button" type="button" data-color-mode="authentic" aria-pressed="false">Authentic</button>
+            <button class="color-button" type="button" data-color-mode="vivid" aria-pressed="false">Vivid</button>
+            <button class="color-button" type="button" data-color-mode="harmonious" aria-pressed="true">Harmonious</button>
+            <button class="color-button" type="button" data-color-mode="surprise" aria-pressed="false">Surprise Me</button>
+          </div>
+          <p class="palette-label">Palette</p>
+          <div class="palette-swatches" aria-label="Current palette"></div>
+          <button class="color-button color-shuffle" id="shuffle-colors" type="button">Shuffle Colors</button>
+          <p class="color-announcement visually-hidden" role="status" aria-live="polite"></p>
+        </aside>
         <button type="button" class="art-button flow-button workflow-button" data-flow="back" aria-label="Back — choose icons" style="--x:917;--y:865;--w:162;--h:61" data-nav="choose-icons"><img src="./assets/library/preview-back.svg" alt="" draggable="false"></button>
         <button type="button" class="art-button flow-button workflow-button" data-flow="redo" aria-label="Redo — generate another pattern" style="--x:1101;--y:865;--w:162;--h:61" data-nav="pattern-creating"><img src="./assets/library/preview-redo.svg" alt="" draggable="false"></button>
         <button type="button" class="art-button flow-button workflow-button" data-flow="next" aria-label="OK — continue to Save" style="--x:1280;--y:865;--w:162;--h:61" data-nav="pattern-save"><img src="./assets/library/preview-next.svg" alt="" draggable="false"></button>

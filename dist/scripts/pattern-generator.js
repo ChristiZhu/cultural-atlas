@@ -1,3 +1,5 @@
+import {generatePalette,contrast} from './pattern-colors.js';
+export {contrast} from './pattern-colors.js';
 /** Deterministic, periodic geometry. No network, raster generation or AI is used. */
 export const TILE_SIZE=1200;
 export const GRAMMARS=['grid','half-drop','diamond','scatter','four-way','diagonal'];
@@ -9,30 +11,6 @@ export function seededRandom(seed) {
   return ()=>{value+=0x6D2B79F5;let t=value;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296;};
 }
 function pick(items,random){return items[Math.floor(random()*items.length)];}
-function luminance(hex){const values=hex.slice(1).match(/../g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return values[0]*.2126+values[1]*.7152+values[2]*.0722;}
-export function contrast(a,b){const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
-function choosePalette(icons,random,first) {
-  const chance=first?0:random();
-  const mode=chance<.55?'authentic':chance<.8?'source-neutral':chance<.95?'source-derived':'curated';
-  const source=icons[0].naturalPalette;
-  let background=source.background;
-  let colors=icons.map((icon,i)=>icon.naturalPalette[mode==='source-derived'?'derived':'colors'][i%4]);
-  if(mode==='source-neutral'){
-    background=pick(['#F5EEDD','#1E3949'],random);
-    if(background==='#1E3949')colors=icons.map((icon,i)=>icon.id==='canton-tower'?['#CBC8BC','#D6A3AA','#C8B17E'][i]:icon.source.includes('enamel')?['#84C9C5','#E6C68B','#EDA69B'][i]:['#E3D6BD','#D6AB91','#B8C4AB'][i]);
-  }
-  if(mode==='curated'){
-    const curated=pick([
-      {background:'#F6EDDF',colors:['#206EB8','#A45379','#967326']},
-      {background:'#203E50',colors:['#84C9E1','#E7C56B','#ECC3CF']},
-      {background:'#F5EBD7',colors:['#356F60','#A34436','#76623B']},
-    ],random);background=curated.background;colors=curated.colors.slice(0,icons.length);
-  }
-  // Single-icon compositions still use the source palette for their smaller motifs.
-  while(colors.length<3){const options=mode==='curated'?['#A45379','#967326']:source[mode==='source-derived'?'derived':'colors'];colors.push(options[colors.length%options.length]);}
-  colors=colors.map((color,i)=>contrast(color,background)>=3?color:source.colors.find(c=>contrast(c,background)>=3)||(luminance(background)<.2?'#E3D6BD':'#514C49'));
-  return {mode,background,primary:colors[0],secondary:colors[1],accent:colors[2]};
-}
 function chooseGrammar(primary,random,previous) {
   const weights=GRAMMARS.filter(g=>g!==previous).flatMap(g=>Array(primary.preferredPatterns.includes(g)?6:1).fill(g));
   return pick(weights,random);
@@ -112,11 +90,11 @@ export function validateComposition(result,icons) {
   if(roleSizes[1]>=roleSizes[0]||roleSizes[2]>=roleSizes[1])problems.push('hierarchy');
   return {valid:problems.length===0,problems:[...new Set(problems)],coverage:round(coverage)};
 }
-export function generatePattern(icons,{seed=Date.now(),previousGrammar=null,grammar=null,first=false}={}) {
+export function generatePattern(icons,{seed=Date.now(),previousGrammar=null,grammar=null,first=false,colorMode='harmonious',colorSeed=seed}={}) {
   if(icons.length<1||icons.length>3)throw new RangeError('Choose one to three icons.');
   if(new Set(icons.map(icon=>icon.id)).size!==icons.length)throw new RangeError('Choose distinct icons.');
   if(grammar&&!GRAMMARS.includes(grammar))throw new RangeError('Unknown pattern grammar.');
-  const random=seededRandom(seed),palette=choosePalette(icons,random,first),chosen=grammar||chooseGrammar(icons[0],random,previousGrammar);
+  const random=seededRandom(seed),palette=generatePalette({icons,colorMode,seed:colorSeed}),chosen=grammar||chooseGrammar(icons[0],random,previousGrammar);
   // Try discrete spacing levels before changing a grammar. No arbitrary jitter.
   const spaces=[pick(['loose','medium','medium','tight'],random),'medium','loose','tight'];
   for(const candidate of [chosen,...(grammar?[]:GRAMMARS.filter(g=>g!==chosen&&g!==previousGrammar))])for(const spacing of [...new Set(spaces)]) {
@@ -129,10 +107,16 @@ export function generatePattern(icons,{seed=Date.now(),previousGrammar=null,gram
 export function wrappedItems(result) {
   return result.items.flatMap(item=>[-TILE_SIZE,0,TILE_SIZE].flatMap(dx=>[-TILE_SIZE,0,TILE_SIZE].map(dy=>({...item,x:item.x+dx,y:item.y+dy}))));
 }
+export function itemColorRole(item,index){
+  const roles=item.role==='primary'?['primary','primary','accent','accent2']:item.role==='secondary'?['secondary','detail']:['accent'];
+  return roles[index%roles.length];
+}
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 export function renderPatternSVG(result,assets,{width=TILE_SIZE,height=TILE_SIZE,prefix='atlas-pattern',repeats=1}={}) {
-  const defs=result.selectedIcons.map(id=>`<symbol id="${prefix}-${escape(id)}" viewBox="0 0 100 100" fill="none">${assets[id]}</symbol>`).join('');
-  const placements=wrappedItems(result).map(item=>`<use href="#${prefix}-${escape(item.id)}" x="${-item.size/2}" y="${-item.size/2}" width="${item.size}" height="${item.size}" color="${result.palette[item.role]}" transform="translate(${item.x} ${item.y}) rotate(${item.angle}) scale(${item.flipX?-1:1} ${item.flipY?-1:1})"/>`).join('');
+  const defs=result.selectedIcons.map(id=>`<symbol id="${prefix}-${escape(id)}" viewBox="0 0 100 100" fill="none">${assets[id].replace(/(fill|stroke)="(?:white|#fff(?:fff)?)"/gi,(_,attr)=>`${attr}="${result.palette.background}" data-color-role="background" data-color-attribute="${attr}"`)}</symbol>`).join('');
+  const roleCounters={};
+  const colored={...result,items:result.items.map(item=>({...item,colorRole:itemColorRole(item,roleCounters[item.role]=(roleCounters[item.role]??-1)+1)}))};
+  const placements=wrappedItems(colored).map(item=>`<use href="#${prefix}-${escape(item.id)}" x="${-item.size/2}" y="${-item.size/2}" width="${item.size}" height="${item.size}" data-color-role="${item.colorRole}" data-color-attribute="color" color="${result.palette[item.colorRole]}" transform="translate(${item.x} ${item.y}) rotate(${item.angle}) scale(${item.flipX?-1:1} ${item.flipY?-1:1})"/>`).join('');
   const viewWidth=TILE_SIZE*repeats,viewHeight=viewWidth*height/width;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${viewWidth} ${viewHeight}" role="img" aria-label="${escape(result.grammar)} pattern"><title>Cultural Atlas — ${escape(result.grammar)}</title><metadata>${escape(JSON.stringify({selectedIcons:result.selectedIcons,grammar:result.grammar,seed:result.seed,colorMode:result.palette.mode,tileSize:TILE_SIZE}))}</metadata><defs>${defs}<pattern id="${prefix}-repeat" width="${TILE_SIZE}" height="${TILE_SIZE}" patternUnits="userSpaceOnUse"><rect width="${TILE_SIZE}" height="${TILE_SIZE}" fill="${result.palette.background}"/>${placements}</pattern></defs><rect width="${viewWidth}" height="${viewHeight}" fill="url(#${prefix}-repeat)"/></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${viewWidth} ${viewHeight}" role="img" aria-label="${escape(result.grammar)} pattern"><title>Cultural Atlas — ${escape(result.grammar)}</title><metadata>${escape(JSON.stringify({selectedIcons:result.selectedIcons,grammar:result.grammar,seed:result.seed,colorMode:result.palette.mode,palette:result.palette,tileSize:TILE_SIZE}))}</metadata><defs>${defs}<pattern id="${prefix}-repeat" width="${TILE_SIZE}" height="${TILE_SIZE}" patternUnits="userSpaceOnUse"><rect width="${TILE_SIZE}" height="${TILE_SIZE}" fill="${result.palette.background}" data-color-role="background" data-color-attribute="fill"/>${placements}</pattern></defs><rect width="${viewWidth}" height="${viewHeight}" fill="url(#${prefix}-repeat)"/></svg>`;
 }

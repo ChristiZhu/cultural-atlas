@@ -5,7 +5,7 @@ const stats={};let count=0;
 for(const grammar of GRAMMARS)for(let i=0;i<culturalIcons.length;i++)for(const size of [1,2,3])for(let seed=1;seed<=12;seed++){
  const icons=Array.from({length:size},(_,j)=>culturalIcons[(i+j)%culturalIcons.length]);
  const result=generatePattern(icons,{grammar,seed});assert(result.quality.valid);assert.equal(result.grammar,grammar);
- assert.deepEqual(result.selectedIcons,icons.map(x=>x.id));assert(new Set(Object.values(result.palette).slice(1)).size<=4);
+ assert.deepEqual(result.selectedIcons,icons.map(x=>x.id));assert(new Set(['background','primary','secondary','accent','accent2','detail'].map(role=>result.palette[role])).size<=6);
  assert.deepEqual(generatePattern(icons,{grammar,seed}),result);
  stats[grammar]=(stats[grammar]||0)+1;count++;
  const wrapped=wrappedItems(result);assert.equal(wrapped.length,result.items.length*9);
@@ -14,7 +14,7 @@ for(const grammar of GRAMMARS)for(let i=0;i<culturalIcons.length;i++)for(const s
 for(let seed=0;seed<200;seed++){
  const icons=[culturalIcons[seed%9],culturalIcons[(seed+1)%9],culturalIcons[(seed+2)%9]];
  const a=generatePattern(icons,{seed,first:true}),b=generatePattern(icons,{seed:seed+1,previousGrammar:a.grammar});
- assert.equal(a.palette.mode,'authentic');assert.notEqual(a.grammar,b.grammar);assert.deepEqual(a.selectedIcons,b.selectedIcons);
+ assert.equal(a.palette.mode,'harmonious');assert.notEqual(a.grammar,b.grammar);assert.deepEqual(a.selectedIcons,b.selectedIcons);
 }
 assert.throws(()=>generatePattern([]),RangeError);
 const state=createLibraryState();for(const icon of culturalIcons)state.toggleIcon(icon.id);assert.equal(state.getState().selectedIcons.length,3);state.toggleIcon(culturalIcons[0].id);assert.equal(state.getState().selectedIcons.length,2);state.setCity('beijing');assert.equal(state.getState().selectedIcons.length,0);

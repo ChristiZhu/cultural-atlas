@@ -1,7 +1,7 @@
 /** Designer-curated interpretations of the cultural sources, not random RGB palettes. */
-const porcelain={background:'#F5EEDD',colors:['#245A86','#2B7977','#B44139','#987126'],derived:['#314F6B','#5B7270','#914B48','#88672E']};
+const porcelain={background:'#F5EEDD',colors:['#245F95','#49AFC2','#B84D51','#D2A94F','#F1E1BE','#1B2F42'],derived:['#314F6B','#5B7270','#914B48','#88672E']};
 const palettes={
-  tower:{background:'#F2EADF',colors:['#665A53','#995F6B','#877146','#767978'],derived:['#514C49','#975E6A','#806339','#636A68']},
+  tower:{background:'#F2EADF',colors:['#7A7774','#A8A5A1','#B98D8D','#8A6B63','#C5A45D'],derived:['#514C49','#975E6A','#806339','#636A68']},
   porcelain,
   food:{background:'#F7EEE0',colors:['#95734F','#B5745B','#8A6652','#976530'],derived:['#756047','#9A6352','#58674F','#846531']},
   stone:{background:'#F1EDDF',colors:['#64665D','#8A7652','#5F7469','#8B6859'],derived:['#4C5951','#826749','#59736B','#805E50']},

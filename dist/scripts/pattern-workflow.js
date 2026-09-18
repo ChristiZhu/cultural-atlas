@@ -1,6 +1,7 @@
 import { culturalIcons, libraryState } from './library-state.js';
 import { generatePattern, renderPatternSVG, TILE_SIZE } from './pattern-generator.js';
 import { renderArtwork, exportArtworkPNG } from './pattern-export.js';
+import {COLOR_ROLES, paletteSwatches, palettesDiffer, recolorPattern} from './pattern-colors.js';
 import { prepareScene } from './scenes.js';
 
 const imageSVG=(body,color)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" color="${color}">${body}</svg>`;
@@ -8,6 +9,8 @@ const dataURL=svg=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
 export function createPatternWorkflow({navigate}) {
   const creating=document.querySelector('#pattern-creating'),field=creating.querySelector('.floating-field');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)'),assets={},pending=new Map(),motions=new Set();
+  let colorMode='harmonious',colorSeed=0;
+  const colorPanel=document.querySelector('.color-controls');
   let currentDisplayedPattern=null,pendingGeneratedPattern=null,selectionKey='',run=0,state='idle',exporting=false;
   const currentIcons=()=>libraryState.getState().selectedIcons.map(id=>culturalIcons.find(icon=>icon.id===id));
   async function loadIcon(icon) {
@@ -35,8 +38,43 @@ export function createPatternWorkflow({navigate}) {
     });
     const tile=document.querySelector('.motif-preview');tile.style.setProperty('--selected-count',currentIcons().length);
     tile.innerHTML=renderPatternSVG(result,assets,{width:92,height:92,prefix:'motif-preview'});
+    syncColorControls();
     document.querySelector('#pattern-preview .pattern-announcement').textContent=`Your ${result.grammar.replaceAll('-',' ')} pattern is ready.`;
   }
+  function syncColorControls(){
+    if(!colorPanel||!currentDisplayedPattern)return;
+    const palette=currentDisplayedPattern.palette;
+    colorPanel.querySelectorAll('[data-color-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.colorMode===palette.mode)));
+    const swatches=colorPanel.querySelector('.palette-swatches');
+    swatches.replaceChildren(...paletteSwatches(palette).map(color=>{
+      const swatch=document.createElement('span');swatch.className='palette-swatch';swatch.style.backgroundColor=color;swatch.title=color;swatch.setAttribute('aria-label',color);return swatch;
+    }));
+    swatches.setAttribute('aria-label',`${palette.name}: ${paletteSwatches(palette).join(', ')}`);
+  }
+  function recolor(mode=colorMode,shuffle=false){
+    if(!canShowResult()||state!=='ready')return;
+    if(!shuffle&&mode===colorMode)return;
+    colorMode=mode;if(shuffle)colorSeed++;
+    const previous=currentDisplayedPattern.palette;
+    let next=recolorPattern(currentDisplayedPattern,currentIcons(),colorMode,colorSeed);
+    // A shuffle always gives a visibly different set, even after palette reduction.
+    for(let attempt=0;shuffle&&!palettesDiffer(next.palette,previous)&&attempt<24;attempt++)next=recolorPattern(currentDisplayedPattern,currentIcons(),colorMode,++colorSeed);
+    if(shuffle&&!palettesDiffer(next.palette,previous)){
+      const roles=COLOR_ROLES.slice(1),colors=roles.map(role=>next.palette[role]);
+      next.palette={...next.palette,...Object.fromEntries(roles.map((role,i)=>[role,colors[(i+1)%colors.length]]))};
+    }
+    currentDisplayedPattern=next;
+    for(const selector of ['#pattern-preview .generated-pattern','#pattern-save .generated-pattern','.motif-preview']){
+      const container=document.querySelector(selector);
+      container.querySelectorAll('[data-color-role]').forEach(node=>node.setAttribute(node.dataset.colorAttribute,next.palette[node.dataset.colorRole]));
+      const metadata=container.querySelector('metadata');
+      if(metadata){const data=JSON.parse(metadata.textContent);metadata.textContent=JSON.stringify({...data,colorMode,palette:next.palette});}
+    }
+    syncColorControls();
+    if(colorPanel)colorPanel.querySelector('.color-announcement').textContent=`${next.palette.name} colors applied. Composition unchanged.`;
+  }
+  colorPanel?.querySelectorAll('[data-color-mode]').forEach(button=>button.addEventListener('click',()=>recolor(button.dataset.colorMode)));
+  colorPanel?.querySelector('#shuffle-colors').addEventListener('click',()=>recolor(colorMode,true));
   function canShowResult() {
     return !!currentDisplayedPattern&&selectionKey===currentIcons().map(icon=>icon.id).join('|');
   }
@@ -88,7 +126,8 @@ export function createPatternWorkflow({navigate}) {
       const generation=(async()=>{
         await new Promise(requestAnimationFrame);if(!live())return;
         const entropy=new Uint32Array(1);crypto.getRandomValues(entropy);
-        const result=generatePattern(icons,{seed:entropy[0],previousGrammar:key===selectionKey?currentDisplayedPattern?.grammar:null,first:!currentDisplayedPattern||key!==selectionKey});
+        if(key!==selectionKey){colorMode='harmonious';colorSeed=entropy[0];}
+        const result=generatePattern(icons,{seed:entropy[0],colorMode,colorSeed,previousGrammar:key===selectionKey?currentDisplayedPattern?.grammar:null,first:!currentDisplayedPattern||key!==selectionKey});
         if(live())pendingGeneratedPattern=result;
         await prepareScene(document.querySelector('#pattern-preview'));
       })();
@@ -143,5 +182,5 @@ export function createPatternWorkflow({navigate}) {
       document.querySelector('#export-status').textContent='The download could not be prepared. Please try Save again.';
     } finally {exporting=false;button.disabled=false;button.removeAttribute('aria-busy');}
   }
-  return {prepare,enter,leave:stop,save,canShowResult,getResult:()=>currentDisplayedPattern,getState:()=>({state,currentDisplayedPattern,pendingGeneratedPattern})};
+  return {prepare,enter,leave:stop,save,canShowResult,recolor,getResult:()=>currentDisplayedPattern,getState:()=>({state,currentDisplayedPattern,pendingGeneratedPattern})};
 }
