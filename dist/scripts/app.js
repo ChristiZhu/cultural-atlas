@@ -1,6 +1,6 @@
 import { transitionPage, transitionWorkflow, transitionSuccess } from './transitions.js';
 import { scenes, prepareScene, showScene } from './scenes.js';
-import { createGuangzhouMap } from './guangzhou.js';
+import { createCityMap } from './city-map.js';
 import { createArchive } from './archive.js';
 import { createWindowEntrance } from './window-entrance.js';
 import { createPatternWorkflow } from './pattern-workflow.js';
@@ -10,7 +10,7 @@ const atlas = document.querySelector('#atlas');
 const trigger = document.querySelector('#enter-window');
 const status = document.querySelector('#status');
 const successLayer = document.querySelector('#save-success-layer');
-const map = createGuangzhouMap(document.querySelector('#guangzhou'), { navigate });
+const map = createCityMap(document.querySelector('#guangzhou'), { navigate });
 const archive = createArchive(document.querySelector('#archive'), { onRestore: () => map.resetInteraction(), onClose: () => { if(history.state?.archive){transitioning=true;history.back();} } });
 const pattern = createPatternWorkflow({ navigate });
 const library = createIconLibrary({ navigate, onSave: () => pattern.save() });
@@ -23,11 +23,11 @@ void entrance.prepare().catch(()=>{});
 // Every fresh visit starts at the window. History supports returning and replaying.
 history.replaceState({ scene: 'home' }, '');
 
-async function navigate(destination, { recordHistory = true, replaceHistory = false, source, patternContinuation = false } = {}) {
+async function navigate(destination, { recordHistory = true, replaceHistory = false, source, cityId, patternContinuation = false } = {}) {
   if(destination==='canton'||destination==='porcelain'){
     if(transitioning||archive.isOpen)return;
     transitioning=true;map.dismissCard();
-    try{const opened=await archive.open(destination,source);if(opened&&recordHistory)history.pushState({scene:'map',archive:destination},'');}
+    try{const opened=await archive.open(destination,source);if(opened&&recordHistory)history.pushState({scene:'map',cityId:map.cityId,archive:destination},'');}
     catch{status.textContent='The archive could not load. Please try again.';}
     finally{transitioning=false;}
     return;
@@ -35,7 +35,7 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   if (archive.isOpen) return;
   if(destination.startsWith('pattern-')&&!library.getSelection().selectedIcons.length)destination='choose-icons';
   if(['pattern-preview','pattern-save','pattern-saved'].includes(destination)&&!pattern.canShowResult())destination='pattern-creating';
-  if (transitioning || destination === current || !scenes[destination]) return;
+  if (transitioning || (destination === current && (destination !== 'map' || !cityId || cityId === map.cityId)) || !scenes[destination]) return;
   library.leave();
   if(!patternContinuation)pattern.leave();
   transitioning = true;
@@ -50,13 +50,21 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   const incoming = document.getElementById(scenes[destination].elementId);
   try {
     // Avoid fading into an empty screen on a slow connection.
-    const destinationReady=Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare() : Promise.resolve(), destination === 'pattern-saved' ? prepareScene(successLayer) : Promise.resolve()]);
+    const destinationReady=Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare(cityId) : Promise.resolve(), destination === 'pattern-saved' ? prepareScene(successLayer) : Promise.resolve()]);
     const windowEntrance=current==='home'&&destination==='corkboard';
     if(!windowEntrance)await destinationReady;
     if(destination==='home')entrance.reset();
     await pattern.prepare(destination);
     library.prepare();
     const commit = () => {
+      if (destination === 'corkboard') incoming.querySelectorAll('[data-card]').forEach(card => {
+        card.setAttribute('role', 'button'); card.setAttribute('tabindex', '0');
+        const name = card.dataset.card === 'shanxi' ? 'Taiyuan' : card.dataset.card;
+        card.setAttribute('aria-label', `${name[0].toUpperCase() + name.slice(1)} — open the map`);
+        card.removeAttribute('aria-hidden');
+        card.ownerSVGElement.removeAttribute('aria-hidden');
+      });
+
       document.body.style.backgroundColor = scenes[destination].background;
       showScene(outgoing, false);showScene(incoming, true);
       current = destination;atlas.dataset.screen = destination;
@@ -68,8 +76,8 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     else if(lightTransition)await transitionWorkflow(scenes[destination].background,commit,outgoing,incoming);
     else await transitionPage(scenes[destination].background, commit);
     if(patternContinuation)pattern.leave();
-    document.title = scenes[destination].title;
-    if (recordHistory) history[replaceHistory ? 'replaceState' : 'pushState']({ scene: destination }, '');
+    document.title = destination === 'map' ? `${map.cityName} — The Cultural Atlas` : scenes[destination].title;
+    if (recordHistory) history[replaceHistory ? 'replaceState' : 'pushState']({ scene: destination, cityId: map.cityId }, '');
     if (destination === 'home') trigger.focus({ preventScroll: true });
     else (destination === 'pattern-saved' ? successLayer : incoming).focus({ preventScroll: true });
     status.textContent = '';
@@ -86,17 +94,27 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     source?.removeAttribute('data-selected');
   }
   if(current===destination)void pattern.enter(destination);
-  if(current==='map')void archive.preload('porcelain').catch(()=>{});
+  if(current==='map'&&map.cityId==='guangzhou')void archive.preload('porcelain').catch(()=>{});
 }
 
 trigger.addEventListener('click', () => navigate('corkboard'));
 document.querySelectorAll('[data-nav]').forEach(button => {
-  button.addEventListener('click', () => navigate(button.dataset.nav, { source: button }));
+  button.addEventListener('click', () => navigate(button.dataset.nav, { source: button, cityId: button.dataset.city }));
 });
 window.addEventListener('popstate', async event => {
   await entrance.cancel();
   if(archive.isOpen)await archive.close(false);
   transitioning=false;
-  await navigate(event.state?.scene ?? 'home', {recordHistory:false});
-  if(event.state?.archive)await navigate(event.state.archive,{recordHistory:false});
+  await navigate(event.state?.scene ?? 'home', {recordHistory:false,cityId:event.state?.cityId});
+  if(event.state?.archive)await navigate(event.state.archive,{recordHistory:false,cityId:event.state?.cityId});
 });
+
+const board = document.querySelector('#corkboard');
+function openBoardCity(event) {
+  const card = event.target.closest('[data-card]');
+  if (!card || (event.type === 'keydown' && !['Enter', ' '].includes(event.key))) return;
+  event.preventDefault();
+  navigate('map', { source: card, cityId: card.dataset.card === 'shanxi' ? 'taiyuan' : card.dataset.card });
+}
+board.addEventListener('click', openBoardCity);
+board.addEventListener('keydown', openBoardCity);

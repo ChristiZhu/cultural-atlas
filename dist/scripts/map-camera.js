@@ -129,11 +129,22 @@ export function createMapCamera({ surface, svg, world, bounds, onChange, onSelec
     }
   });
   new ResizeObserver(() => { constrain(); draw(); }).observe(surface);
-  return { refresh: draw, zoomBy(factor) {
-    const view = visibleBounds();
-    const p = { x: view.x + view.width / 2, y: view.y + view.height / 2 };
-    const zoom = clamp(state.zoom * factor, limits.min, limits.max);
-    animateTo({ zoom, x: p.x - (p.x - state.x) * zoom / state.zoom,
-      y: p.y - (p.y - state.y) * zoom / state.zoom });
+  return {
+    refresh: draw,
+    getState() { stopMotion(); return { ...state }; },
+    setContent(content, saved = { zoom: 1, x: 0, y: 0 }) {
+      stopMotion();
+      if (gesture && surface.hasPointerCapture(gesture.pointerId)) surface.releasePointerCapture(gesture.pointerId);
+      gesture = null; delete surface.dataset.dragging;
+      ({ svg, world, bounds } = content);
+      Object.assign(state, saved);
+      draw();
+    },
+    zoomBy(factor) {
+      const view = visibleBounds();
+      const p = { x: view.x + view.width / 2, y: view.y + view.height / 2 };
+      const zoom = clamp(state.zoom * factor, limits.min, limits.max);
+      animateTo({ zoom, x: p.x - (p.x - state.x) * zoom / state.zoom,
+        y: p.y - (p.y - state.y) * zoom / state.zoom });
   } };
 }

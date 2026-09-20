@@ -48,9 +48,7 @@
 .map-overview { position: absolute; z-index: 4; left: calc(13 * var(--unit)); bottom: calc(14 * var(--unit)); width: calc(235 * var(--unit)); height: calc(223 * var(--unit)); pointer-events: none; }
 .map-overview[hidden] { display: none; }
 .overview-art svg { inset: 0; width: 100%; height: 100%; }
-.map-filter-status { position: absolute; left: calc(10 * var(--unit)); top: calc(15 * var(--unit)); width: calc(184 * var(--unit)); height: calc(27 * var(--unit)); text-align: center; color: #f8d24d; font: calc(23 * var(--unit))/1.2 'Ugly Dave', sans-serif; letter-spacing: calc(4.6 * var(--unit)); pointer-events: none; }
-.map-filter-status[hidden] { display: none; }
-.map-scene[data-category='architecture'] .map-filter-status { font-size: calc(17 * var(--unit)); letter-spacing: calc(.4 * var(--unit)); top: calc(20 * var(--unit)); }
+.map-filter-title { position: absolute; left: calc(10 * var(--unit)); top: calc(15 * var(--unit)); width: calc(184 * var(--unit)); height: calc(27 * var(--unit)); text-align: center; color: #f8d24d; font: calc(23 * var(--unit))/1.2 'Ugly Dave', sans-serif; letter-spacing: calc(4.6 * var(--unit)); pointer-events: none; }
 
 /* Smaller secondary navigation; the original vector labels retain comfortable hit areas. */
 .scene nav { position: absolute; z-index: 5; right: calc(35 * var(--unit)); top: calc(var(--art-top) + 23 * var(--unit)); display: flex; align-items: center; gap: calc(12 * var(--unit)); }
@@ -74,7 +72,7 @@
 .panel-art { position: absolute; inset: 0; z-index: 2; }
 .panel-art [data-panel] { pointer-events: visiblePainted; }
 .map-scene::before, .map-scene::after { z-index: 2; pointer-events: none; }
-.map-controls .art-button, .collapse-button, .map-filter-status { z-index: 4; }
+.map-controls .art-button, .collapse-button, .map-filter-title { z-index: 4; }
 .map-item { pointer-events: all; cursor: pointer; outline: none; }
 .map-item .marker-art { transform-box: fill-box; transform-origin: center bottom; transition: transform 240ms cubic-bezier(.2,.7,.2,1), filter 240ms ease; }
 .map-item:hover .marker-art, .map-item:focus-visible .marker-art { transform: translateY(-6px) scale(1.06); filter: drop-shadow(0 0 3px rgb(248 210 77 / .4)) drop-shadow(0 3px 3px rgb(19 45 70 / .15)); }
@@ -109,3 +107,11 @@
 #icon-library nav { gap: calc(36 * var(--unit)); }
 
 .map-scene[data-suppress-card='true'] .map-item .marker-art { transform: none; filter: none; }
+
+/* Every original paired card uses the same keyboard and transition feedback. */
+.board-art [data-card] { cursor: pointer; }
+.board-art [data-card]:focus-visible { outline: none; transform: translateY(-8px); }
+.board-art [data-card][data-selected='true'] { transform: translateY(-2px) scale(.99); transition-duration: 100ms; }
+@media (prefers-reduced-motion: reduce) {
+  .board-art [data-card]:focus-visible, .board-art [data-card][data-selected='true'] { transform: none; }
+}
