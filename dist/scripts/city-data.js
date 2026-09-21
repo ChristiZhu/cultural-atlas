@@ -21,7 +21,9 @@ const citySources = {
     },
     "archives": {
       "Canton Tower": "canton",
-      "Guangcai Porcelain": "porcelain"
+      "Guangcai Porcelain": "porcelain",
+      "Shrimp Dumpling": "shrimp",
+      "Five Rams Sculpture": "five-rams"
     }
   },
   "beijing": {

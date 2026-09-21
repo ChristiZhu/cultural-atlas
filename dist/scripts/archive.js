@@ -20,7 +20,24 @@ const catalog = {
     {key:'SPREAD_07_08',file:'porcelain-07-08.svg',label:'Pages 07–08 — Symbol extraction'},
     {key:'BACK_COVER',file:'porcelain-back.svg',label:'Back cover'},
   ]},
+  'shrimp':{title:iconDisplayName('guangzhou','Shrimp Dumpling'),pages:[
+    {key:'FRONT_COVER',file:'shrimp-front.svg',label:'Front cover'},
+    {key:'SPREAD_01_02',file:'shrimp-01-02.svg',label:'Pages 01–02 — Identity and tea culture'},
+    {key:'SPREAD_03_04',file:'shrimp-03-04.svg',label:'Pages 03–04 — Ingredients and making'},
+    {key:'SPREAD_05_06',file:'shrimp-05-06.svg',label:'Pages 05–06 — Visual features and geometry'},
+    {key:'SPREAD_07_08',file:'shrimp-07-08.svg',label:'Pages 07–08 — From observation to icon'},
+    {key:'BACK_COVER',file:'shrimp-back.svg',label:'Back cover'},
+  ]},
+  'five-rams':{title:iconDisplayName('guangzhou','Five Rams Sculpture'),pages:[
+    {key:'FRONT_COVER',file:'five-rams-front.svg',label:'Front cover'},
+    {key:'SPREAD_01_02',file:'five-rams-01-02.svg',label:'Pages 01–02 — Identity and legend'},
+    {key:'SPREAD_03_04',file:'five-rams-03-04.svg',label:'Pages 03–04 — Form and structure'},
+    {key:'SPREAD_05_06',file:'five-rams-05-06.svg',label:'Pages 05–06 — Stone, colour and geometry'},
+    {key:'SPREAD_07_08',file:'five-rams-07-08.svg',label:'Pages 07–08 — From sculpture to icon'},
+    {key:'BACK_COVER',file:'five-rams-back.svg',label:'Back cover'},
+  ]},
 };
+export const archiveIds = Object.freeze(Object.keys(catalog));
 const isCover = page => page.key.endsWith('COVER');
 export function createArchive(dialog,{onClose,onRestore}) {
   const backdrop=dialog.querySelector('.archive-backdrop');

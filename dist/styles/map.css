@@ -43,12 +43,13 @@
 }
 
 /* Frame 04 interface stays docked to the lower-left viewport edge. */
-.site-logo { position: absolute; z-index: 20; left: calc(28 * var(--unit)); top: calc(32 * var(--unit)); width: calc(176 * var(--unit)); height: calc(24 * var(--unit)); pointer-events: none; }
+.site-logo { position: absolute; z-index: 2; left: calc(28 * var(--unit)); top: calc(32 * var(--unit)); width: calc(176 * var(--unit)); height: calc(24 * var(--unit)); pointer-events: none; }
 .site-logo img { display: block; width: 100%; height: 100%; }
 .map-overview { position: absolute; z-index: 4; left: calc(13 * var(--unit)); bottom: calc(14 * var(--unit)); width: calc(235 * var(--unit)); height: calc(223 * var(--unit)); pointer-events: none; }
 .map-overview[hidden] { display: none; }
 .overview-art svg { inset: 0; width: 100%; height: 100%; }
-.map-filter-title { position: absolute; left: calc(10 * var(--unit)); top: calc(15 * var(--unit)); width: calc(184 * var(--unit)); height: calc(27 * var(--unit)); text-align: center; color: #f8d24d; font: calc(23 * var(--unit))/1.2 'Ugly Dave', sans-serif; letter-spacing: calc(4.6 * var(--unit)); pointer-events: none; }
+.map-filter-title { position: absolute; left: calc(10 * var(--unit)); top: calc(9 * var(--unit)); display: flex; align-items: center; justify-content: center; width: calc(184 * var(--unit)); height: calc(37 * var(--unit)); color: #f8d24d; font: calc(23 * var(--unit))/1.2 'Ugly Dave', sans-serif; letter-spacing: calc(4.6 * var(--unit)); white-space: nowrap; pointer-events: none; }
+.map-filter-title[data-category='architecture'] { font-size: calc(18 * var(--unit)); }
 
 /* Smaller secondary navigation; the original vector labels retain comfortable hit areas. */
 .scene nav { position: absolute; z-index: 5; right: calc(35 * var(--unit)); top: calc(var(--art-top) + 23 * var(--unit)); display: flex; align-items: center; gap: calc(12 * var(--unit)); }
@@ -69,7 +70,7 @@
 .map-viewport:focus-visible { box-shadow: inset 0 0 0 1px #f5bbc7; }
 .map-viewport[data-dragging='true'], .map-viewport[data-dragging='true'] .map-item { cursor: grabbing; }
 .map-art svg { inset: 0; width: 100%; height: 100%; overflow: hidden; }
-.panel-art { position: absolute; inset: 0; z-index: 2; }
+.panel-art { position: absolute; inset: 0; z-index: 3; }
 .panel-art [data-panel] { pointer-events: visiblePainted; }
 .map-scene::before, .map-scene::after { z-index: 2; pointer-events: none; }
 .map-controls .art-button, .collapse-button, .map-filter-title { z-index: 4; }
@@ -117,3 +118,17 @@
 @media (prefers-reduced-motion: reduce) {
   .board-art [data-card]:focus-visible, .board-art [data-card][data-selected='true'] { transform: none; }
 }
+
+/* The shared expanded panel covers the logo, including through its translucent paper. */
+.atlas:has(.map-scene.scene--active[data-collapsed='false']) .site-logo { visibility: hidden; }
+
+/* Small paper tabs sit on the lower outer board edges, clear of the city cards. */
+.board-tab { position: absolute; bottom: calc(var(--art-top) + 24 * var(--unit)); z-index: 4; display: inline-flex; align-items: center; justify-content: center; gap: calc(12 * var(--unit)); height: calc(48 * var(--unit)); padding: 0 calc(16 * var(--unit)); border: max(1px, calc(1 * var(--unit))) solid rgb(61 41 26 / .45); border-radius: 1px; background: #efdeb5; color: #3d291a; font: calc(22 * var(--unit))/1 'Ugly Dave', sans-serif; white-space: nowrap; box-shadow: 0 2px 4px rgb(61 41 26 / .18); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 250ms ease, box-shadow 250ms ease; }
+.board-tab--back { left: max(16px, calc(var(--art-left) + 64 * var(--unit))); --direction: -1; --tilt: -1deg; transform: rotate(-1deg); }
+.board-tab--create { right: max(16px, calc(var(--art-left) + 64 * var(--unit))); --direction: 1; --tilt: 1deg; transform: rotate(1deg); color: #206eb8; }
+.board-tab:hover { transform: translate(calc(var(--direction) * 2px), -3px) rotate(var(--tilt)); box-shadow: 0 4px 6px rgb(61 41 26 / .22); }
+.board-tab:active, .board-tab[data-selected='true'] { transform: translateY(1px) rotate(var(--tilt)) scale(.99); box-shadow: 0 1px 2px rgb(61 41 26 / .18); transition-duration: 100ms; }
+.board-tab:focus:not(:focus-visible) { outline: none; }
+.board-tab:focus-visible { outline: 2px solid #ffd01a; outline-offset: 3px; }
+.board-tab[aria-disabled='true'] { cursor: progress; }
+@media (prefers-reduced-motion: reduce) { .board-tab { transition: none; } .board-tab:hover, .board-tab:active, .board-tab[data-selected='true'] { transform: rotate(var(--tilt)); } }

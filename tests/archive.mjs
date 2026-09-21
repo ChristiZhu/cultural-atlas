@@ -37,7 +37,7 @@ globalThis.getComputedStyle = () => ({ opacity: '1', transform: 'none' });
 globalThis.cancelAnimationFrame = () => {};
 const settle = async () => { for (let i = 0; i < 150; i++) await Promise.resolve(); };
 
-for (const book of ['canton', 'porcelain']) {
+for (const book of ['canton', 'porcelain', 'shrimp', 'five-rams']) {
   const dialog = new Element();
   dialog.nodes = Object.fromEntries(['.archive-backdrop', '.archive-stage', '.archive-art', '.archive-hit', '.archive-cursor',
     '[data-page="previous"]', '[data-page="next"]', '[data-page="cover"]', '.archive-status'].map(s => [s, new Element()]));
@@ -73,7 +73,7 @@ for (const page of fit) {
   assert.deepEqual(page.stage, [1512, 982]);
   if (page.sourceSpine !== null) assert(Math.abs(page.sourceSpine * page.scale + page.translate[0] - 756) < 1e-6);
 }
-console.log('PASS: both archives use all six states, forward/back/closed-cover transitions, fixed stage, shared spine, and restore background interaction on exit.');
+console.log('PASS: all four archives use all six states, forward/back/closed-cover transitions, fixed stage, shared spine, and restore background interaction on exit.');
 
 // Failure/lifecycle regression cases use the real engine and controlled async work.
 function harness(){
@@ -94,7 +94,7 @@ function harness(){
 }
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 const h=harness();
-for(const id of ['porcelain','porcelain','canton','porcelain','canton']){
+for(const id of ['porcelain','shrimp','five-rams','canton','shrimp','five-rams','porcelain','canton']){
   await h.archive.open(id);
   for(const key of ['ArrowRight','ArrowRight','ArrowRight','ArrowLeft','ArrowLeft']){h.key(key);await settle();}
   h.stable('SPREAD_01_02');await h.archive.close();

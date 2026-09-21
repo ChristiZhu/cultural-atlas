@@ -1,7 +1,7 @@
 import { transitionPage, transitionWorkflow, transitionSuccess } from './transitions.js';
 import { scenes, prepareScene, showScene } from './scenes.js';
 import { createCityMap } from './city-map.js';
-import { createArchive } from './archive.js';
+import { createArchive, archiveIds } from './archive.js?v=4';
 import { createWindowEntrance } from './window-entrance.js';
 import { createPatternWorkflow } from './pattern-workflow.js';
 import { createIconLibrary } from './icon-library.js';
@@ -24,7 +24,7 @@ void entrance.prepare().catch(()=>{});
 history.replaceState({ scene: 'home' }, '');
 
 async function navigate(destination, { recordHistory = true, replaceHistory = false, source, cityId, patternContinuation = false } = {}) {
-  if(destination==='canton'||destination==='porcelain'){
+  if(archiveIds.includes(destination)){
     if(transitioning||archive.isOpen)return;
     transitioning=true;map.dismissCard();
     try{const opened=await archive.open(destination,source);if(opened&&recordHistory)history.pushState({scene:'map',cityId:map.cityId,archive:destination},'');}
@@ -94,7 +94,10 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     source?.removeAttribute('data-selected');
   }
   if(current===destination)void pattern.enter(destination);
-  if(current==='map'&&map.cityId==='guangzhou')void archive.preload('porcelain').catch(()=>{});
+  if(current==='map'&&map.cityId==='guangzhou') {
+    // Warm every book on map entry; each book limits concurrent image decodes.
+    for(const id of archiveIds)void archive.preload(id).catch(()=>{});
+  }
 }
 
 trigger.addEventListener('click', () => navigate('corkboard'));

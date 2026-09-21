@@ -89,5 +89,17 @@ Validation: `node tests/city-map.mjs` checks city switching, exact camera restor
 - The original minimap text element now reports the live category, including deselection and restored city state. Its size, position, typeface and letter spacing are unchanged.
 - `icon-names.js` centralizes the user-supplied workbook names for 29 matched map subjects. Existing artwork identity keys, IDs, categories and archive routing remain unchanged. The same names are used in the map’s accessible item list, marker labels, hover cards, shared library labels and archive titles. No artwork or cultural items were added.
 - Unmatched: Dehong’s existing Jingpo Knife (`craft-景颇刀`) is not confirmed to represent the listed Achang Husa Knife Forging, so its name remains unchanged. Workbook-only items were not added.
-- Text fit: all 30 current map hover labels fit the existing two-line treatment and clip area. ARCHITECTURE is approximately 224 design units wide in the unchanged status style, exceeding the original 184-unit text area and overlapping the decorative dot. This is reported rather than changing the requested typography or layout.
+- Text fit: all 30 current map hover labels fit the existing two-line treatment and clip area. The minimap status preserves its original fixed SVG box and decorative dot. It uses All / Food / Architecture / Craft; only Architecture uses a smaller font to fit the same text area. Switching filters never resizes the box.
 - Verified all five maps’ FOOD / ARCHITECTURE / CRAFT / ALL states and matching marker counts; keyboard versus pointer board focus; library labels; collapse/navigation restoration; and the renamed porcelain archive link. `tests/icon-names.mjs` checks subject matching, library labels and stable archive keys; existing map-camera and archive tests pass.
+
+## Board paper tabs and shared map layering
+
+The board includes small matching paper tabs for Back to Window and Create Pattern, using the existing home and library routes. Expanded city information hides the logo through the shared map style; collapsing restores it. The original minimap filter box remains unchanged across all status values.
+
+## Har Gow and Five Rams archives
+
+The Guangzhou map now links Har Gow and Five Rams Sculpture to six original Figma pages each from file `WFlQP08xWWdLY5ifbnLAHs`: Har Gow `835:2,6,10,14,18,22`; Five Rams `868:2,15,28,41,54,67`. Original exports are retained in `design-sources/archives/`. `scripts/prepare-guangzhou-archives.py` removes only the baked map/background/navigation and applies a uniform book scale, preserving text outlines, photograph crops, texture and internal spacing. All pages use the unchanged 1512×982 stage and x=756 turn axis.
+
+`archive.js` is the sole modal/page-turn engine for all four archives. Its catalog supplies the available archive IDs to navigation and map-entry preloading. The new archives do not add animation branches or alter existing timing, cursors, sizing, history, or background locking.
+
+Validation: all four archives pass the shared lifecycle and failure tests. Browser checks covered all new pages through both back covers, cover reset, backward turns, outside/Escape closing, repeated cross-archive opening, and both existing archives. The stage bounds stayed identical between turns. A filtered, zoomed and panned map retained the exact transform and filter after closing; the background was inert while open and the hover card was cleared on close. Local preview is available on port 4173; these archive updates have not been published.

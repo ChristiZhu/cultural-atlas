@@ -61,7 +61,9 @@ export function createCityMap(scene, { navigate }) {
   function render() {
     scene.dataset.collapsed = String(state.collapsed);
     scene.dataset.category = state.category ?? 'all';
-    filterStatus.textContent = (state.category ?? 'all').toUpperCase();
+    const category = state.category ?? 'all';
+    filterStatus.textContent = category[0].toUpperCase() + category.slice(1);
+    filterStatus.dataset.category = category;
     filters.hidden = state.collapsed;
     filters.inert = state.collapsed;
     collapse.hidden = state.collapsed;
