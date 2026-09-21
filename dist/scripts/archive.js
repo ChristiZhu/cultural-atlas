@@ -1,3 +1,4 @@
+import { iconDisplayName } from './icon-names.js';
 /** A transparent fixed stage with Figma-normalized covers and two-sided pages. */
 const base = './assets/archive/';
 const FRAME = { width:1512, height:982, left:111, spine:756, pageWidth:645, coverLeft:433.5 };
@@ -10,8 +11,8 @@ const canton = [
   { key:'BACK_COVER', file:'canton-back.svg', label:'Back cover' },
 ];
 const catalog = {
-  canton:{title:'Canton Tower',pages:canton},
-  porcelain:{title:'Guangzhou Painted Porcelain',pages:[
+  canton:{title:iconDisplayName('guangzhou','Canton Tower'),pages:canton},
+  porcelain:{title:iconDisplayName('guangzhou','Guangcai Porcelain'),pages:[
     {key:'FRONT_COVER',file:'porcelain-front.svg',label:'Front cover'},
     {key:'SPREAD_01_02',file:'porcelain-01-02.svg',label:'Pages 01–02 — Identity and context'},
     {key:'SPREAD_03_04',file:'porcelain-03-04.svg',label:'Pages 03–04 — Materials and making'},

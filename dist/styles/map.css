@@ -109,8 +109,10 @@
 .map-scene[data-suppress-card='true'] .map-item .marker-art { transform: none; filter: none; }
 
 /* Every original paired card uses the same keyboard and transition feedback. */
-.board-art [data-card] { cursor: pointer; }
-.board-art [data-card]:focus-visible { outline: none; transform: translateY(-8px); }
+.board-art [data-card] { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+/* SVG buttons otherwise receive the browser's native pointer-focus ring. */
+.board-art [data-card]:focus:not(:focus-visible) { outline: none; }
+.board-art [data-card]:focus-visible { outline: 2px solid #ffd01a; outline-offset: 3px; transform: translateY(-8px); }
 .board-art [data-card][data-selected='true'] { transform: translateY(-2px) scale(.99); transition-duration: 100ms; }
 @media (prefers-reduced-motion: reduce) {
   .board-art [data-card]:focus-visible, .board-art [data-card][data-selected='true'] { transform: none; }

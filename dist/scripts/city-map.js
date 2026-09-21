@@ -2,9 +2,11 @@ import { loadArtwork } from './scenes.js';
 import { createMapCamera } from './map-camera.js';
 import { createNameCard } from './name-card.js';
 import { createOcean } from './ocean.js';
+import { iconDisplayName } from './icon-names.js';
+
+import { cities } from './city-data.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
-import { cities } from './city-data.js';
 
 /** Shared interaction surface. Only city artwork and saved view state are swapped. */
 export function createCityMap(scene, { navigate }) {
@@ -21,6 +23,7 @@ export function createCityMap(scene, { navigate }) {
   const itemList = scene.querySelector('#map-items');
   const callout = scene.querySelector('#item-callout');
   const overview = scene.querySelector('#map-overview');
+  const filterStatus = overview.querySelector('.map-filter-title');
   const nameCard = createNameCard(callout, { onHide: () => { state.selected = null; for (const { element } of markers.values()) element.setAttribute('aria-expanded', 'false'); } });
 
   function updateCamera(view, visible, { rect, viewport, scale }) {
@@ -58,6 +61,7 @@ export function createCityMap(scene, { navigate }) {
   function render() {
     scene.dataset.collapsed = String(state.collapsed);
     scene.dataset.category = state.category ?? 'all';
+    filterStatus.textContent = (state.category ?? 'all').toUpperCase();
     filters.hidden = state.collapsed;
     filters.inert = state.collapsed;
     collapse.hidden = state.collapsed;
@@ -73,7 +77,7 @@ export function createCityMap(scene, { navigate }) {
     for (const [name, { element }] of markers) {
       const visible = !state.category || element.dataset.category === state.category;
       element.style.display = visible ? '' : 'none';
-      if (visible) visibleItems.push(name);
+      if (visible) visibleItems.push(iconDisplayName(city.id, name));
       else if (state.selected === name) closeCallout();
     }
     itemList.replaceChildren(...visibleItems.map(name => {
@@ -85,7 +89,7 @@ export function createCityMap(scene, { navigate }) {
     if (suppressCard) return;
     if (scene.querySelector('.map-viewport').dataset.dragging) return;
     state.selected = element.dataset.item;
-    nameCard.show(state.selected);
+    nameCard.show(iconDisplayName(city.id, state.selected));
     for (const { element: marker } of markers.values()) marker.setAttribute('aria-expanded', String(marker === element));
     camera?.refresh();
   }
@@ -190,7 +194,7 @@ export function createCityMap(scene, { navigate }) {
         hit.classList.add('marker-hit'); element.prepend(hit);
         element.classList.add('map-item');
         element.setAttribute('role', 'button'); element.setAttribute('tabindex', '0');
-        element.setAttribute('aria-label', element.dataset.item);
+        element.setAttribute('aria-label', iconDisplayName(city.id, element.dataset.item));
         element.setAttribute('aria-controls', 'item-callout'); element.setAttribute('aria-expanded', 'false');
         element.addEventListener('pointerenter', () => showItem(element));
         element.addEventListener('pointerleave', () => nameCard.leave());
