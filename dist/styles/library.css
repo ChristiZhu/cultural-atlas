@@ -11,7 +11,7 @@
 [data-icon-card] { --icon-ink: #000; }
 [data-icon-background] { fill: #ffd0ed; transition: fill 180ms ease; }
 [data-icon-card][data-hover='true']:not([data-selected='true']) [data-icon-background] { fill: #cfe8ff; }
-[data-icon-card][data-selected='true'] { --icon-ink: #fff; }
+[data-icon-card][data-selected='true'] { --icon-ink: #fff; --icon-cutout: #206eb8; }
 [data-icon-card][data-selected='true'] [data-icon-background] { fill: #206eb8; }
 [data-icon-art] { color: var(--icon-ink); transition: color 180ms ease; }
 [data-icon-card][data-selected='true'] [data-icon-art] { opacity: 1; }

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createRequire} from 'node:module';
-import {culturalIcons} from '../dist/scripts/library-state.js';
+import {culturalIcons} from '../dist/scripts/library-state.js?v=20260922-library-final';
 import {generatePattern,renderPatternSVG,GRAMMARS} from '../dist/scripts/pattern-generator.js';
 const sharp=createRequire(import.meta.url)('sharp');
 const assets=Object.fromEntries(culturalIcons.map(icon=>[icon.id,fs.readFileSync(new URL('../assets/pattern-icons/'+icon.id+'.svg',new URL('../dist/scripts/',import.meta.url)),'utf8').replace(/^<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'')]));
@@ -24,4 +24,4 @@ for(const icon of culturalIcons){
  for(let y=0;y<100;y++)for(let x=0;x<100;x++)if(raw[(y*100+x)*4+3]>10){ink++;if(x<2||y<2||x>97||y>97)edgeInk++;}
  assert(ink>100,`${icon.id}: empty icon`);assert.equal(edgeInk,0,`${icon.id}: accidentally clipped icon`);
 }
-console.log('PASS: all six exported repeat tiles match a 2×2 rendered repeat, embedded vectors are self-contained, all nine source glyphs have clear unclipped bounds.');
+console.log('PASS: all six exported repeat tiles match a 2×2 rendered repeat, embedded vectors are self-contained, all source glyphs have clear unclipped bounds.');

@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {culturalIcons} from '../dist/scripts/library-state.js';
+import {culturalIcons} from '../dist/scripts/library-state.js?v=20260922-library-final';
 import {generatePattern,renderPatternSVG} from '../dist/scripts/pattern-generator.js';
 import {generatePalette,paletteSwatches,COLOR_MODES,COLOR_ROLES,contrast,recolorPattern,CURATED_PALETTES} from '../dist/scripts/pattern-colors.js';
 const stats={};
 for(const mode of COLOR_MODES)for(let n=1;n<=3;n++)for(let i=0;i<culturalIcons.length;i++)for(let seed=0;seed<40;seed++){
- const icons=Array.from({length:n},(_,j)=>culturalIcons[(i+j*4)%9]);
+ const icons=Array.from({length:n},(_,j)=>culturalIcons[(i+j*4)%culturalIcons.length]);
  const palette=generatePalette({icons,colorMode:mode,seed}),swatches=paletteSwatches(palette);
  assert.deepEqual(palette,generatePalette({icons,colorMode:mode,seed}));
  assert(swatches.length>=(mode==='vivid'?5:4)&&swatches.length<=(mode==='authentic'?5:6),`${mode} color count ${swatches.length}`);

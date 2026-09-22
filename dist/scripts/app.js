@@ -3,8 +3,8 @@ import { scenes, prepareScene, showScene } from './scenes.js';
 import { createCityMap } from './city-map.js?v=2';
 import { createArchive, archiveIds } from './archive.js?v=5';
 import { createWindowEntrance } from './window-entrance.js';
-import { createPatternWorkflow } from './pattern-workflow.js';
-import { createIconLibrary } from './icon-library.js';
+import { createPatternWorkflow } from './pattern-workflow.js?v=20260922-library-final';
+import { createIconLibrary } from './icon-library.js?v=20260922-library-final';
 
 const atlas = document.querySelector('#atlas');
 const trigger = document.querySelector('#enter-window');
@@ -54,6 +54,9 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     const windowEntrance=current==='home'&&destination==='corkboard';
     if(!windowEntrance)await destinationReady;
     if(destination==='home')entrance.reset();
+    // Only an explicit entry from a city map changes the shared city filter.
+    // Back/forward and the creation workflow retain city and icon selection.
+    if(destination==='library'&&current==='map'&&recordHistory)library.setCity(map.cityId);
     await pattern.prepare(destination);
     library.prepare();
     const commit = () => {
@@ -83,6 +86,7 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     status.textContent = '';
 
   } catch(error) {
+    console.error('Unable to open the requested scene',destination,error);
     document.body.style.backgroundColor = scenes[current].background;
     showScene(outgoing, true);
     status.textContent = 'The artwork could not load. Please try again.';

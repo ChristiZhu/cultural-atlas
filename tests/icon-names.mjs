@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { iconDisplayName, iconNames } from '../dist/scripts/icon-names.js';
 import { cities } from '../dist/scripts/city-data.js';
-import { culturalIcons } from '../dist/scripts/library-state.js';
+import { culturalIcons } from '../dist/scripts/library-state.js?v=20260922-library-final';
 let matched=0,unmatched=[];
 for(const city of Object.values(cities)) {
   const svg=readFileSync(new URL('../dist/'+city.mapAsset.replace('./',''),import.meta.url),'utf8');
@@ -18,5 +18,5 @@ const { archivesByCity } = await import('../dist/scripts/archive-entries.js');
 assert.equal(archivesByCity.guangzhou['Guangcai Porcelain'],'porcelain','stable archive routing key');
 assert.equal(culturalIcons.find(x=>x.id==='har-gow').label,'Har Gow (Steamed Shrimp Dumplings)');
 assert.equal(culturalIcons.find(x=>x.id==='five-rams').label,'Five Rams Sculpture motif');
-assert.equal(culturalIcons.length,9,'no new library glyphs');
-console.log('PASS: 29 matched map names, one explicitly unmatched subject, canonical library names, and unchanged archive key and glyph count.');
+assert.equal(culturalIcons.length,24,'complete Figma 07 icon collection');
+console.log('PASS: 29 matched map names, one explicitly unmatched subject, canonical library names, and unchanged archive key and 24 library glyphs.');

@@ -1,4 +1,4 @@
-import { cities, culturalIcons, libraryState, MAX_SELECTED_ICONS } from './library-state.js';
+import { cities, culturalIcons, libraryState, MAX_SELECTED_ICONS } from './library-state.js?v=20260922-library-final';
 
 export function createIconLibrary({navigate,onSave}) {
   const library=document.querySelector('#icon-library'),chooser=document.querySelector('#choose-icons');
@@ -13,9 +13,10 @@ export function createIconLibrary({navigate,onSave}) {
     el.dataset.city=city.id;el.classList.add('city-button');el.setAttribute('aria-controls','city-collection');
     el.addEventListener('click',()=>libraryState.setCity(city.id));library.querySelector('.city-controls').append(el);
   }
-  const xs=[144,256,368,480,592,700,812,924,1042];
+  const cellPosition=(index,isChooser)=>({x:(isChooser?144:150)+112.8*(index%11),y:(isChooser?259:368)+121.5*Math.floor(index/11)});
   for(const [index,icon] of culturalIcons.entries()) {
-    const el=button(icon.label,`--x:${xs[index]};--y:259;--w:92;--h:92`);
+    const {x,y}=cellPosition(index,true);
+    const el=button(icon.label,`--x:${x};--y:${y};--w:92;--h:92`);
     el.dataset.icon=icon.id;el.classList.add('icon-button');
     el.addEventListener('click',()=>{
       if(libraryState.toggleIcon(icon.id)===false)chooser.querySelector('#icon-selection-hint').textContent='Choose up to 3 icons. Deselect one to try another.';
@@ -31,29 +32,26 @@ export function createIconLibrary({navigate,onSave}) {
     el.addEventListener('pointerdown',()=>feedback('pressed'));el.addEventListener('pointerup',()=>feedback('hover'));
     el.addEventListener('focus',()=>feedback('hover'));el.addEventListener('blur',()=>feedback(''));
   });
-  // All cells share the same positioning component; visual states only change ink.
-  function centerIconCards() {
-    chooser.querySelectorAll('[data-icon-card]').forEach(card=>{
-      if(card.querySelector('[data-icon-position]'))return;
-      const art=card.querySelector('[data-icon-art]'),cell=card.querySelector('[data-icon-background]');
-      const wrapper=document.createElementNS('http://www.w3.org/2000/svg','g');
-      wrapper.setAttribute('data-icon-position','');art.before(wrapper);wrapper.append(art);
-      const wasHidden=card.style.display;card.style.display='';
-      const box=wrapper.getBBox(),bounds=cell.getBBox();
-      wrapper.setAttribute('transform',`translate(${bounds.x+bounds.width/2-box.x-box.width/2} ${bounds.y+bounds.height/2-box.y-box.height/2})`);
-      card.style.display=wasHidden;
-    });
-  }
+  // Source vectors are centered once during asset preparation. Both views pack
+  // filtered icons into these same, evenly spaced cells without resizing glyphs.
   function paintIcons(scene,state) {
-    const available=new Set(state.availableIcons.map(icon=>icon.id));
-    scene.querySelectorAll('[data-library-icon]').forEach(el=>el.style.display=available.has(el.dataset.libraryIcon)?'':'none');
-    scene.querySelectorAll('[data-icon-card]').forEach(el=>{
-      el.style.display=available.has(el.dataset.iconCard)?'':'none';
-      el.dataset.selected=String(state.selectedIcons.includes(el.dataset.iconCard));
+    const available=new Map(state.availableIcons.map((icon,index)=>[icon.id,index]));
+    scene.querySelectorAll('[data-library-icon], [data-icon-card]').forEach(el=>{
+      const id=el.dataset.libraryIcon??el.dataset.iconCard;
+      el.style.display=available.has(id)?'':'none';
+      if(available.has(id)){
+        const {x,y}=cellPosition(available.get(id),scene===chooser);
+        el.setAttribute('transform',`translate(${x} ${y})`);
+      }
+      el.dataset.selected=String(state.selectedIcons.includes(id));
     });
     scene.querySelectorAll('[data-icon]').forEach(el=>{
       el.hidden=!available.has(el.dataset.icon);el.setAttribute('aria-pressed',String(state.selectedIcons.includes(el.dataset.icon)));
       el.setAttribute('aria-disabled',String(state.selectedIcons.length>=MAX_SELECTED_ICONS&&!state.selectedIcons.includes(el.dataset.icon)));
+      if(available.has(el.dataset.icon)){
+        const {x,y}=cellPosition(available.get(el.dataset.icon),true);
+        el.style.setProperty('--x',x);el.style.setProperty('--y',y);
+      }
     });
     scene.dataset.city=state.selectedCity;
   }
@@ -71,7 +69,7 @@ export function createIconLibrary({navigate,onSave}) {
     const layer=library.querySelector('[data-collection]');
     const cityChanged=paintedCity!==state.selectedCity;paintedCity=state.selectedCity;
     if(!cityChanged||!layer||!library.classList.contains('scene--active')||reduced.matches) {
-      change++;animation?.cancel();paintIcons(library,state);return;
+      change++;animation?.cancel();library.removeAttribute('aria-busy');paintIcons(library,state);return;
     }
     const ticket=++change;animation?.cancel();library.setAttribute('aria-busy','true');
     try {
@@ -95,12 +93,12 @@ export function createIconLibrary({navigate,onSave}) {
   });
   return {
     prepare() {
-      centerIconCards();
       change++;animation?.cancel();library.removeAttribute('aria-busy');
       const state=libraryState.getState();paintedCity=state.selectedCity;
       paintControls(state);paintIcons(library,state);paintIcons(chooser,state);
     },
     leave(){change++;animation?.cancel();library.removeAttribute('aria-busy');},
     getSelection:()=>libraryState.getState(),
+    setCity:city=>libraryState.setCity(city),
   };
 }

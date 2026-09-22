@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {culturalIcons,createLibraryState} from '../dist/scripts/library-state.js';
+import {culturalIcons,createLibraryState} from '../dist/scripts/library-state.js?v=20260922-library-final';
 import {generatePattern,GRAMMARS,renderPatternSVG,wrappedItems,TILE_SIZE} from '../dist/scripts/pattern-generator.js';
 const stats={};let count=0;
 for(const grammar of GRAMMARS)for(let i=0;i<culturalIcons.length;i++)for(const size of [1,2,3])for(let seed=1;seed<=12;seed++){
@@ -12,7 +12,7 @@ for(const grammar of GRAMMARS)for(let i=0;i<culturalIcons.length;i++)for(const s
  for(const item of result.items){assert(wrapped.some(p=>p.id===item.id&&p.x===item.x-TILE_SIZE&&p.y===item.y));assert(wrapped.some(p=>p.id===item.id&&p.x===item.x&&p.y===item.y+TILE_SIZE));}
 }
 for(let seed=0;seed<200;seed++){
- const icons=[culturalIcons[seed%9],culturalIcons[(seed+1)%9],culturalIcons[(seed+2)%9]];
+ const icons=[culturalIcons[seed%culturalIcons.length],culturalIcons[(seed+1)%culturalIcons.length],culturalIcons[(seed+2)%culturalIcons.length]];
  const a=generatePattern(icons,{seed,first:true}),b=generatePattern(icons,{seed:seed+1,previousGrammar:a.grammar});
  assert.equal(a.palette.mode,'harmonious');assert.notEqual(a.grammar,b.grammar);assert.deepEqual(a.selectedIcons,b.selectedIcons);
 }

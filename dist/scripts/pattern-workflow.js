@@ -1,6 +1,6 @@
-import { culturalIcons, libraryState } from './library-state.js';
-import { generatePattern, renderPatternSVG, TILE_SIZE } from './pattern-generator.js';
-import { renderArtwork, exportArtworkPNG } from './pattern-export.js';
+import { culturalIcons, libraryState } from './library-state.js?v=20260922-library-final';
+import { generatePattern, renderPatternSVG, TILE_SIZE } from './pattern-generator.js?v=20260922-library-final';
+import { renderArtwork, exportArtworkPNG } from './pattern-export.js?v=20260922-library-final';
 import {COLOR_ROLES, paletteSwatches, palettesDiffer, recolorPattern} from './pattern-colors.js';
 import { prepareScene } from './scenes.js';
 
@@ -13,6 +13,7 @@ export function createPatternWorkflow({navigate}) {
   const colorPanel=document.querySelector('.color-controls');
   let currentDisplayedPattern=null,pendingGeneratedPattern=null,selectionKey='',run=0,state='idle',exporting=false;
   const currentIcons=()=>libraryState.getState().selectedIcons.map(id=>culturalIcons.find(icon=>icon.id===id));
+  const currentSelectionKey=()=>{const {selectedCity,selectedIcons}=libraryState.getState();return [selectedCity,...selectedIcons].join('|');};
   async function loadIcon(icon) {
     if(assets[icon.id])return;
     if(!pending.has(icon.id))pending.set(icon.id,(async()=>{
@@ -76,7 +77,7 @@ export function createPatternWorkflow({navigate}) {
   colorPanel?.querySelectorAll('[data-color-mode]').forEach(button=>button.addEventListener('click',()=>recolor(button.dataset.colorMode)));
   colorPanel?.querySelector('#shuffle-colors').addEventListener('click',()=>recolor(colorMode,true));
   function canShowResult() {
-    return !!currentDisplayedPattern&&selectionKey===currentIcons().map(icon=>icon.id).join('|');
+    return !!currentDisplayedPattern&&selectionKey===currentSelectionKey();
   }
   async function prepare(scene) {
     if(scene!=='pattern-creating')return;
@@ -106,7 +107,7 @@ export function createPatternWorkflow({navigate}) {
   }
   async function enter(scene) {
     if(scene!=='pattern-creating'||state==='creating')return;
-    const ticket=++run,icons=currentIcons(),key=icons.map(icon=>icon.id).join('|');
+    const ticket=++run,icons=currentIcons(),key=currentSelectionKey(),selectedCity=libraryState.getState().selectedCity;
     state='creating';pendingGeneratedPattern=null;
     const w=creating.clientWidth,h=creating.clientHeight;
     const symbols=Array.from({length:16},(_,i)=>{
@@ -128,6 +129,7 @@ export function createPatternWorkflow({navigate}) {
         const entropy=new Uint32Array(1);crypto.getRandomValues(entropy);
         if(key!==selectionKey){colorMode='harmonious';colorSeed=entropy[0];}
         const result=generatePattern(icons,{seed:entropy[0],colorMode,colorSeed,previousGrammar:key===selectionKey?currentDisplayedPattern?.grammar:null,first:!currentDisplayedPattern||key!==selectionKey});
+        result.selectedCity=selectedCity;
         if(live())pendingGeneratedPattern=result;
         await prepareScene(document.querySelector('#pattern-preview'));
       })();

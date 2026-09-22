@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {palettesDiffer} from '../dist/scripts/pattern-colors.js';
-import {libraryState} from '../dist/scripts/library-state.js';
+import {libraryState,culturalIcons} from '../dist/scripts/library-state.js?v=20260922-library-final';
 const animations=[],frames=[];
 class Element {
  constructor(){this.children=[];this.dataset={};this.attributes={};this.style={setProperty:(k,v)=>this.style[k]=v};this.clientWidth=1920;this.clientHeight=1080;this.innerHTML='';}
@@ -58,4 +58,29 @@ reduce=true;for(let i=0;i<2;i++){
  assert(animations.filter(a=>!a.settled).every(a=>a.options.duration===650));await finishPhase();await running;assert.equal(navigations.length,count+1);workflow.leave();
 }
 await workflow.prepare('pattern-save');assert.equal(workflow.canShowResult(),true);libraryState.toggleIcon('har-gow');assert.equal(workflow.canShowResult(),false,'Stale selection cannot be shown through history');
+// The existing workflow must load the new vectors and keep city identity through
+// generation, Back, Redo, recoloring, Save and a switch to a different city.
+for(const city of ['guangzhou','beijing','shanghai','taiyuan','dehong']){
+ libraryState.setCity(city);
+ for(const id of libraryState.getState().selectedIcons)libraryState.toggleIcon(id);
+ const ids=culturalIcons.filter(icon=>icon.city===city).slice(-3).map(icon=>icon.id);
+ for(const id of ids)libraryState.toggleIcon(id);
+ assert.equal(workflow.canShowResult(),false);
+ for(let round=0;round<2;round++){
+  workflow.leave();await workflow.prepare('pattern-creating');
+  const running=workflow.enter('pattern-creating');await generate();await finishPhase();await running;
+  assert.equal(workflow.getResult().selectedCity,city);
+  assert.deepEqual(workflow.getResult().selectedIcons,ids);
+  await workflow.prepare('choose-icons');
+  assert.equal(libraryState.getState().selectedCity,city);
+  assert.deepEqual(libraryState.getState().selectedIcons,ids);
+  assert.equal(workflow.canShowResult(),true);
+  const geometry=workflow.getResult().items;
+  workflow.recolor('authentic');assert.strictEqual(workflow.getResult().items,geometry);
+  await workflow.prepare('pattern-save');
+  assert.equal(workflow.getResult().selectedCity,city);
+  assert.deepEqual(workflow.getResult().selectedIcons,ids);
+ }
+}
 console.log('PASS: initial/Redo/Back generations all run three phases; pending results never render early; cancellation discards pending work; reduced motion preserves Creating; stale selections cannot bypass generation.');
+console.log('PASS: five cities retain their selected city and source icons through generation, Back, Redo, recoloring and Save.');

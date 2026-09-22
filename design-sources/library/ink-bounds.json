@@ -1,0 +1,200 @@
+{
+  "cities:canton-tower": [
+    180,
+    375,
+    31,
+    78
+  ],
+  "cities:porcelain-1": [
+    267.5,
+    377.5,
+    76,
+    76
+  ],
+  "cities:porcelain-2": [
+    384.5,
+    381.5,
+    71,
+    71
+  ],
+  "cities:porcelain-3": [
+    500.5,
+    383.5,
+    59,
+    66
+  ],
+  "cities:porcelain-4": [
+    607.5,
+    396.5,
+    68,
+    46
+  ],
+  "cities:porcelain-5": [
+    714.5,
+    392.5,
+    71,
+    46
+  ],
+  "cities:porcelain-6": [
+    832.5,
+    385.5,
+    58,
+    60
+  ],
+  "cities:har-gow": [
+    937,
+    394.5,
+    75,
+    43.5
+  ],
+  "cities:five-rams": [
+    1075,
+    384.25,
+    33,
+    65.25
+  ],
+  "choose-icons:canton-tower": [
+    174,
+    266,
+    31,
+    78
+  ],
+  "choose-icons:porcelain-1": [
+    265.5,
+    268.5,
+    76,
+    76
+  ],
+  "choose-icons:porcelain-2": [
+    382.5,
+    272.5,
+    71,
+    71
+  ],
+  "choose-icons:porcelain-3": [
+    498.5,
+    274.5,
+    59,
+    66
+  ],
+  "choose-icons:porcelain-4": [
+    605.5,
+    287.5,
+    68,
+    46
+  ],
+  "choose-icons:porcelain-5": [
+    712.5,
+    283.5,
+    71,
+    46
+  ],
+  "choose-icons:porcelain-6": [
+    830.5,
+    276.5,
+    58,
+    60
+  ],
+  "choose-icons:har-gow": [
+    935,
+    285.5,
+    75,
+    43.5
+  ],
+  "choose-icons:five-rams": [
+    1070,
+    275.25,
+    33,
+    65.25
+  ],
+  "new:porcelain-7": [
+    15.75,
+    5.5,
+    66.5,
+    68
+  ],
+  "new:eight-treasure-duck": [
+    0,
+    0,
+    39.5,
+    63.5
+  ],
+  "new:lvdagun": [
+    0,
+    0,
+    66,
+    59
+  ],
+  "new:beijing-kite": [
+    0,
+    0,
+    65.75,
+    67.5
+  ],
+  "new:youmian": [
+    0,
+    0,
+    64,
+    49
+  ],
+  "new:paper-cutting": [
+    0,
+    0,
+    65,
+    65
+  ],
+  "new:bamboo-rice": [
+    3.5,
+    3.5,
+    75,
+    55.25
+  ],
+  "new:jingpo-1": [
+    0,
+    0,
+    68.25,
+    68.25
+  ],
+  "new:jingpo-2": [
+    9,
+    9,
+    57,
+    57
+  ],
+  "new:jingpo-3": [
+    0,
+    0,
+    33.25,
+    61.5
+  ],
+  "new:jinshan-1": [
+    8.75,
+    7.5,
+    66.5,
+    61.5
+  ],
+  "new:jinshan-2": [
+    7.5,
+    12.25,
+    68.25,
+    43.5
+  ],
+  "new:jinshan-3": [
+    8.25,
+    6.75,
+    59.5,
+    50.75
+  ],
+  "new:jinshan-4": [
+    12.5,
+    27.25,
+    66.75,
+    32
+  ],
+  "new:beijing-rabbit": [
+    0,
+    0,
+    57,
+    71
+  ]
+}
