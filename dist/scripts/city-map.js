@@ -5,6 +5,7 @@ import { createOcean } from './ocean.js';
 import { iconDisplayName } from './icon-names.js';
 
 import { cities } from './city-data.js';
+import { archivesByCity } from './archive-entries.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -96,7 +97,7 @@ export function createCityMap(scene, { navigate }) {
     camera?.refresh();
   }
   function activateItem(element) {
-    const destination = city.archives?.[element.dataset.item];
+    const destination = archivesByCity[city.id]?.[element.dataset.item];
     if (destination) { closeCallout(); navigate(destination, { source: element }); }
   }
   scene.addEventListener('pointermove', event => {
@@ -121,6 +122,7 @@ export function createCityMap(scene, { navigate }) {
 
   return {
     get cityId() { return city.id; },
+    get archiveIds() { return Object.values(archivesByCity[city.id] ?? {}); },
     get cityName() { return city.name; },
     zoomBy(factor) { camera?.zoomBy(factor); },
     dismissCard: closeCallout,

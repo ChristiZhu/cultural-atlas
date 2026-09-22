@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createArchive } from '../dist/scripts/archive.js';
+import { createArchive, archiveIds } from '../dist/scripts/archive.js';
+import { archivesByCity, newArchiveEntries } from '../dist/scripts/archive-entries.js';
+import { cities } from '../dist/scripts/city-data.js';
 
 const motions = [], loads = [];
 let decodeHook=()=>Promise.resolve(),motionHook=()=>Promise.resolve();
@@ -37,7 +39,13 @@ globalThis.getComputedStyle = () => ({ opacity: '1', transform: 'none' });
 globalThis.cancelAnimationFrame = () => {};
 const settle = async () => { for (let i = 0; i < 150; i++) await Promise.resolve(); };
 
-for (const book of ['canton', 'porcelain', 'shrimp', 'five-rams']) {
+for (const entry of newArchiveEntries) {
+  assert(cities[entry.city].icons.some(icon => icon.sourceName === entry.item), `${entry.id} has a real map marker`);
+  assert.equal(archivesByCity[entry.city][entry.item], entry.id);
+}
+assert.equal(new Set(Object.values(archivesByCity).flatMap(Object.values)).size, archiveIds.length);
+
+for (const book of archiveIds) {
   const dialog = new Element();
   dialog.nodes = Object.fromEntries(['.archive-backdrop', '.archive-stage', '.archive-art', '.archive-hit', '.archive-cursor',
     '[data-page="previous"]', '[data-page="next"]', '[data-page="cover"]', '.archive-status'].map(s => [s, new Element()]));
@@ -68,12 +76,12 @@ for (const book of ['canton', 'porcelain', 'shrimp', 'five-rams']) {
 assert(motions.some(m => m.options.duration === 420 && m.frames.at(-1).transform?.startsWith('translateX')));
 assert(motions.some(m => m.options.duration === 850 && m.frames.at(-1).transform === 'rotateY(180deg)'));
 assert.equal(new Set(loads.filter(s => /porcelain.*svg$/.test(s))).size, 6);
-const fit = JSON.parse(fs.readFileSync(new URL('../dist/assets/archive/guangcai-fit.json', import.meta.url)));
+const fit = ['guangcai-fit.json','new-guangzhou-fit.json','cultural-archives-fit.json'].flatMap(file => JSON.parse(fs.readFileSync(new URL('../dist/assets/archive/'+file, import.meta.url))));
 for (const page of fit) {
   assert.deepEqual(page.stage, [1512, 982]);
   if (page.sourceSpine !== null) assert(Math.abs(page.sourceSpine * page.scale + page.translate[0] - 756) < 1e-6);
 }
-console.log('PASS: all four archives use all six states, forward/back/closed-cover transitions, fixed stage, shared spine, and restore background interaction on exit.');
+console.log(`PASS: all ${archiveIds.length} archives use all six states, forward/back/closed-cover transitions, fixed stage, shared spine, and restore background interaction on exit.`);
 
 // Failure/lifecycle regression cases use the real engine and controlled async work.
 function harness(){
@@ -94,7 +102,7 @@ function harness(){
 }
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 const h=harness();
-for(const id of ['porcelain','shrimp','five-rams','canton','shrimp','five-rams','porcelain','canton']){
+for(const id of [...archiveIds, ...archiveIds].reverse()){
   await h.archive.open(id);
   for(const key of ['ArrowRight','ArrowRight','ArrowRight','ArrowLeft','ArrowLeft']){h.key(key);await settle();}
   h.stable('SPREAD_01_02');await h.archive.close();

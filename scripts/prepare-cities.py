@@ -38,8 +38,7 @@ city_data={
  'guangzhou': {'id':'guangzhou','name':'Guangzhou','figmaNode':'1:10306',
   'mapAsset':'./assets/map/guangzhou.svg','minimapAsset':'./assets/map/overview.svg',
   'geography':dict(zip(['x','y','width','height'],[483,123,617.000244,820.00061])),
-  'minimapBounds':dict(zip(['x','y','width','height'],[74,803,112,145])),
-  'archives':{'Canton Tower':'canton','Guangcai Porcelain':'porcelain'}},
+  'minimapBounds':dict(zip(['x','y','width','height'],[74,803,112,145]))},
 }
 for city,(name,node,geo,names) in specs.items():
     root=E.parse('design-sources/cities/'+city+'.svg').getroot()

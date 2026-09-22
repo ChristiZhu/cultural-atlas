@@ -18,12 +18,6 @@ const citySources = {
       "y": 803,
       "width": 112,
       "height": 145
-    },
-    "archives": {
-      "Canton Tower": "canton",
-      "Guangcai Porcelain": "porcelain",
-      "Shrimp Dumpling": "shrimp",
-      "Five Rams Sculpture": "five-rams"
     }
   },
   "beijing": {

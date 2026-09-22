@@ -1,4 +1,5 @@
 import { iconDisplayName } from './icon-names.js';
+import { newArchiveCatalog } from './archive-entries.js';
 /** A transparent fixed stage with Figma-normalized covers and two-sided pages. */
 const base = './assets/archive/';
 const FRAME = { width:1512, height:982, left:111, spine:756, pageWidth:645, coverLeft:433.5 };
@@ -11,6 +12,7 @@ const canton = [
   { key:'BACK_COVER', file:'canton-back.svg', label:'Back cover' },
 ];
 const catalog = {
+  ...newArchiveCatalog,
   canton:{title:iconDisplayName('guangzhou','Canton Tower'),pages:canton},
   porcelain:{title:iconDisplayName('guangzhou','Guangcai Porcelain'),pages:[
     {key:'FRONT_COVER',file:'porcelain-front.svg',label:'Front cover'},
@@ -25,7 +27,7 @@ const catalog = {
     {key:'SPREAD_01_02',file:'shrimp-01-02.svg',label:'Pages 01–02 — Identity and tea culture'},
     {key:'SPREAD_03_04',file:'shrimp-03-04.svg',label:'Pages 03–04 — Ingredients and making'},
     {key:'SPREAD_05_06',file:'shrimp-05-06.svg',label:'Pages 05–06 — Visual features and geometry'},
-    {key:'SPREAD_07_08',file:'shrimp-07-08.svg',label:'Pages 07–08 — From observation to icon'},
+    {key:'SPREAD_07_08',file:'shrimp-07-08.svg?v=2',label:'Pages 07–08 — From observation to icon'},
     {key:'BACK_COVER',file:'shrimp-back.svg',label:'Back cover'},
   ]},
   'five-rams':{title:iconDisplayName('guangzhou','Five Rams Sculpture'),pages:[

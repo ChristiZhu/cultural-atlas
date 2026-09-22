@@ -1,7 +1,7 @@
 import { transitionPage, transitionWorkflow, transitionSuccess } from './transitions.js';
 import { scenes, prepareScene, showScene } from './scenes.js';
-import { createCityMap } from './city-map.js';
-import { createArchive, archiveIds } from './archive.js?v=4';
+import { createCityMap } from './city-map.js?v=2';
+import { createArchive, archiveIds } from './archive.js?v=5';
 import { createWindowEntrance } from './window-entrance.js';
 import { createPatternWorkflow } from './pattern-workflow.js';
 import { createIconLibrary } from './icon-library.js';
@@ -94,9 +94,9 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     source?.removeAttribute('data-selected');
   }
   if(current===destination)void pattern.enter(destination);
-  if(current==='map'&&map.cityId==='guangzhou') {
-    // Warm every book on map entry; each book limits concurrent image decodes.
-    for(const id of archiveIds)void archive.preload(id).catch(()=>{});
+  if(current==='map') {
+    // Warm only the current city's books; each book limits concurrent decodes.
+    for(const id of map.archiveIds)void archive.preload(id).catch(()=>{});
   }
 }
 

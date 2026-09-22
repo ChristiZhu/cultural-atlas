@@ -102,4 +102,28 @@ The Guangzhou map now links Har Gow and Five Rams Sculpture to six original Figm
 
 `archive.js` is the sole modal/page-turn engine for all four archives. Its catalog supplies the available archive IDs to navigation and map-entry preloading. The new archives do not add animation branches or alter existing timing, cursors, sizing, history, or background locking.
 
-Validation: all four archives pass the shared lifecycle and failure tests. Browser checks covered all new pages through both back covers, cover reset, backward turns, outside/Escape closing, repeated cross-archive opening, and both existing archives. The stage bounds stayed identical between turns. A filtered, zoomed and panned map retained the exact transform and filter after closing; the background was inert while open and the hover card was cleared on close. Local preview is available on port 4173; these archive updates have not been published.
+Validation: all four archives pass the shared lifecycle and failure tests. Browser checks covered all new pages through both back covers, cover reset, backward turns, outside/Escape closing, repeated cross-archive opening, and both existing archives. The stage bounds stayed identical between turns. A filtered, zoomed and panned map retained the exact transform and filter after closing; the background was inert while open and the hover card was cleared on close. Local preview uses port 4173.
+
+## Eight additional cultural archives
+
+The Shanghai, Beijing, Taiyuan and Dehong markers now share the existing archive engine:
+Eight Treasure Duck, Jinshan Peasant Painting, Rolling Donkey Rice Cake, Beijing Kite Making,
+Youmian Kaolao Lao, Bamboo Tube Rice, Taiyuan Paper Cutting and Jingpo Brocade Weaving.
+Each has six pages in the supplied Figma order. `archive-entries.js` centralizes their catalog
+and the icon-to-archive routes, including the four existing Guangzhou routes. Map entry
+preloads only that city's archives. No animation, modal, cursor, history or sizing code changes.
+
+`design-sources/archives/cultural-archives.json` records all 48 Figma node IDs.
+Run `python3 scripts/prepare-cultural-archives.py` to retain original vector artwork and
+embedded photographs on the shared transparent stage. Four interior spreads of each book
+use exactly the same uniform transform; paper and decoration are never stretched separately.
+The only changed existing artwork is Har Gow `835:18` / `shrimp-07-08.svg` (last interior
+spread); its other pages, back cover and all other existing archive artwork are unchanged.
+
+Validation: `node tests/archive.mjs`, `python3 tests/archive-assets.py`,
+`node tests/city-map.mjs`, and `node tests/icon-names.mjs` cover all twelve books' lifecycle,
+exact source artwork retention, page order, shared spine and map-route regression.
+
+Desktop browser checks covered every new book through its back cover, original Guangzhou
+archives, backward turns, repeated opening, Home, Icon Library, and exact camera/filter/panel
+restoration after closing. All 48 new SVG pages render without stage-edge clipping.

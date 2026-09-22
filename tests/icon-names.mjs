@@ -14,7 +14,8 @@ for(const city of Object.values(cities)) {
 }
 assert.equal(matched,29);
 assert.deepEqual(unmatched,[['dehong','Jingpo Knife']]);
-assert.equal(cities.guangzhou.archives['Guangcai Porcelain'],'porcelain','stable archive routing key');
+const { archivesByCity } = await import('../dist/scripts/archive-entries.js');
+assert.equal(archivesByCity.guangzhou['Guangcai Porcelain'],'porcelain','stable archive routing key');
 assert.equal(culturalIcons.find(x=>x.id==='har-gow').label,'Har Gow (Steamed Shrimp Dumplings)');
 assert.equal(culturalIcons.find(x=>x.id==='five-rams').label,'Five Rams Sculpture motif');
 assert.equal(culturalIcons.length,9,'no new library glyphs');

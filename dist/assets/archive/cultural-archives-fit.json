@@ -1,0 +1,674 @@
+[
+  {
+    "node": "932:2",
+    "file": "eight-treasure-duck-front.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -10.381889763779554,
+      -13.124978614212523
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "924:2",
+    "file": "eight-treasure-duck-01-02.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "924:15",
+    "file": "eight-treasure-duck-03-04.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "924:28",
+    "file": "eight-treasure-duck-05-06.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "924:41",
+    "file": "eight-treasure-duck-07-08.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "932:211",
+    "file": "eight-treasure-duck-back.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -10.381889763779554,
+      -13.124978614212523
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "964:300",
+    "file": "jinshan-painting-front.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -10.381889763779554,
+      -13.124978614212523
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "960:2",
+    "file": "jinshan-painting-01-02.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "960:15",
+    "file": "jinshan-painting-03-04.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "960:28",
+    "file": "jinshan-painting-05-06.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "960:41",
+    "file": "jinshan-painting-07-08.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "964:509",
+    "file": "jinshan-painting-back.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -10.381889763779554,
+      -13.124978614212523
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "997:2",
+    "file": "lvdagun-front.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -10.381889763779554,
+      -13.124978614212523
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "991:3",
+    "file": "lvdagun-01-02.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "991:16",
+    "file": "lvdagun-03-04.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "991:29",
+    "file": "lvdagun-05-06.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "991:42",
+    "file": "lvdagun-07-08.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -11.905511811023644,
+      -2.4596242835038993
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "997:195",
+    "file": "lvdagun-back.svg",
+    "scale": 1.015748031496063,
+    "translate": [
+      -10.381889763779554,
+      -13.124978614212523
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1011:46",
+    "file": "beijing-kite-front.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      10.743491577335362,
+      1.3645970571286625
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1002:2",
+    "file": "beijing-kite-01-02.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      8.27411944869823,
+      8.772713443039834
+    ],
+    "sourceSpine": 757,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1002:3",
+    "file": "beijing-kite-03-04.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      8.27411944869823,
+      8.772713443039834
+    ],
+    "sourceSpine": 757,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1002:4",
+    "file": "beijing-kite-05-06.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      8.27411944869823,
+      8.772713443039834
+    ],
+    "sourceSpine": 757,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1002:5",
+    "file": "beijing-kite-07-08.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      8.27411944869823,
+      8.772713443039834
+    ],
+    "sourceSpine": 757,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1011:260",
+    "file": "beijing-kite-back.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      10.743491577335362,
+      1.3645970571286625
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1044:2",
+    "file": "youmian-front.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      23.52462768500004
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1037:2",
+    "file": "youmian-01-02.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      21.52462768500004
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1037:15",
+    "file": "youmian-03-04.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      21.52462768500004
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1037:28",
+    "file": "youmian-05-06.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      21.52462768500004
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1037:41",
+    "file": "youmian-07-08.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      21.52462768500004
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1044:8",
+    "file": "youmian-back.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      23.52462768500004
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1072:2",
+    "file": "bamboo-rice-front.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      10.743491577335362,
+      1.3645970571286625
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1072:3",
+    "file": "bamboo-rice-01-02.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      8.27411944869823,
+      8.772713443039834
+    ],
+    "sourceSpine": 757,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1072:4",
+    "file": "bamboo-rice-03-04.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      8.27411944869823,
+      8.772713443039834
+    ],
+    "sourceSpine": 757,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1072:5",
+    "file": "bamboo-rice-05-06.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      8.27411944869823,
+      8.772713443039834
+    ],
+    "sourceSpine": 757,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1072:6",
+    "file": "bamboo-rice-07-08.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      8.27411944869823,
+      8.772713443039834
+    ],
+    "sourceSpine": 757,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1072:7",
+    "file": "bamboo-rice-back.svg",
+    "scale": 0.9877488514548239,
+    "translate": [
+      10.743491577335362,
+      1.3645970571286625
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1077:443",
+    "file": "paper-cutting-front.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      23.52462768500004
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1059:2",
+    "file": "paper-cutting-01-02.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      21.52462768500004
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1059:12",
+    "file": "paper-cutting-03-04.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      21.52462768500004
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1059:22",
+    "file": "paper-cutting-05-06.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      21.52462768500004
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1059:32",
+    "file": "paper-cutting-07-08.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      21.52462768500004
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1077:450",
+    "file": "paper-cutting-back.svg",
+    "scale": 1,
+    "translate": [
+      0,
+      23.52462768500004
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1074:2",
+    "file": "jingpo-brocade-front.svg",
+    "scale": 0.9953703703703703,
+    "translate": [
+      3.5,
+      24.793146203518575
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1074:7",
+    "file": "jingpo-brocade-01-02.svg",
+    "scale": 0.9953703703703703,
+    "translate": [
+      3.5,
+      8.369535092407432
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1074:19",
+    "file": "jingpo-brocade-03-04.svg",
+    "scale": 0.9953703703703703,
+    "translate": [
+      3.5,
+      8.369535092407432
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1074:31",
+    "file": "jingpo-brocade-05-06.svg",
+    "scale": 0.9953703703703703,
+    "translate": [
+      3.5,
+      8.369535092407432
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1074:43",
+    "file": "jingpo-brocade-07-08.svg",
+    "scale": 0.9953703703703703,
+    "translate": [
+      3.5,
+      8.369535092407432
+    ],
+    "sourceSpine": 756,
+    "stage": [
+      1512,
+      982
+    ]
+  },
+  {
+    "node": "1074:55",
+    "file": "jingpo-brocade-back.svg",
+    "scale": 0.9953703703703703,
+    "translate": [
+      3.5,
+      24.793146203518575
+    ],
+    "sourceSpine": null,
+    "stage": [
+      1512,
+      982
+    ]
+  }
+]

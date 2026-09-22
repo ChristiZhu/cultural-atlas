@@ -1,0 +1,106 @@
+[
+  {
+    "id": "eight-treasure-duck",
+    "city": "shanghai",
+    "item": "Eight Treasure Duck",
+    "nodes": [
+      "932:2",
+      "924:2",
+      "924:15",
+      "924:28",
+      "924:41",
+      "932:211"
+    ]
+  },
+  {
+    "id": "jinshan-painting",
+    "city": "shanghai",
+    "item": "Jinshan Folk Painting",
+    "nodes": [
+      "964:300",
+      "960:2",
+      "960:15",
+      "960:28",
+      "960:41",
+      "964:509"
+    ]
+  },
+  {
+    "id": "lvdagun",
+    "city": "beijing",
+    "item": "Ludagun",
+    "nodes": [
+      "997:2",
+      "991:3",
+      "991:16",
+      "991:29",
+      "991:42",
+      "997:195"
+    ]
+  },
+  {
+    "id": "beijing-kite",
+    "city": "beijing",
+    "item": "Swallow Kite",
+    "nodes": [
+      "1011:46",
+      "1002:2",
+      "1002:3",
+      "1002:4",
+      "1002:5",
+      "1011:260"
+    ]
+  },
+  {
+    "id": "youmian",
+    "city": "taiyuan",
+    "item": "Youmian Kaolaolao",
+    "nodes": [
+      "1044:2",
+      "1037:2",
+      "1037:15",
+      "1037:28",
+      "1037:41",
+      "1044:8"
+    ]
+  },
+  {
+    "id": "bamboo-rice",
+    "city": "dehong",
+    "item": "Bamboo Rice",
+    "nodes": [
+      "1072:2",
+      "1072:3",
+      "1072:4",
+      "1072:5",
+      "1072:6",
+      "1072:7"
+    ]
+  },
+  {
+    "id": "paper-cutting",
+    "city": "taiyuan",
+    "item": "Paper Cutting",
+    "nodes": [
+      "1077:443",
+      "1059:2",
+      "1059:12",
+      "1059:22",
+      "1059:32",
+      "1077:450"
+    ]
+  },
+  {
+    "id": "jingpo-brocade",
+    "city": "dehong",
+    "item": "Jingpo Brocade",
+    "nodes": [
+      "1074:2",
+      "1074:7",
+      "1074:19",
+      "1074:31",
+      "1074:43",
+      "1074:55"
+    ]
+  }
+]
