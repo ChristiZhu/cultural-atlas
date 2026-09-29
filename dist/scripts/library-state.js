@@ -1,4 +1,4 @@
-import { patternMetadata } from './pattern-metadata.js?v=20260922-library-final';
+import { patternMetadata } from './pattern-metadata.js?v=20260929-taiyuan';
 import { iconDisplayName } from './icon-names.js';
 /** Shared cultural sources and ordered selection: primary, secondary, accent. */
 export const MAX_SELECTED_ICONS=3;
@@ -24,8 +24,8 @@ export const cities = Object.freeze([
   {id:'beijing',label:'Beijing',x:464,w:179},
   {id:'shanghai',label:'Shanghai',x:649,w:192},
   {id:'dehong',label:'Dehong',x:841,w:161.5},
-  // Keep the original Figma tab artwork “Shanxi”, using the map's city ID.
-  {id:'taiyuan',label:'Taiyuan (Shanxi)',x:1009,w:159.5},
+  // Keep the original Figma tab artwork “Taiyuan”, using the map's city ID.
+  {id:'taiyuan',label:'Taiyuan',x:1009,w:159.5},
 ].map(Object.freeze));
 export function createLibraryState() {
   let selectedCity='all',selectedIcons=[];

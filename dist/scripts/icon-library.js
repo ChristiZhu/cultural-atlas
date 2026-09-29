@@ -1,4 +1,4 @@
-import { cities, culturalIcons, libraryState, MAX_SELECTED_ICONS } from './library-state.js?v=20260922-library-final';
+import { cities, culturalIcons, libraryState, MAX_SELECTED_ICONS } from './library-state.js?v=20260929-taiyuan';
 
 export function createIconLibrary({navigate,onSave}) {
   const library=document.querySelector('#icon-library'),chooser=document.querySelector('#choose-icons');

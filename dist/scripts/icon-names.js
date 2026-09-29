@@ -30,7 +30,7 @@ export const iconNames = Object.freeze({
     'Yongzuo Temple': 'Yongzuo Temple (Twin Pagoda Temple)',
     'Chunyang Palace': 'Chunyang Palace',
     'Youmian Kaolaolao': 'Youmian Kaolao Lao (Rolled Oat Noodles)',
-    'Knife-cut Noodles': 'Shanxi Knife-cut Noodles',
+    'Knife-cut Noodles': 'Taiyuan Knife-cut Noodles',
     'Paper Cutting': 'Taiyuan Paper Cutting',
     'Door Gods': 'Woodblock New Year Prints',
   }),

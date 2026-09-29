@@ -1,6 +1,6 @@
-import { culturalIcons, libraryState } from './library-state.js?v=20260922-library-final';
-import { generatePattern, renderPatternSVG, TILE_SIZE } from './pattern-generator.js?v=20260922-library-final';
-import { renderArtwork, exportArtworkPNG } from './pattern-export.js?v=20260922-library-final';
+import { culturalIcons, libraryState } from './library-state.js?v=20260929-taiyuan';
+import { generatePattern, renderPatternSVG, TILE_SIZE } from './pattern-generator.js?v=20260929-taiyuan';
+import { renderArtwork, exportArtworkPNG } from './pattern-export.js?v=20260929-taiyuan';
 import {COLOR_ROLES, paletteSwatches, palettesDiffer, recolorPattern} from './pattern-colors.js';
 import { prepareScene } from './scenes.js';
 

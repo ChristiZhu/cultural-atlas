@@ -1,4 +1,4 @@
-import {renderPatternSVG} from './pattern-generator.js?v=20260922-library-final';
+import {renderPatternSVG} from './pattern-generator.js?v=20260929-taiyuan';
 
 /** One composition definition is shared by Preview, Save and full-artwork export. */
 export const ARTWORK=Object.freeze({width:1014,height:581,repeats:3});

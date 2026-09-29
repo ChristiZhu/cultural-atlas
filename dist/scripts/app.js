@@ -3,8 +3,8 @@ import { scenes, prepareScene, showScene } from './scenes.js';
 import { createCityMap } from './city-map.js?v=2';
 import { createArchive, archiveIds } from './archive.js?v=5';
 import { createWindowEntrance } from './window-entrance.js';
-import { createPatternWorkflow } from './pattern-workflow.js?v=20260922-library-final';
-import { createIconLibrary } from './icon-library.js?v=20260922-library-final';
+import { createPatternWorkflow } from './pattern-workflow.js?v=20260929-taiyuan';
+import { createIconLibrary } from './icon-library.js?v=20260929-taiyuan';
 
 const atlas = document.querySelector('#atlas');
 const trigger = document.querySelector('#enter-window');
