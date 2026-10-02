@@ -1,4 +1,45 @@
-work/
-outputs/
-.sites-runtime/
+# Local design work and inspection output
+/work/
+/outputs/
+/.sites-runtime/
+
+# Dependencies and generated tooling output
+node_modules/
+.cache/
+.parcel-cache/
+.vite/
+.next/
+.nuxt/
+/build/
+/coverage/
+*.tsbuildinfo
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Credentials and machine-local environment files
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# Logs, temporary files, and editor/OS metadata
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# dist/ is the complete static website and must remain tracked.
