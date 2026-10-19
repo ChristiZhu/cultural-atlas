@@ -16,7 +16,9 @@ export const scenes = Object.freeze({
 
 export async function prepareScene(element) {
   await Promise.all([
-    ...[...element.querySelectorAll('img')].map(image => image.decode()),
+    // Offscreen gallery thumbnails only load once their scene is visible; awaiting
+    // their decode here would deadlock a return visit to the hidden community.
+    ...[...element.querySelectorAll('img')].filter(image=>image.loading!=='lazy').map(image => image.decode()),
     ...[...element.querySelectorAll('[data-svg-src]')].map(async container => {
       if (!container.firstElementChild) container.replaceChildren(await loadArtwork(container.dataset.svgSrc));
     }),
