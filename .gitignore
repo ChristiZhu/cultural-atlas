@@ -43,3 +43,9 @@ Thumbs.db
 .vscode/
 
 # dist/ is the complete static website and must remain tracked.
+
+# Shared community database and backups must stay outside the public website.
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.db

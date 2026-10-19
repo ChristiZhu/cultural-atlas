@@ -39,3 +39,13 @@
 /* Move the artwork, source column and original heading as one composition. */
 .preview-composition { position: absolute; inset: 0; transform: translateX(calc(-32 * var(--unit))); }
 #pattern-creating .generated-pattern { transform: translateX(calc(-32 * var(--unit))); }
+
+/* Match the original pink Save control for the adjacent direct-share action. */
+#share-pattern{background:#c14f94;border-radius:calc(20 * var(--unit));color:#fff;font:400 calc(25 * var(--unit))/1 'Ugly Dave',sans-serif;display:flex;align-items:center;justify-content:center;transition:transform .12s,filter .12s}
+#share-pattern:hover{filter:brightness(1.06)}
+#share-pattern:active{transform:translateY(1px) scale(.985)}
+html:lang(zh) #share-pattern{font-family:'Atlas Hand SC',sans-serif}
+@media(prefers-reduced-motion:reduce){#share-pattern{transition:none}}
+
+#save-pattern{left:calc(50% - 174 * var(--unit));right:auto}
+#share-pattern{left:calc(50% + 12 * var(--unit));right:auto}

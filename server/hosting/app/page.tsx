@@ -1,0 +1,1 @@
+export default function Page(){return <main><h1>Cultural Atlas Community</h1><p>The community service for Cultural Atlas.</p><a href="https://christizhu.github.io/cultural-atlas/">Open Cultural Atlas</a></main>;}

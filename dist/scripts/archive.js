@@ -1,3 +1,4 @@
+import {artworkURL,getLanguage,t} from './i18n.js';
 import { iconDisplayName } from './icon-names.js';
 import { newArchiveCatalog } from './archive-entries.js';
 /** A transparent fixed stage with Figma-normalized covers and two-sided pages. */
@@ -65,29 +66,32 @@ export function createArchive(dialog,{onClose,onRestore}) {
       Promise.resolve(promise).then(value=>finish(resolve,value),error=>finish(reject,error));
     });
   }
+  const cacheKey=file=>getLanguage()+':'+file;
   function load(file){
-    if(!decoded.has(file)){
-      const image=new Image();image.src=base+file;image.draggable=false;
+    const key=cacheKey(file);
+    if(!decoded.has(key)){
+      const image=new Image();image.draggable=false;
       const entry={image};
-      entry.ready=bounded(image.decode(),35000).then(()=>image).catch(error=>{
-        if(decoded.get(file)===entry)decoded.delete(file);
+      entry.ready=bounded(artworkURL(base+file).then(url=>{image.src=url;return image.decode();}),35000).then(()=>image).catch(error=>{
+        if(decoded.get(key)===entry)decoded.delete(key);
         throw error;
       });
-      decoded.set(file,entry);
+      decoded.set(key,entry);
     }
-    return decoded.get(file).ready;
+    return decoded.get(key).ready;
   }
   function preload(id){
+    const key=getLanguage()+':'+id;
     if(!catalog[id])return Promise.resolve();
-    if(!preloads.has(id)){
+    if(!preloads.has(key)){
       // Limit concurrent SVG decodes: Guangcai includes large original photos.
       const files=catalog[id].pages.map(page=>page.file);
       let at=0;
       const worker=async()=>{while(at<files.length)await load(files[at++]);};
-      const ready=Promise.all([worker(),worker()]).catch(error=>{preloads.delete(id);throw error;});
-      preloads.set(id,ready);
+      const ready=Promise.all([worker(),worker()]).catch(error=>{preloads.delete(key);throw error;});
+      preloads.set(key,ready);
     }
-    return preloads.get(id);
+    return preloads.get(key);
   }
   function setBusy(value){
     busy=value;
@@ -107,17 +111,17 @@ export function createArchive(dialog,{onClose,onRestore}) {
     stage.querySelectorAll('.archive-sheet').forEach(el=>el.style.visibility='');
   }
   function paint(page){
-    const prepared=decoded.get(page.file).image;
+    const prepared=decoded.get(cacheKey(page.file)).image;
     if(art!==prepared){prepared.className='archive-art';prepared.removeAttribute('style');art.replaceWith(prepared);art=prepared;}
-    art.alt=`${book.title}. ${page.label}. Original Figma archive artwork.`;
+    art.alt=`${t(book.title)}. ${t(page.label)}. ${t('Original Figma archive artwork.')}`;
     dialog.dataset.bookState=page.key;
     previous.hidden=next.hidden=isCover(page);cover.hidden=!isCover(page);
     cover.disabled=book.pages.length===1;
     cover.setAttribute('aria-label',page.key==='BACK_COVER'?'Return to front cover':'Open archive book');
-    status.textContent=`${book.title} — ${page.label}`;
+    status.textContent=`${t(book.title)} — ${t(page.label)}`;
   }
   function image(file,start){
-    const img=new Image();img.src=base+file;img.alt='';
+    const img=new Image();img.src=decoded.get(cacheKey(file))?.image.src||base+file;img.alt='';
     Object.assign(img.style,{width:FRAME.width/FRAME.pageWidth*100+'%',height:'100%',left:-start/FRAME.pageWidth*100+'%',top:'0'});
     return img;
   }

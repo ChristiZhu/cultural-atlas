@@ -1,3 +1,4 @@
+import {t,isChinese} from './i18n.js';
 /** Shared Frame 06 hover card, with measured SVG lettering and one-pixel outer stroke. */
 export function createNameCard(element, { onHide } = {}) {
   const text = element.querySelector('#item-title');
@@ -8,13 +9,14 @@ export function createNameCard(element, { onHide } = {}) {
   const namespace = 'http://www.w3.org/2000/svg';
   const width = 264;
   function measure(value, size, spacing) {
-    context.font = `${size}px "Ugly Dave"`;
+    context.font = `${size}px "${isChinese()?'Atlas Hand SC':'Ugly Dave'}"`;
     return context.measureText(value).width + Math.max(0, [...value].length - 1) * spacing;
   }
   function label(name) {
+    name=t(name);
     accessible.textContent = name;
-    let size = 25, spacing = 5, lines = [name];
-    while (size > 19 && measure(name, size, spacing) > width) { size--; spacing = size * .2; }
+    let size = 25, spacing = isChinese()?1:5, lines = [name];
+    while (size > 19 && measure(name, size, spacing) > width) { size--; spacing = isChinese()?1:size * .2; }
     if (measure(name, size, spacing) > width) {
       const words = name.split(/\s+/);
       let split = 1, best = Infinity;
@@ -25,7 +27,7 @@ export function createNameCard(element, { onHide } = {}) {
       }
       lines = words.length > 1 ? [words.slice(0, split).join(' '), words.slice(split).join(' ')]
         : [name.slice(0, Math.ceil(name.length / 2)), name.slice(Math.ceil(name.length / 2))];
-      while (size > 10 && lines.some(line => measure(line, size, spacing) > width)) { size--; spacing = size * .14; }
+      while (size > 10 && lines.some(line => measure(line, size, spacing) > width)) { size--; spacing = isChinese()?.6:size * .14; }
     }
     text.setAttribute('font-size', size);
     text.setAttribute('letter-spacing', spacing);

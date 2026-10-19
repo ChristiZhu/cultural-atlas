@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {localizedReflection,translationChunks,reflectionLanguage} from '../server/reflection-translation.mjs';
+import {projectTranslations} from '../server/project-translations.mjs';
+const cache=new Map();let calls=0;
+const adapter={read:async(id,lang)=>cache.get(id+lang),write:async(id,lang,text,updated_at)=>cache.set(id+lang,{text,updated_at}),request:async url=>{
+ calls++;assert.equal(new URL(url).searchParams.get('langpair'),'zh-CN|en');
+ return Response.json({responseStatus:200,responseData:{translatedText:'I like this pattern.'}});
+}};
+const row={id:'one',reflection:'我喜欢这个纹样。'};
+let value=await localizedReflection(row,'en',adapter);
+assert.equal(value.reflection,'I like this pattern.');assert.equal(value.reflectionOriginal,row.reflection);assert.equal(value.translationStatus,'translated');
+await localizedReflection(row,'en',adapter);assert.equal(calls,1,'repeat views use the persistent cache');
+value=await localizedReflection(row,'zh',adapter);assert.equal(value.reflection,row.reflection);assert.equal(value.translationStatus,'original');assert.equal(calls,1);
+await Promise.all([1,2,3].map(()=>localizedReflection({...row,id:'parallel'},'en',adapter)));assert.equal(calls,2,'concurrent views share one request');
+const bad={...adapter,request:async()=>Response.json({responseStatus:403,quotaFinished:true,responseData:{translatedText:'quota message'}})};
+value=await localizedReflection({...row,id:'failed'},'en',bad);assert.equal(value.reflection,row.reflection);assert.equal(value.translationStatus,'unavailable');
+const [original,translation]=Object.entries(projectTranslations)[0];value=await localizedReflection({id:'curated',reflection:original},'zh',bad);assert.equal(value.reflection,translation.zh);assert.equal(value.translationStatus,'translated');
+const long='这是一个较长的中文留言。'.repeat(25);assert.equal(translationChunks(long).join(''),long);assert(translationChunks(long).every(s=>new TextEncoder().encode(s).length<=450));
+assert.equal(reflectionLanguage('English text'),'en');assert.equal(reflectionLanguage('中文 pattern'),'zh');
+console.log('PASS: bilingual reflections retain originals, cache translations, coalesce requests, bound UTF-8 chunks, and recover safely from provider quota/errors.');

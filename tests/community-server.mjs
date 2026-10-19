@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import {mkdtempSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {randomUUID} from 'node:crypto';
+import {DatabaseSync} from 'node:sqlite';
+import {createCommunityServer} from '../server/index.mjs';
+import {culturalIcons} from '../dist/scripts/library-state.js';
+import {generatePattern} from '../dist/scripts/pattern-generator.js';
+const dir=mkdtempSync(join(tmpdir(),'atlas-community-')),database=join(dir,'test.sqlite');
+let server;
+async function start(){server=createCommunityServer({database});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));return `http://127.0.0.1:${server.address().port}`;}
+let base=await start();
+const call=(path='',options={})=>fetch(base+'/api/community/patterns'+path,{...options,headers:{Origin:base,'Content-Type':'application/json',...options.headers}});
+const data=(city='all')=>{const icon=culturalIcons.find(i=>city==='all'||i.city===city);return {requestId:randomUUID(),creatorName:'<img src=x onerror=alert(1)>',reflection:'A personal reflection.',consent:true,patternData:{...generatePattern([icon],{seed:42}),selectedCity:city}};};
+const post=payload=>call('',{method:'POST',body:JSON.stringify(payload)});
+try{
+ assert.equal((await (await call()).json()).items.length,0);
+ const input=data();const first=await post(input);assert.equal(first.status,201);const entry=await first.json();assert.equal(entry.citySelection,'all');assert.deepEqual(entry.patternData.items,input.patternData.items);assert.deepEqual(entry.patternData.palette,input.patternData.palette);
+ assert.equal((await (await post(input)).json()).id,entry.id);
+ assert.equal((await post({...input,creatorName:'changed'})).status,409);
+ assert.equal((await post({...data(),consent:false})).status,400);
+ assert.equal((await post({...data(),requestId:[randomUUID()]})).status,400);
+ assert.equal((await post({...data(),reflection:'x'.repeat(301)})).status,400);
+ const bad=data();bad.patternData.items[0].x='<script>';assert.equal((await post(bad)).status,400);
+ const wrong=data('beijing');wrong.patternData.selectedCity='shanghai';assert.equal((await post(wrong)).status,400);
+ const script=data();script.patternData.palette.background='url(javascript:alert(1))';assert.equal((await post(script)).status,400);
+ assert.equal((await call('',{headers:{Origin:'https://evil.example'}})).status,403);
+ const svg=await (await call(`/${entry.id}/preview.svg`)).text();assert(svg.includes('<svg'));assert(!svg.includes(input.creatorName));assert(!svg.includes('<script'));
+ await post(data('beijing'));
+ assert.equal((await (await call('?city=all')).json()).items.length,1);
+ assert.equal((await (await call('?city=beijing')).json()).items.length,1);
+ assert.equal((await (await call('?city=*')).json()).items.length,2);
+ for(let i=0;i<12;i++)assert.equal((await post(data())).status,201);
+ const page=await (await call()).json();assert.equal(page.items.length,12);assert(page.nextCursor);const second=await (await call('?before='+page.nextCursor)).json();assert.equal(second.items.length,2);assert(!page.items.some(a=>second.items.some(b=>a.id===b.id)));
+ await new Promise(resolve=>server.close(resolve));base=await start();
+ const freshVisitor=await fetch(base+'/api/community/patterns/'+entry.id);assert.equal(freshVisitor.status,200);assert.equal((await freshVisitor.json()).creatorName,input.creatorName);
+ assert.equal((await fetch(base+'/cultural-atlas/')).status,200);
+ assert.equal((await fetch(base+'/work/community/community.sqlite')).status,404);
+ const owner=new DatabaseSync(database);owner.prepare("UPDATE patterns SET visibility='removed',creator_name='',reflection='',data='{}',preview='' WHERE id=?").run(entry.id);owner.close();
+ assert.equal((await call('/'+entry.id)).status,404);assert.equal((await call('/'+entry.id+'/preview.svg')).status,404);assert.equal((await post(input)).status,410);
+ console.log('PASS: persistent cross-visitor API, restart, exact geometry/palette, consent, idempotency, injection guards, city semantics and pagination.');
+}finally{await new Promise(resolve=>server.close(resolve));rmSync(dir,{recursive:true,force:true});}

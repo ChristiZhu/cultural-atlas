@@ -6,7 +6,7 @@ import { prepareScene } from './scenes.js';
 
 const imageSVG=(body,color)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" color="${color}">${body}</svg>`;
 const dataURL=svg=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
-export function createPatternWorkflow({navigate}) {
+export function createPatternWorkflow({navigate,onSaved=()=>{},onShare=()=>{}}) {
   const creating=document.querySelector('#pattern-creating'),field=creating.querySelector('.floating-field');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)'),assets={},pending=new Map(),motions=new Set();
   let colorMode='harmonious',colorSeed=0;
@@ -168,6 +168,13 @@ export function createPatternWorkflow({navigate}) {
       }
     }
   }
+  function share() {
+    if(!canShowResult()||exporting)return;
+    // Sharing uses the displayed composition directly, without downloading or regenerating it.
+    const patternData=structuredClone(currentDisplayedPattern);
+    const blob=new Blob([renderArtwork(patternData,assets,'atlas-share-preview')],{type:'image/svg+xml;charset=utf-8'});
+    onShare({patternData,blob});
+  }
   async function save() {
     if(!currentDisplayedPattern||exporting)return;
     const result=currentDisplayedPattern,ticket=run,button=document.querySelector('#save-pattern');
@@ -179,10 +186,11 @@ export function createPatternWorkflow({navigate}) {
       const url=URL.createObjectURL(blob),link=document.createElement('a');
       link.href=url;link.download=`cultural-atlas-${result.grammar}-${result.seed}.png`;
       document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+      onSaved({patternData:structuredClone(result),blob});
       await navigate('pattern-saved');
     } catch(error) {
       document.querySelector('#export-status').textContent='The download could not be prepared. Please try Save again.';
     } finally {exporting=false;button.disabled=false;button.removeAttribute('aria-busy');}
   }
-  return {prepare,enter,leave:stop,save,canShowResult,recolor,getResult:()=>currentDisplayedPattern,getState:()=>({state,currentDisplayedPattern,pendingGeneratedPattern})};
+  return {prepare,enter,leave:stop,save,share,canShowResult,recolor,getResult:()=>currentDisplayedPattern,getState:()=>({state,currentDisplayedPattern,pendingGeneratedPattern})};
 }

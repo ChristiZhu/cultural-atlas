@@ -1,0 +1,88 @@
+/* One content-sized row: original vector letterforms, shared spacing and feedback. */
+.scene nav.shared-navigation {
+  --nav-scale: calc(.75 * var(--unit));
+  --nav-size: calc(18 * var(--unit));
+  --nav-gap: clamp(18px, calc(32 * var(--unit)), 32px);
+  --nav-edge: max(20px, calc(35 * var(--unit)));
+  position: absolute;
+  top: max(16px, calc(var(--art-top) + 23 * var(--unit)));
+  right: var(--nav-edge);
+  width: max-content;
+  max-width: calc(100% - 2 * var(--nav-edge));
+  padding: 0 6px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--nav-gap);
+  z-index: 5;
+  color: #206eb8;
+  font: 400 var(--nav-size)/1 'Russo One', sans-serif;
+}
+.shared-navigation .nav-button {
+  position: relative;
+  inset: auto;
+  flex: 0 0 auto;
+  width: max-content;
+  height: max(44px, calc(40 * var(--unit)));
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  color: inherit;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.shared-navigation .nav-button img {
+  width: auto;
+  height: calc(29 * var(--nav-scale));
+  flex: none;
+}
+.shared-navigation .nav-button::after {width:100%;bottom:calc(6 * var(--unit))}
+.shared-navigation .nav-button::before {content:'';position:absolute;inset:0 -6px}
+.shared-navigation .nav-button:active,.shared-navigation .nav-button[data-selected='true'] {transform:translateY(1px);opacity:.7}
+.shared-navigation .nav-button:active img,.shared-navigation .nav-button[data-selected='true'] img {transform:none;opacity:1}
+.nav-label-zh {display:none}
+html:lang(zh) nav.shared-navigation {--nav-size:calc(23 * var(--unit));font-family:'Atlas Display SC','Atlas Sans SC',sans-serif}
+html:lang(zh) .shared-navigation .nav-button img {display:none}
+html:lang(zh) .nav-label-zh {display:block;font:inherit;color:inherit;white-space:nowrap}
+
+/* The existing paper tabs share one edge-docked group without moving board artwork. */
+.scene nav.board-navigation {
+  position:absolute;
+  top:auto;
+  bottom:calc(var(--art-top) + 24 * var(--unit));
+  left:max(16px, calc(var(--art-left) + 64 * var(--unit)));
+  right:max(16px, calc(var(--art-left) + 64 * var(--unit)));
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:clamp(12px, calc(20 * var(--unit)), 24px);
+  z-index:4;
+}
+.board-navigation__links {display:flex;align-items:center;gap:clamp(12px, calc(20 * var(--unit)), 24px);flex:none}
+.board-navigation .board-tab {position:relative;inset:auto;flex:none;margin:0}
+.board-tab--about,.board-tab--community {--direction:1;--tilt:-1deg;transform:rotate(-1deg);color:#206eb8}
+
+/* Small screens retain one readable row, with native horizontal scrolling if needed. */
+@media(max-width:700px) {
+  .scene nav.shared-navigation {
+    --nav-size:14px;
+    --nav-scale:calc(14px / 24);
+    --nav-gap:20px;
+    top:44px;
+    justify-content:flex-start;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding:0 6px 5px;
+    scrollbar-width:thin;
+    scrollbar-color:#206eb866 transparent;
+  }
+  html:lang(zh) nav.shared-navigation {--nav-size:16px}
+  .shared-navigation .nav-button::after {bottom:6px}
+  .scene nav.board-navigation {justify-content:flex-start;overflow-x:auto;overflow-y:hidden;padding:6px 3px;scrollbar-width:thin;scrollbar-color:#3d291a66 transparent}
+  .board-navigation .board-tab {font-size:14px;height:36px;padding:0 12px}
+}

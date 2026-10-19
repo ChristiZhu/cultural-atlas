@@ -1,5 +1,4 @@
 .library-art { pointer-events: none; }
-.library-scene nav, .pattern-scene nav { gap: calc(36 * var(--unit)); }
 .city-button { z-index: 2; }
 .city-button:focus-visible { outline: 2px solid #206eb8; outline-offset: 2px; }
 [data-city-art] { --tab-background: #a4d4e5; --tab-label: #000; }

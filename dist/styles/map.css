@@ -10,8 +10,6 @@
 .guangzhou-card:hover, .guangzhou-card:focus-visible { transform: translateY(calc(-8 * var(--unit))) rotate(-3deg); }
 .board-art [data-card]:active, #corkboard:has(.guangzhou-card:active, .guangzhou-card[data-selected='true']) [data-card='guangzhou'] { transform: translateY(-2px) scale(.99); transition-duration: 100ms; }
 .guangzhou-card:active, .guangzhou-card[data-selected='true'] { transform: translateY(calc(-2 * var(--unit))) rotate(-3deg) scale(.99); transition-duration: 100ms; }
-/* Preserve right-hand Figma offsets while allowing the page to use wide viewports. */
-.scene nav { --art-left: calc(100vw - var(--art-width)); }
 .nav-button img { display: block; width: 100%; height: 100%; transition: transform 100ms, opacity 100ms; pointer-events: none; }
 .nav-button::after { content: ''; position: absolute; bottom: calc(-4 * var(--unit)); left: 50%; width: calc(var(--underline) / var(--w) * 100%); height: max(1px, calc(1.5 * var(--unit))); background: #206eb8; transform: translateX(-50%) scaleX(0); transform-origin: center; transition: transform 120ms ease; }
 .nav-button:hover::after, .nav-button:focus-visible::after, .nav-button:active::after, .nav-button[data-selected='true']::after, .nav-button[aria-current='page']::after { transform: translateX(-50%) scaleX(1); }
@@ -51,11 +49,6 @@
 .map-filter-title { position: absolute; left: calc(10 * var(--unit)); top: calc(9 * var(--unit)); display: flex; align-items: center; justify-content: center; width: calc(184 * var(--unit)); height: calc(37 * var(--unit)); color: #f8d24d; font: calc(23 * var(--unit))/1.2 'Ugly Dave', sans-serif; letter-spacing: calc(4.6 * var(--unit)); white-space: nowrap; pointer-events: none; }
 .map-filter-title[data-category='architecture'] { font-size: calc(18 * var(--unit)); }
 
-/* Smaller secondary navigation; the original vector labels retain comfortable hit areas. */
-.scene nav { position: absolute; z-index: 5; right: calc(35 * var(--unit)); top: calc(var(--art-top) + 23 * var(--unit)); display: flex; align-items: center; gap: calc(12 * var(--unit)); }
-.scene nav .nav-button { position: relative; left: auto; top: auto; width: max(44px, calc(var(--w) * .75 * var(--unit))); height: max(44px, calc(40 * var(--unit))); display: flex; align-items: center; justify-content: center; }
-.scene nav .nav-button img { width: 100%; height: calc(29 * .75 * var(--unit)); }
-.scene nav .nav-button::after { bottom: calc(6 * var(--unit)); }
 .cover-scene { background: #426571; }
 .cover-scene .nav-button img, .cover-scene .nav-button::after { opacity: .6; }
 
@@ -105,7 +98,6 @@
 
 .atlas[data-archive-open='true'] .item-callout { display: none; }
 
-#icon-library nav { gap: calc(36 * var(--unit)); }
 
 .map-scene[data-suppress-card='true'] .map-item .marker-art { transform: none; filter: none; }
 

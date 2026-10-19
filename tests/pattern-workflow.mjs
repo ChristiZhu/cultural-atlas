@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {palettesDiffer} from '../dist/scripts/pattern-colors.js';
-import {libraryState,culturalIcons} from '../dist/scripts/library-state.js?v=20260922-library-final';
+import {libraryState,culturalIcons} from '../dist/scripts/library-state.js?v=20260929-taiyuan';
 const animations=[],frames=[];
 class Element {
  constructor(){this.children=[];this.dataset={};this.attributes={};this.style={setProperty:(k,v)=>this.style[k]=v};this.clientWidth=1920;this.clientHeight=1080;this.innerHTML='';}
@@ -22,7 +22,8 @@ globalThis.DOMParser=class{parseFromString(source){return {querySelector:()=>nul
 globalThis.XMLSerializer=class{serializeToString(child){return child.xml;}};
 globalThis.fetch=async url=>({ok:true,text:async()=>fs.readFileSync(new URL('../dist/'+url.slice(2),import.meta.url),'utf8')});
 const {createPatternWorkflow}=await import('../dist/scripts/pattern-workflow.js');
-const workflow=createPatternWorkflow({navigate:async(...args)=>navigations.push(args)});
+const shares=[];
+const workflow=createPatternWorkflow({navigate:async(...args)=>navigations.push(args),onShare:payload=>shares.push(payload)});
 const flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 const finishPhase=async()=>{for(const a of animations.filter(a=>!a.settled))a.finish();await flush();};
 const generate=async()=>{for(const frame of frames.splice(0))frame();await flush();};
@@ -51,6 +52,14 @@ for(const mode of ['authentic','vivid','harmonious','surprise']){
  assert.equal(elements.get('#pattern-preview .generated-pattern').innerHTML,renderedBefore,'Recolor cannot replace the SVG tree');
  await workflow.prepare('pattern-save');assert.equal(workflow.getResult().palette.mode,mode,'Save must preserve the current mode');
 }
+const beforeSharing=workflow.getResult(),routesBeforeSharing=navigations.length;
+workflow.share();assert.equal(shares.length,1);
+assert.deepEqual(shares[0].patternData,beforeSharing);
+assert.notStrictEqual(shares[0].patternData,beforeSharing,'Sharing must use an independent snapshot');
+assert.equal(shares[0].blob.type,'image/svg+xml;charset=utf-8');
+assert.match(await shares[0].blob.text(),/<svg/);
+assert.strictEqual(workflow.getResult(),beforeSharing,'Sharing must not regenerate or recolor the result');
+assert.equal(navigations.length,routesBeforeSharing,'Direct share must not go through download success');
 workflow.leave();const displayed=workflow.getResult();await workflow.prepare('pattern-creating');const cancelled=workflow.enter('pattern-creating');await generate();workflow.leave();await cancelled;assert.strictEqual(workflow.getResult(),displayed);assert.equal(workflow.getState().pendingGeneratedPattern,null);
 // Reduced motion still has a real, visible Creating interval on every request.
 reduce=true;for(let i=0;i<2;i++){
@@ -58,6 +67,8 @@ reduce=true;for(let i=0;i<2;i++){
  assert(animations.filter(a=>!a.settled).every(a=>a.options.duration===650));await finishPhase();await running;assert.equal(navigations.length,count+1);workflow.leave();
 }
 await workflow.prepare('pattern-save');assert.equal(workflow.canShowResult(),true);libraryState.toggleIcon('har-gow');assert.equal(workflow.canShowResult(),false,'Stale selection cannot be shown through history');
+workflow.share();assert.equal(shares.length,1,'Cannot share a stale selection');
+console.log('PASS: direct Share snapshots the displayed pattern without downloading, navigating or regenerating; stale selections are blocked.');
 // The existing workflow must load the new vectors and keep city identity through
 // generation, Back, Redo, recoloring, Save and a switch to a different city.
 for(const city of ['guangzhou','beijing','shanghai','taiyuan','dehong']){

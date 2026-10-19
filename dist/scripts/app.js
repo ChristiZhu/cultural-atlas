@@ -1,3 +1,6 @@
+import {createCommunity} from './community/index.js?v=20261017-rebuild';
+import {initLocalization,t} from './i18n.js';
+import {initNavigation} from './navigation.js';
 import { transitionPage, transitionWorkflow, transitionSuccess } from './transitions.js';
 import { scenes, prepareScene, showScene } from './scenes.js';
 import { createCityMap } from './city-map.js?v=2';
@@ -6,13 +9,18 @@ import { createWindowEntrance } from './window-entrance.js';
 import { createPatternWorkflow } from './pattern-workflow.js?v=20260929-taiyuan';
 import { createIconLibrary } from './icon-library.js?v=20260929-taiyuan';
 
+initNavigation();
+await initLocalization();
+
 const atlas = document.querySelector('#atlas');
 const trigger = document.querySelector('#enter-window');
 const status = document.querySelector('#status');
 const successLayer = document.querySelector('#save-success-layer');
 const map = createCityMap(document.querySelector('#guangzhou'), { navigate });
 const archive = createArchive(document.querySelector('#archive'), { onRestore: () => map.resetInteraction(), onClose: () => { if(history.state?.archive){transitioning=true;history.back();} } });
-const pattern = createPatternWorkflow({ navigate });
+const community = createCommunity({ navigate });
+const pattern = createPatternWorkflow({ navigate, onSaved:community.setSaved, onShare:community.share });
+document.querySelector('#share-pattern').addEventListener('click',()=>pattern.share());
 const library = createIconLibrary({ navigate, onSave: () => pattern.save() });
 document.querySelectorAll('[data-zoom]').forEach(button=>button.addEventListener('click',()=>map.zoomBy(button.dataset.zoom==='in'?1.25:1/1.25)));
 let current = 'home';
@@ -20,8 +28,9 @@ let transitioning = false;
 const entrance=createWindowEntrance(document.querySelector('#home'),trigger);
 void entrance.prepare().catch(()=>{});
 
-// Every fresh visit starts at the window. History supports returning and replaying.
-history.replaceState({ scene: 'home' }, '');
+// Direct editorial/gallery links share normal history; other visits start at the window.
+const initialScene=({'#about':'about','#community':'community'})[location.hash] || 'home';
+history.replaceState({ scene: initialScene }, '');
 
 async function navigate(destination, { recordHistory = true, replaceHistory = false, source, cityId, patternContinuation = false } = {}) {
   if(archiveIds.includes(destination)){
@@ -71,6 +80,7 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
       document.body.style.backgroundColor = scenes[destination].background;
       showScene(outgoing, false);showScene(incoming, true);
       current = destination;atlas.dataset.screen = destination;
+      if(destination==='community')community.enter();
       successLayer.hidden = destination !== 'pattern-saved';
       atlas.inert = destination === 'pattern-saved';
     };
@@ -80,7 +90,7 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     else await transitionPage(scenes[destination].background, commit);
     if(patternContinuation)pattern.leave();
     document.title = destination === 'map' ? `${map.cityName} — The Cultural Atlas` : scenes[destination].title;
-    if (recordHistory) history[replaceHistory ? 'replaceState' : 'pushState']({ scene: destination, cityId: map.cityId }, '');
+    if (recordHistory) history[replaceHistory ? 'replaceState' : 'pushState']({ scene: destination, cityId: map.cityId }, '', location.pathname+location.search+(['community','about'].includes(destination)?'#'+destination:''));
     if (destination === 'home') trigger.focus({ preventScroll: true });
     else (destination === 'pattern-saved' ? successLayer : incoming).focus({ preventScroll: true });
     status.textContent = '';
@@ -125,3 +135,6 @@ function openBoardCity(event) {
 }
 board.addEventListener('click', openBoardCity);
 board.addEventListener('keydown', openBoardCity);
+
+// Keep direct links in the existing scene lifecycle, including asset preparation.
+if(initialScene!=='home')void navigate(initialScene,{recordHistory:false});

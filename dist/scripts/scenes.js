@@ -1,5 +1,8 @@
+import {applyArtwork} from './i18n.js';
 /** Add later screens here as they are implemented. Artwork and behavior stay separate. */
 export const scenes = Object.freeze({
+  about: {elementId:'about',title:'About — The Cultural Atlas',background:'#f4ebd9'},
+  community: {elementId:'community',title:'Community Patterns — The Cultural Atlas',background:'#ffeff9'},
   home: { elementId: 'home', title: 'The Cultural Atlas', background: '#fff7cd' },
   corkboard: { elementId: 'corkboard', title: 'Corkboard — The Cultural Atlas', background: '#f4ebd9' },
   map: { elementId: 'guangzhou', title: 'Guangzhou — The Cultural Atlas', background: '#84c9e1' },
@@ -36,5 +39,5 @@ export async function loadArtwork(url) {
   svg.classList.add('art-canvas');
   svg.setAttribute('aria-hidden', 'true');
   svg.setAttribute('focusable', 'false');
-  return svg;
+  return applyArtwork(svg,url);
 }
