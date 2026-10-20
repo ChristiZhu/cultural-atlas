@@ -3,6 +3,7 @@ import { generatePattern, renderPatternSVG, TILE_SIZE } from './pattern-generato
 import { renderArtwork, exportArtworkPNG } from './pattern-export.js?v=20260929-taiyuan';
 import {COLOR_ROLES, paletteSwatches, palettesDiffer, recolorPattern} from './pattern-colors.js';
 import { prepareScene } from './scenes.js';
+import {readPatternDraft} from './pattern-draft.js';
 
 const imageSVG=(body,color)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" color="${color}">${body}</svg>`;
 const dataURL=svg=>'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
@@ -14,6 +15,18 @@ export function createPatternWorkflow({navigate,onSaved=()=>{},onShare=()=>{}}) 
   let currentDisplayedPattern=null,pendingGeneratedPattern=null,selectionKey='',run=0,state='idle',exporting=false;
   const currentIcons=()=>libraryState.getState().selectedIcons.map(id=>culturalIcons.find(icon=>icon.id===id));
   const currentSelectionKey=()=>{const {selectedCity,selectedIcons}=libraryState.getState();return [selectedCity,...selectedIcons].join('|');};
+  // Keep the committed composition when browsing away or refreshing this tab.
+  // Restore exact validated geometry and colors, without rerunning generation.
+  let restoredDraft=null;
+  try {
+    restoredDraft=readPatternDraft(globalThis.sessionStorage,currentSelectionKey(),currentIcons());
+  }catch{}
+  function persistDraft(){
+    if(!currentDisplayedPattern)return;
+    try{globalThis.sessionStorage?.setItem('atlas-pattern-draft',JSON.stringify({
+      key:selectionKey,pattern:currentDisplayedPattern,colorMode,colorSeed,
+    }));}catch{}
+  }
   async function loadIcon(icon) {
     if(assets[icon.id])return;
     if(!pending.has(icon.id))pending.set(icon.id,(async()=>{
@@ -65,6 +78,7 @@ export function createPatternWorkflow({navigate,onSaved=()=>{},onShare=()=>{}}) 
       next.palette={...next.palette,...Object.fromEntries(roles.map((role,i)=>[role,colors[(i+1)%colors.length]]))};
     }
     currentDisplayedPattern=next;
+    persistDraft();
     for(const selector of ['#pattern-preview .generated-pattern','#pattern-save .generated-pattern','.motif-preview']){
       const container=document.querySelector(selector);
       container.querySelectorAll('[data-color-role]').forEach(node=>node.setAttribute(node.dataset.colorAttribute,next.palette[node.dataset.colorRole]));
@@ -77,9 +91,17 @@ export function createPatternWorkflow({navigate,onSaved=()=>{},onShare=()=>{}}) 
   colorPanel?.querySelectorAll('[data-color-mode]').forEach(button=>button.addEventListener('click',()=>recolor(button.dataset.colorMode)));
   colorPanel?.querySelector('#shuffle-colors').addEventListener('click',()=>recolor(colorMode,true));
   function canShowResult() {
-    return !!currentDisplayedPattern&&selectionKey===currentSelectionKey();
+    return (!!currentDisplayedPattern&&selectionKey===currentSelectionKey())||!!(restoredDraft?.key===currentSelectionKey());
   }
   async function prepare(scene) {
+    if(restoredDraft&&['pattern-preview','pattern-save','pattern-saved'].includes(scene)){
+      const saved=restoredDraft,icons=currentIcons();
+      await Promise.all(icons.map(loadIcon));
+      currentDisplayedPattern=saved.pattern;
+      currentDisplayedPattern.selectedCity=libraryState.getState().selectedCity;
+      selectionKey=saved.key;colorMode=saved.colorMode;colorSeed=saved.colorSeed;
+      restoredDraft=null;state='ready';renderResult();
+    }
     if(scene!=='pattern-creating')return;
     const icons=currentIcons();if(!icons.length)throw new Error('Choose at least one icon first.');
     // Only assets are prepared offscreen. A new result is never rendered here.
@@ -159,6 +181,7 @@ export function createPatternWorkflow({navigate,onSaved=()=>{},onShare=()=>{}}) 
       if(!live())return;
       // The only commit point: publish after all Creating phases have completed.
       currentDisplayedPattern=pending;selectionKey=key;pendingGeneratedPattern=null;state='ready';
+      restoredDraft=null;persistDraft();
       renderResult();creating.dataset.phase='complete';
       await navigate('pattern-preview',{replaceHistory:true,patternContinuation:true});
     } catch(error) {

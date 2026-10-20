@@ -8,6 +8,11 @@ export function initNavigation(){
     for(const [code,label] of [['en','EN'],['zh','中文']]){const b=document.createElement('button');b.type='button';b.dataset.language=code;b.textContent=label;b.addEventListener('click',()=>setLanguage(code).catch(()=>{document.querySelector('#status').textContent=t('The artwork could not load. Please try again.');}));control.append(b);if(code==='en'){const divider=document.createElement('span');divider.textContent='/';divider.setAttribute('aria-hidden','true');control.append(divider);}}
     scene.append(control);
   }
+  for(const id of ['guangzhou','icon-library','pattern-creating','pattern-save','community','about']){
+    const back=document.createElement('button');back.type='button';back.className='exploration-back';back.dataset.back='';
+    const label=id==='guangzhou'?'Back to China':id==='icon-library'?'Back to Exploration':id==='pattern-save'?'Back to Preview':'Back';
+    back.append('← ',Object.assign(document.createElement('span'),{textContent:label}));document.getElementById(id).append(back);
+  }
   const boardAbout=document.createElement('button');boardAbout.type='button';boardAbout.className='board-tab board-tab--about';boardAbout.textContent='About';boardAbout.dataset.nav='about';board.querySelector('.board-tab--create').before(boardAbout);
   for(const nav of document.querySelectorAll('.scene nav:not(.board-navigation)')){
     nav.classList.add('shared-navigation');

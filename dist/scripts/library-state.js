@@ -29,10 +29,20 @@ export const cities = Object.freeze([
 ].map(Object.freeze));
 export function createLibraryState() {
   let selectedCity='all',selectedIcons=[];
+  try {
+    const saved=JSON.parse(globalThis.sessionStorage?.getItem('atlas-icon-draft')||'null');
+    if(saved&&cities.some(city=>city.id===saved.selectedCity)){
+      selectedCity=saved.selectedCity;
+      selectedIcons=[...new Set(saved.selectedIcons)].filter(id=>culturalIcons.some(icon=>icon.id===id&&(selectedCity==='all'||icon.city===selectedCity))).slice(0,MAX_SELECTED_ICONS);
+    }
+  } catch {}
   const listeners=new Set();
   const availableIcons=()=>culturalIcons.filter(icon=>selectedCity==='all'||icon.city===selectedCity);
   const snapshot=()=>({selectedCity,selectedIcons:[...selectedIcons],availableIcons:availableIcons()});
-  const notify=()=>listeners.forEach(listener=>listener(snapshot()));
+  const notify=()=>{
+    try{globalThis.sessionStorage?.setItem('atlas-icon-draft',JSON.stringify({selectedCity,selectedIcons}));}catch{}
+    listeners.forEach(listener=>listener(snapshot()));
+  };
   return {
     getState:snapshot,
     setCity(city) {

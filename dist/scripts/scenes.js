@@ -1,6 +1,7 @@
 import {applyArtwork} from './i18n.js';
 /** Add later screens here as they are implemented. Artwork and behavior stay separate. */
 export const scenes = Object.freeze({
+  world: {elementId:'world',title:'Explore the World — The Cultural Atlas',background:'#f4ebd9'},
   about: {elementId:'about',title:'About — The Cultural Atlas',background:'#f4ebd9'},
   community: {elementId:'community',title:'Community Patterns — The Cultural Atlas',background:'#ffeff9'},
   home: { elementId: 'home', title: 'The Cultural Atlas', background: '#fff7cd' },

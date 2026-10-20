@@ -30,3 +30,15 @@ Object.assign(uiZh,{
 'A corkboard of illustrated landmark cards for Guangzhou, Beijing, Dehong, Taiyuan and Shanghai. Red threads connect the cards to a paper map of China. Field bulletin: An atlas of places, collected through the landmarks that give them identity. Follow the red thread. Every city has its own story.':'软木板上贴着广州、北京、德宏、太原和上海的地标插画卡片，红线将卡片与中国纸地图相连。田野简报：循着赋予城市身份的地标，汇集一册地方图鉴。循着红线开启探索，每座城市都有自己的故事。',
 'Original Figma archive artwork.':'原始 Figma 档案设计。',
 });
+Object.assign(uiZh,{
+'World Map':'世界地图','Explore the World':'探索世界','Explore':'探索','China':'中国',
+'Begin in China. More countries and cultural stories are coming soon.':'从中国出发，更多国家与文化故事正在路上。',
+'World countries — select a place to explore':'世界地图 — 选择一个地方开启探索',
+'Choose a country on the map or in the country list.':'点击地图，或在列表中选择想探索的国家。',
+'Find a place':'寻找目的地','Country list':'国家列表','Ready to explore':'开启探索','Explore China →':'探索中国 →',
+'Natural Earth · Public domain map data':'Natural Earth · 公有领域地图数据',
+'More Cities Coming Soon':'更多城市，即将相遇','New places and stories are on the way.':'新的地方与故事，正在路上。',
+'More cities and regions coming soon.':'更多城市与地区，即将相遇。',
+'Back to World':'返回世界地图','Back to China':'返回中国城市板','Back to Exploration':'返回探索','Back to Preview':'返回预览','Back':'返回',
+'Open the window and explore the world':'打开窗户，探索世界',
+});

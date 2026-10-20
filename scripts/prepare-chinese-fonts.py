@@ -11,6 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]
 text=''.join(path.read_text() for path in (ROOT/'dist/locales').glob('*zh.js'))
 for file in json.loads((ROOT/'design-sources/localization/artwork.json').read_text()):
  for row in file['entries']:text+=row['zh']
+text+=(ROOT/'dist/assets/world/countries.json').read_text()
 characters=set(map(ord,text))|set(range(32,256))|set(range(0x2000,0x2070))|set(range(0x2190,0x2200))|set(range(0x3000,0x3040))|set(range(0xff00,0xffef))
 for source,name in [('xiaolai','atlas-note-sc'),('zcool','atlas-play-sc')]:
  font=TTFont(ROOT/f'work/localization/fonts/{source}.ttf')

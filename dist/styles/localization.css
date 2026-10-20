@@ -1,5 +1,5 @@
-@font-face{font-family:'Atlas Hand SC';src:url('../assets/fonts/atlas-note-sc.woff2?v=20261019-sharing') format('woff2');font-display:block;font-weight:400}
-@font-face{font-family:'Atlas Display SC';src:url('../assets/fonts/atlas-play-sc.woff2?v=20261019-sharing') format('woff2');font-display:block;font-weight:400}
+@font-face{font-family:'Atlas Hand SC';src:url('../assets/fonts/atlas-note-sc.woff2?v=20261020-world2') format('woff2');font-display:block;font-weight:400}
+@font-face{font-family:'Atlas Display SC';src:url('../assets/fonts/atlas-play-sc.woff2?v=20261020-world2') format('woff2');font-display:block;font-weight:400}
 @font-face{font-family:'Atlas Sans SC';src:url('../assets/fonts/atlas-sans-sc.woff2') format('woff2');font-display:block;font-weight:400}
 @font-face{font-family:'Russo One';src:url('../assets/fonts/russo-one.woff2') format('woff2');font-display:block;font-weight:400}
 .entrance-instruction{position:absolute;left:calc(var(--art-left) + 486 * var(--unit));top:calc(var(--art-top) + 740 * var(--unit));width:calc(475 * var(--unit));margin:0;text-align:center;font:400 calc(18 * var(--unit))/1.4 'Ugly Dave',sans-serif;color:#fff7cd;letter-spacing:.04em;pointer-events:none;opacity:1;animation:invitation-in 1.1s ease .3s both;transition:opacity .3s ease}

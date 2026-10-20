@@ -8,6 +8,8 @@ import { createArchive, archiveIds } from './archive.js?v=5';
 import { createWindowEntrance } from './window-entrance.js';
 import { createPatternWorkflow } from './pattern-workflow.js?v=20260929-taiyuan';
 import { createIconLibrary } from './icon-library.js?v=20260929-taiyuan';
+import {createWorld} from './world.js';
+import {routeFromHash,routeHash,nextEntry,backTarget,backDistance} from './exploration-history.js';
 
 initNavigation();
 await initLocalization();
@@ -19,6 +21,7 @@ const successLayer = document.querySelector('#save-success-layer');
 const map = createCityMap(document.querySelector('#guangzhou'), { navigate });
 const archive = createArchive(document.querySelector('#archive'), { onRestore: () => map.resetInteraction(), onClose: () => { if(history.state?.archive){transitioning=true;history.back();} } });
 const community = createCommunity({ navigate });
+const world = createWorld({navigate});
 const pattern = createPatternWorkflow({ navigate, onSaved:community.setSaved, onShare:community.share });
 document.querySelector('#share-pattern').addEventListener('click',()=>pattern.share());
 const library = createIconLibrary({ navigate, onSave: () => pattern.save() });
@@ -28,15 +31,20 @@ let transitioning = false;
 const entrance=createWindowEntrance(document.querySelector('#home'),trigger);
 void entrance.prepare().catch(()=>{});
 
-// Direct editorial/gallery links share normal history; other visits start at the window.
-const initialScene=({'#about':'about','#community':'community'})[location.hash] || 'home';
-history.replaceState({ scene: initialScene }, '');
+// Every scene has a project-path-safe hash. Native history keeps internal origins
+// across refreshes, without ever using an unrelated external history entry.
+const initialRoute=routeFromHash(location.hash),initialScene=initialRoute.scene;
+let entry=history.state?.atlas&&history.state.scene===initialScene?history.state:{atlas:true,...initialRoute,index:0,trail:[]};
+history.replaceState(entry, '');
+if(entry.cityId)document.querySelectorAll('[data-nav="map"]:not([data-city])').forEach(button=>
+  button.setAttribute('aria-label',`Map — return to ${entry.cityId[0].toUpperCase()+entry.cityId.slice(1)}`));
 
 async function navigate(destination, { recordHistory = true, replaceHistory = false, source, cityId, patternContinuation = false } = {}) {
+  cityId=cityId||entry.cityId||map.cityId;
   if(archiveIds.includes(destination)){
     if(transitioning||archive.isOpen)return;
     transitioning=true;map.dismissCard();
-    try{const opened=await archive.open(destination,source);if(opened&&recordHistory)history.pushState({scene:'map',cityId:map.cityId,archive:destination},'');}
+    try{const opened=await archive.open(destination,source);if(opened&&recordHistory)history.pushState({...entry,scene:'map',cityId:map.cityId,archive:destination},'');}
     catch{status.textContent='The archive could not load. Please try again.';}
     finally{transitioning=false;}
     return;
@@ -59,13 +67,13 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   const incoming = document.getElementById(scenes[destination].elementId);
   try {
     // Avoid fading into an empty screen on a slow connection.
-    const destinationReady=Promise.all([prepareScene(incoming), destination === 'map' ? map.prepare(cityId) : Promise.resolve(), destination === 'pattern-saved' ? prepareScene(successLayer) : Promise.resolve()]);
-    const windowEntrance=current==='home'&&destination==='corkboard';
+    const destinationReady=Promise.all([prepareScene(incoming), destination === 'world' ? world.prepare() : Promise.resolve(), destination === 'map' ? map.prepare(cityId) : Promise.resolve(), destination === 'pattern-saved' ? prepareScene(successLayer) : Promise.resolve()]);
+    const windowEntrance=current==='home'&&destination==='world';
     if(!windowEntrance)await destinationReady;
     if(destination==='home')entrance.reset();
     // Only an explicit entry from a city map changes the shared city filter.
     // Back/forward and the creation workflow retain city and icon selection.
-    if(destination==='library'&&current==='map'&&recordHistory)library.setCity(map.cityId);
+    if(destination==='library'&&current==='map'&&recordHistory&&!library.getSelection().selectedIcons.length)library.setCity(map.cityId);
     await pattern.prepare(destination);
     library.prepare();
     const commit = () => {
@@ -90,7 +98,14 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
     else await transitionPage(scenes[destination].background, commit);
     if(patternContinuation)pattern.leave();
     document.title = destination === 'map' ? `${map.cityName} — The Cultural Atlas` : scenes[destination].title;
-    if (recordHistory) history[replaceHistory ? 'replaceState' : 'pushState']({ scene: destination, cityId: map.cityId }, '', location.pathname+location.search+(['community','about'].includes(destination)?'#'+destination:''));
+    if (recordHistory) {
+      entry=nextEntry(entry,destination,cityId,{replace:replaceHistory});
+      history[replaceHistory ? 'replaceState' : 'pushState'](entry,'',location.pathname+location.search+routeHash(entry));
+    } else if(entry.scene!==destination) {
+      // A direct result URL without a saved draft safely lands in icon selection.
+      entry={...entry,scene:destination,cityId};
+      history.replaceState(entry,'',location.pathname+location.search+routeHash(entry));
+    }
     if (destination === 'home') trigger.focus({ preventScroll: true });
     else (destination === 'pattern-saved' ? successLayer : incoming).focus({ preventScroll: true });
     status.textContent = '';
@@ -114,7 +129,13 @@ async function navigate(destination, { recordHistory = true, replaceHistory = fa
   }
 }
 
-trigger.addEventListener('click', () => navigate('corkboard'));
+trigger.addEventListener('click', () => navigate('world'));
+document.querySelectorAll('[data-back]').forEach(button=>button.addEventListener('click',()=>{
+  if(transitioning||archive.isOpen)return;
+  const target=backTarget(entry),distance=backDistance(entry,target);
+  if(distance&&entry.index>=distance)history.go(-distance);
+  else void navigate(target.scene,{cityId:target.cityId,source:button});
+}));
 document.querySelectorAll('[data-nav]').forEach(button => {
   button.addEventListener('click', () => navigate(button.dataset.nav, { source: button, cityId: button.dataset.city }));
 });
@@ -122,7 +143,8 @@ window.addEventListener('popstate', async event => {
   await entrance.cancel();
   if(archive.isOpen)await archive.close(false);
   transitioning=false;
-  await navigate(event.state?.scene ?? 'home', {recordHistory:false,cityId:event.state?.cityId});
+  entry=event.state?.atlas?event.state:{atlas:true,...routeFromHash(location.hash),index:0,trail:[]};
+  await navigate(entry.scene, {recordHistory:false,cityId:entry.cityId});
   if(event.state?.archive)await navigate(event.state.archive,{recordHistory:false,cityId:event.state?.cityId});
 });
 
@@ -137,4 +159,4 @@ board.addEventListener('click', openBoardCity);
 board.addEventListener('keydown', openBoardCity);
 
 // Keep direct links in the existing scene lifecycle, including asset preparation.
-if(initialScene!=='home')void navigate(initialScene,{recordHistory:false});
+if(initialScene!=='home')void navigate(initialScene,{recordHistory:false,cityId:entry.cityId});
