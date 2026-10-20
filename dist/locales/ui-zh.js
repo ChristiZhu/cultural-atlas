@@ -39,6 +39,7 @@ Object.assign(uiZh,{
 'Natural Earth · Public domain map data':'Natural Earth · 公有领域地图数据',
 'More Cities Coming Soon':'更多城市，即将相遇','New places and stories are on the way.':'新的地方与故事，正在路上。',
 'More cities and regions coming soon.':'更多城市与地区，即将相遇。',
+'More Cities':'更多城市',
 'Back to World':'返回世界地图','Back to China':'返回中国城市板','Back to Exploration':'返回探索','Back to Preview':'返回预览','Back':'返回',
 'Open the window and explore the world':'打开窗户，探索世界',
 });

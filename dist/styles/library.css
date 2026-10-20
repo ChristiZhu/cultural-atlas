@@ -1,6 +1,25 @@
 .library-art { pointer-events: none; }
 .city-button { z-index: 2; }
 .city-button:focus-visible { outline: 2px solid #206eb8; outline-offset: 2px; }
+.library-coming-tab {
+  position: absolute;
+  left: calc(var(--art-left) + 1175 * var(--unit));
+  top: calc(var(--art-top) + 239 * var(--unit));
+  width: calc(230 * var(--unit));
+  height: calc(52 * var(--unit));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(2 * var(--unit));
+  background: #a4d4e5;
+  color: #000;
+  clip-path: polygon(7.4% 0, 91.5% 0, 100% 100%, 0 100%);
+  font: 400 calc(23 * var(--unit))/1.1 'Ugly Dave', 'Atlas Hand SC', serif;
+  cursor: default;
+}
+.library-coming-tab small { font: 400 calc(12 * var(--unit))/1.1 'Patrick Hand', 'Atlas Hand SC', serif; }
+:lang(zh) .library-coming-tab { font-family: 'Atlas Hand SC', serif; }
 [data-city-art] { --tab-background: #a4d4e5; --tab-label: #000; }
 [data-city-art][data-active='true'] { --tab-background: #206eb8; --tab-label: #fff; }
 [data-tab-shape] { fill: var(--tab-background); transition: fill 180ms ease; }

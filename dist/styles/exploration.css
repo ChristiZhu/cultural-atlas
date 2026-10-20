@@ -39,7 +39,6 @@
 #community>.exploration-back,#about>.exploration-back{top:65px;bottom:auto;left:24px;background:transparent}
 #icon-library>.exploration-back{left:max(18px,calc(var(--art-left) + 28 * var(--unit)))}
 .growth-note{font:18px/1.4 'Patrick Hand','Atlas Hand SC',serif;color:#59675a;margin:8px 0 20px}
-.library-growth-note{position:absolute;left:calc(var(--art-left) + 86 * var(--unit));top:calc(var(--art-top) + 302 * var(--unit));font-size:max(12px,calc(18 * var(--unit)));margin:0}
 /* Blank strip at the board's top: no cards, threads, or navigation are covered. */
 .board-growth-note{position:absolute;left:calc(var(--art-left) + 1080 * var(--unit));top:calc(var(--art-top) + 82 * var(--unit));width:calc(340 * var(--unit));padding:calc(10 * var(--unit)) calc(16 * var(--unit));background:#efdeb5;color:#59452f;box-shadow:1px 3px 5px #3d291a33;transform:rotate(-1deg);pointer-events:none;font:calc(16 * var(--unit))/1.25 'Patrick Hand','Atlas Hand SC',serif}
 .board-growth-note::before{content:'';position:absolute;top:calc(-6 * var(--unit));left:40%;width:23%;height:calc(12 * var(--unit));background:#d6c897bf;transform:rotate(2deg)}
