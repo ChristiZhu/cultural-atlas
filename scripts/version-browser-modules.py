@@ -20,6 +20,6 @@ s=re.sub(r'    <!-- browser-module-release -->[\s\S]*?    <!-- /browser-module-r
 block='    <!-- browser-module-release -->\n    <script type="importmap">'+json.dumps({'imports':dict(sorted(imports.items()))},ensure_ascii=False,separators=(',',':'))+'</script>\n    <!-- /browser-module-release -->\n'
 s=s.replace('    <script type="module"',block+'    <script type="module"',1)
 s=re.sub(r'(src="\./scripts/app\.js)\?[^\"]+',r'\1?v='+version,s)
-s=re.sub(r'(href="\./styles/(?:community|localization|navigation|map|library|about|pattern)\.css)(?:\?[^\"]*)?',r'\1?v='+version,s)
+s=re.sub(r'(href="\./styles/(?:community|localization|navigation|map|library|about|pattern|exploration)\.css)(?:\?[^\"]*)?',r'\1?v='+version,s)
 html.write_text(s)
 print('Pinned',len(imports),'browser module URLs to',version)

@@ -42,3 +42,9 @@ Object.assign(uiZh,{
 'Back to World':'返回世界地图','Back to China':'返回中国城市板','Back to Exploration':'返回探索','Back to Preview':'返回预览','Back':'返回',
 'Open the window and explore the world':'打开窗户，探索世界',
 });
+Object.assign(uiZh,{
+'Select a country':'选择国家','Select a country to begin exploring.':'选择一个国家，开启探索。',
+'Select a country on the map':'在地图上选择一个国家','Select China':'选择中国',
+'Explore cultural stories, cities, and creative traditions.':'探索城市、文化故事与创作传统。',
+'More cultural stories are coming soon.':'更多文化故事，正在路上。',
+});
